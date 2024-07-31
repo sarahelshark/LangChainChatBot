@@ -77,7 +77,6 @@ This project implements a digital assistant for e-commerce product descriptions 
 - Flask-CORS
 - LangChain
 - OpenAI API
-- SQLite3
 
 ### Note
 
@@ -98,5 +97,37 @@ This project implements a digital assistant for e-commerce product search using 
 
 - `searchDB_deprecated.py`: Flask application with chat API endpoints ()
 - `create_db.py`: Script to create and populate a SQLite database with sample products
+- `check_db.py`: Script to check if the SQLite db is correctly populated
 - `main.js`: Client-side JavaScript for handling user interactions
 - `index.html`: HTML template for the chat interface
+
+### Features
+
+- Search queries from the user input
+- european languages are supported
+- Maintain conversation context using LangChain's ConversationChain.
+- Reset conversation functionality.
+- Integration with a SQLite database for product information.
+
+## Usage
+
+- Start a conversation by greeting the assistant and ask them what they skills are.
+- Type 'exit' to end the conversation.
+- ask to help you find a specific product by description, price or name, in a european language 
+- Use the "Reset Conversation" button to start a new chat session.
+
+
+## Dependencies
+
+- Flask
+- Flask-CORS
+- LangChain
+- OpenAI API
+- SQLite3
+
+
+## 3 > test-integration.py => work in progress
+This project implements a digital assistant for e-commerce. In this program will include the first two features in a single app: 
+
+`description generator/translator + product search/purchase advice`
++ the UI will be enhanced
