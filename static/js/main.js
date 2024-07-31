@@ -8,6 +8,12 @@ document.addEventListener("DOMContentLoaded", function () {
     resetButton.style.marginLeft = "10px";
     sendButton.parentNode.insertBefore(resetButton, sendButton.nextSibling);
 
+    /**
+     * Appends a new message to the chatbox.
+     * 
+     * @param {string} content - The content of the message.
+     * @param {string} sender - The sender of the message.
+     */
     function appendMessage(content, sender) {
         const messageElement = document.createElement("div");
         messageElement.className = `message ${sender}`;
@@ -16,6 +22,11 @@ document.addEventListener("DOMContentLoaded", function () {
         chatbox.scrollTop = chatbox.scrollHeight;
     }
 
+    /**
+     * Sends a message to the chat API and appends the user's message to the chat window.
+     * @async
+     * @function sendMessage
+     */
     async function sendMessage() {
         const input = userInput.value.trim();
         if (!input) return;
@@ -49,6 +60,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    /**
+     * Resets the conversation by making a POST request to the '/api/reset' endpoint.
+     * Clears the chatbox and displays a message indicating that the conversation has been reset.
+     * If an error occurs during the reset process, an error message is displayed.
+     */
     async function resetConversation() {
         try {
             const response = await fetch('/api/reset', {

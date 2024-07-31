@@ -4,7 +4,7 @@ import os
 load_dotenv()
 
 from langchain_openai import ChatOpenAI
-from langchain_core.messages import SystemMessage,HumanMessage
+from langchain_core.messages import SystemMessage,HumanMessage, trim_messages, AIMessage
 #from langchain_community.chains import ConversationChain deprecato!!! preferire from langchain_core.chat_history import (BaseChatMessageHistory,InMemoryChatMessageHistory,)
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -64,6 +64,33 @@ print(response.content )
 
 #https://python.langchain.com/v0.2/docs/tutorials/chatbot/ Right now, all we've done is add a simple persistence layer around the model. We can start to make the more complicated and personalized by adding in a prompt template.
 
+
+trimmer = trim_messages(
+    max_tokens=65,
+    strategy="last",
+    token_counter=llm,
+    include_system=True,
+    allow_partial=False,
+    start_on="human",
+)
+
+messages = [
+    SystemMessage(content="you're a good assistant"),
+    HumanMessage(content="hi! I'm bob"),
+    AIMessage(content="hi!"),
+    HumanMessage(content="I like vanilla ice cream"),
+    AIMessage(content="nice"),
+    HumanMessage(content="whats 2 + 2"),
+    AIMessage(content="4"),
+    HumanMessage(content="thanks"),
+    AIMessage(content="no problem!"),
+    HumanMessage(content="having fun?"),
+    AIMessage(content="yes!"),
+]
+
+trimmer.invoke(messages)
+print(messages)
+
 #Prompt Templates help to turn raw user information into a format that the LLM can work with.
 prompt = ChatPromptTemplate.from_messages(
     [
@@ -78,6 +105,14 @@ prompt = ChatPromptTemplate.from_messages(
 chain = prompt | llm
 
 response = chain.invoke(
+    {
+        "messages": messages + [HumanMessage(content="what math problem did i ask")],
+        "language": "English",
+    }
+)
+print(response.content)
+
+response = chain.invoke(
     {"messages": [HumanMessage(content="hi! I'm bob")], "language": "Spanish"}
 )
 
@@ -88,3 +123,6 @@ response = chain.invoke(
 )
 
 print(response.content)
+
+
+   
