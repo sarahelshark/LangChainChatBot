@@ -1,0 +1,34 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.chatbox {
+  background-color: white;
+  border-radius: 8px;
+}
+
+.message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+.message.user {
+  background-color: #cce5ff;
+  text-align: right;
+}
+.message.assistant {
+  background-color: white;
+  text-align: left;
+}
+
+.input-group {
+  margin-top: 10px;
+}
+
+
