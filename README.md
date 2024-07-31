@@ -23,6 +23,8 @@ This project implements a digital assistant for e-commerce product descriptions 
    pip install langchain langchain-openai
    pip install -qU langchain-openai
    # (You might need to run an upgrade, e.g., `python.exe -m pip install --upgrade pip`)
+   
+   pip install langchain_community 
    ```
    
 
