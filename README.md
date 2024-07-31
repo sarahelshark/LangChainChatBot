@@ -88,7 +88,7 @@ This project implements a digital assistant for e-commerce product search using 
    python create_db.py
    ```
 2. Check if the db is populated
-  ```
+   ```
    python check_db.py
    ```
 3. Start the Flask server:
@@ -131,7 +131,7 @@ This project implements a digital assistant for e-commerce product search using 
 
 
 ## 3 > test-integration.py => work in progress
-This project implements a digital assistant for e-commerce. In this program will include the first two features in a single app: 
+This project implements a digital assistant for e-commerce. This app will include the first two features in a single app: 
 
 `description generator/translator + product search/purchase advice`
 + the UI will be enhanced
