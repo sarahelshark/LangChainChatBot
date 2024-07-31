@@ -1,10 +1,10 @@
 
 # E-commerce Digital Assistant with LangChain and OpenAI
 
-### > productDescription_deprecated.py
+## 1 > productDescription_deprecated.py 
 This project implements a digital assistant for e-commerce product descriptions using Flask, LangChain, and OpenAI's GPT models. The assistant generates product descriptions in Italian based on user input and can also perform translations.
 
-## Setup
+### Setup
 
 1. Create a virtual environment:
    ```
@@ -35,14 +35,14 @@ This project implements a digital assistant for e-commerce product descriptions 
    SECRET_KEY = "your_flask_secret_key"
    ```
 
-## Project Structure
+### Project Structure
 
 - `productDescription_deprecated.py`: Flask application with chat API endpoints ()
 - `create_db.py`: Script to create and populate a SQLite database with sample products
 - `main.js`: Client-side JavaScript for handling user interactions
 - `index.html`: HTML template for the chat interface
 
-## Running the Application
+### Running the Application
 
 1. Create the database:
    ```
@@ -56,14 +56,14 @@ This project implements a digital assistant for e-commerce product descriptions 
 
 3. Open a web browser and navigate to `http://localhost:5000` to interact with the assistant.
 
-## Features
+### Features
 
 - Generate product descriptions in Italian
 - Translate product descriptions on request
 - Maintain conversation context using LangChain's ConversationChain
 - Reset conversation functionality
 
-## Usage
+### Usage
 
 - Start a conversation by greeting the assistant
 - Provide product information to generate descriptions
@@ -71,7 +71,7 @@ This project implements a digital assistant for e-commerce product descriptions 
 - Type 'exit' to end the conversation
 - Use the "Reset Conversation" button to start a new chat session
 
-## Dependencies
+### Dependencies
 
 - Flask
 - Flask-CORS
@@ -79,6 +79,24 @@ This project implements a digital assistant for e-commerce product descriptions 
 - OpenAI API
 - SQLite3
 
-## Note
+### Note
 
 This project uses environment variables for API keys and other sensitive information. Make sure to keep your `.env` file secure and never commit it to version control.
+
+
+## 2 > productDescription_deprecated.py
+This project implements a digital assistant for e-commerce product search using Flask, LangChain, and OpenAI's GPT models. The setup is the same, you will just need to run the App you already used for the product description generator, after having typed 'exit' on the flask UI and started a new terminal.
+
+> Start the Flask server:
+   ```
+   python productDescription_deprecated.py
+   ```
+
+> Open a web browser and navigate to `http://localhost:5000` to interact with the assistant.
+
+### Project Structure
+
+- `searchDB_deprecated.py`: Flask application with chat API endpoints ()
+- `create_db.py`: Script to create and populate a SQLite database with sample products
+- `main.js`: Client-side JavaScript for handling user interactions
+- `index.html`: HTML template for the chat interface
