@@ -79,3 +79,6 @@ while True:
 
 print("---- Message History ----")
 print(chat_history)
+
+##### 4 SAVING THE HISTORY OF THE ENTIRE CONVERSATION  OVER TO THE CLOUD  ############################################################################################################
+#see cloud_example.py
