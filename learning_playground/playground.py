@@ -50,3 +50,32 @@ print(f"Answer from AI: {result.content}")
 
 #creare una conversazione e registrarla dentro messages[] è essenziale per poter sviluppare un chatbot che sia in grado di ricordare 
 #la conversazione passata ed elaborare ulteriori richieste.
+
+
+##### 3 REAL-TIME CONVERSATION WITH USER  ############################################################################################################
+from langchain.schema import AIMessage, HumanMessage, SystemMessage
+#langchain.schema instead of langchain_core.messages 
+
+chat_history = []  # Use a list to store messages
+
+# Set an initial system message (optional)
+system_message = SystemMessage(content="You are a helpful AI assistant.")
+chat_history.append(system_message)  # Add system message to chat history
+
+# Chat loop
+while True:
+    query = input("You: ")
+    if query.lower() == "exit":
+        break
+    chat_history.append(HumanMessage(content=query))  # Add user message
+
+    # Get AI response using history
+    result = model.invoke(chat_history)
+    response = result.content
+    chat_history.append(AIMessage(content=response))  # Add AI message
+
+    print(f"AI: {response}")
+
+
+print("---- Message History ----")
+print(chat_history)
