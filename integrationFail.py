@@ -54,8 +54,8 @@ Your capabilities include:
 Always respond in the same language as the user's input. When giving search results from the Italian database, translate them to the user's language. If you don't understand a request, politely ask for clarification in the user's language.
 
 To end the conversation, the user can write 'exit' in any language.
-Be ready for any task: searching products, generating descriptions, or translating.
-introduce yourself to the user and explain your capabilities.
+To switch between functionalities, the user can say "switch to search" or "switch to description" in any language they're talking to.
+Introduce yourself to the user and explain your capabilities.
 """)
 
 db = SQLDatabase.from_uri("sqlite:///fakeEcommerce.db")
@@ -80,10 +80,10 @@ Guidelines for query generation:
 4. If the user specifies multiple criteria, combine them with AND/OR appropriately.
 5. Use LOWER() to make the search case-insensitive.
    Example: WHERE LOWER(description) LIKE LOWER('%wireless%')
-6. Always limit the results to 5 products to avoid overly long responses, but inform user how many results are left outside, and if they ask, provide the the missing results only.
+6. Always limit the results to 5 products to avoid overly long responses, but inform user how many results are left outside, and if they ask, provide the missing results only.
 
 Return only the SQL query, without explanations.
-if there are errors in the query, please do not print the wrong query, in that case you should apologize and ask to try again in different terms.
+If there are errors in the query, please do not print the wrong query, in that case you should apologize and ask to try again in different terms.
 """
 
 query_prompt = PromptTemplate.from_template(query_template)
@@ -133,6 +133,21 @@ def is_search_query(text):
     
     return any(keyword in text.lower() for keyword in search_keywords[detected_lang])
 
+def is_description_request(text):
+    description_keywords = {
+        'en': ["describe", "generate description", "create description", "product description"],
+        'it': ["descrivi", "genera descrizione", "crea descrizione", "descrizione prodotto"],
+        'es': ["describir", "generar descripción", "crear descripción", "descripción del producto"],
+        'fr': ["décrire", "générer une description", "créer une description", "description du produit"],
+        'de': ["beschreiben", "beschreibung generieren", "beschreibung erstellen", "produktbeschreibung"]
+    }
+    
+    detected_lang = detect(text)
+    if detected_lang not in description_keywords:
+        detected_lang = 'en'  # Default to English if language not supported
+    
+    return any(keyword in text.lower() for keyword in description_keywords[detected_lang])
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -157,48 +172,36 @@ def chat():
             }
             return jsonify({'content': exit_messages.get(detected_language, exit_messages['en'])})
         
-        # Variabile di controllo per il ciclo
-        first_iteration_done = False
-        
-        while not first_iteration_done:
-            # Prima funzionalità: eseguire una ricerca
-            if is_search_query(user_message):
-                query = query_chain.invoke(user_message)
-                print(f"Generated SQL query: {query}")
-                
-                try:
-                    results = db.run(query)
-                    print(f"Query results: {results}")
-                    
-                    if not results.strip():
-                        results = "No results found."
-                    
-                    response = response_chain.invoke({
-                        "user_input": user_message,
-                        "query_results": results,
-                        "detected_language": detected_language
-                    })
-                except Exception as e:
-                    print(f"Error executing query: {str(e)}")
-                    response = f"I'm sorry, there was an error executing the search. Could you try rephrasing your request? Error: {str(e)}"
-            else:
-                if not conversation.memory.chat_memory.messages:
-                    conversation.memory.chat_memory.add_message(system_message)
-                
-                response = conversation.predict(input=user_message)
+        if "switch to search" in user_message.lower():
+            response = "Switched to search functionality. How can I help you find products?"
+        elif "switch to description" in user_message.lower():
+            response = "Switched to description functionality. What product would you like me to describe?"
+        elif is_search_query(user_message):
+            query = query_chain.invoke(user_message)
+            print(f"Generated SQL query: {query}")
             
-            # Stampa la risposta
-            print(response)
+            try:
+                results = db.run(query)
+                print(f"Query results: {results}")
+                
+                if not results.strip():
+                    results = "No results found."
+                
+                response = response_chain.invoke({
+                    "user_input": user_message,
+                    "query_results": results,
+                    "detected_language": detected_language
+                })
+            except Exception as e:
+                print(f"Error executing query: {str(e)}")
+                response = f"I'm sorry, there was an error executing the search. Could you try rephrasing your request? Error: {str(e)}"
+        elif is_description_request(user_message):
+            response = conversation.predict(input=f"Generate a product description in Italian for: {user_message}")
+        else:
+            if not conversation.memory.chat_memory.messages:
+                conversation.memory.chat_memory.add_message(system_message)
             
-            # Imposta la variabile di controllo per uscire dal ciclo
-            first_iteration_done = True
-        
-        # Seconda funzionalità: eseguire altre operazioni
-        # Puoi aggiungere qui il codice per la seconda funzionalità
-        print("Passando alla seconda funzionalità...")
-        # Esempio di seconda funzionalità
-        # second_functionality()
-        
+            response = conversation.predict(input=user_message)
         
         return jsonify({'content': response})
     
@@ -213,6 +216,4 @@ def reset_conversation():
     return jsonify({'message': 'Conversation reset successfully'})
 
 if __name__ == '__main__':
-    app.run(debug=True) 
-    
-   
+    app.run(debug=True)
