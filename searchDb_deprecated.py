@@ -16,7 +16,7 @@ from langdetect import detect
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 CORS(app)
 
 api_key = os.getenv("OPENAI_API_KEY")
