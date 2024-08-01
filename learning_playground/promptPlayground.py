@@ -79,14 +79,6 @@ prompt_template = ChatPromptTemplate.from_template(template)
 
 prompt = prompt_template.invoke({"topic": "cats"})
 
-# Access the content of the human message in the prompt  >> se voglio 'pulire' il prompt e mi serve solo il contenuto
-# human_message_content = None
-# for message in prompt.messages:
-#     if isinstance(message, HumanMessage):
-#         human_message_content = message.content
-#         break
-# Print the human message content
-# print("Human message content:", human_message_content)
 
 result = model.invoke(prompt)
 print(prompt, " "," Model reply :", " ", result.content)
