@@ -38,7 +38,7 @@ neutral_feedback_template = ChatPromptTemplate.from_messages(
         ),
     ]
 )
-#the default branch in case all the previous did not trigger 
+#the default branch in case all the previous did not trigger
 escalate_feedback_template = ChatPromptTemplate.from_messages(
     [
         ("system", "You are a helpful assistant."),
