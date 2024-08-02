@@ -1,4 +1,4 @@
-#imagine it as an 'if' statement
+#imagine it as an 'if' statement > conditionally run chains 
 
 from dotenv import load_dotenv
 from langchain.prompts import ChatPromptTemplate
@@ -38,7 +38,7 @@ neutral_feedback_template = ChatPromptTemplate.from_messages(
         ),
     ]
 )
-
+#the default branch in case all the previous did not trigger 
 escalate_feedback_template = ChatPromptTemplate.from_messages(
     [
         ("system", "You are a helpful assistant."),
