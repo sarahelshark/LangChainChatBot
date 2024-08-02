@@ -53,16 +53,17 @@ if not os.path.exists(persistent_directory):
     else:
         raise RuntimeError("Unable to decode the file with any of the attempted encodings.")
 
-    # Split the document into chunks
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    # Split the document into chunks (there are diff chunking strategies, this is one)
+    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200) #the chunk overlaps helps with the chunk limit, better performance reuslts: common values are 200-400 
     docs = text_splitter.split_documents(documents)
+    #...or chunks, call it whatever you prefer 
     
     # Display information about the split documents
     print("\n--- Document Chunks Information ---")
     print(f"Number of document chunks: {len(docs)}")
     print(f"Sample chunk:\n{docs[0].page_content}\n")
     
-    # Create embeddings
+    # Create embeddings (there are diff options, now we ose the OpenAIEmbeddings class )
     print("\n--- Creating embeddings ---")
     embeddings = OpenAIEmbeddings(
         model="text-embedding-3-small"  # this is the cheapest one
@@ -79,3 +80,32 @@ if not os.path.exists(persistent_directory):
 else:
     print("Vector store already exists. No need to initialize.")
     print(f"Persistent directory: {persistent_directory}")
+
+#2
+
+# Define the persistent directory
+persistent_directory = os.path.join(current_dir, "db", "faiss_index")
+
+# Define the embedding model
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+
+# Load the existing vector store with the embedding function
+db = FAISS.load_local(persistent_directory, embeddings)
+#set allow_dangerous_deserialization: bool = True, if you want to load the vector store from a remote source
+
+# Define the user's question
+query = "Who is Odysseus' wife?"
+
+# Retrieve relevant documents based on the query (there are different possibilities when it comes to working with retrievers )
+retriever = db.as_retriever(
+    search_type="similarity_score_threshold",
+    search_kwargs={"k": 3, "score_threshold": 0.4},  #returns key closest document: in this case top 3 similar results 3=3k tokens llms limit is generally around 8k  
+)
+relevant_docs = retriever.invoke(query)
+
+# Display the relevant results with metadata
+print("\n--- Relevant Documents ---")
+for i, doc in enumerate(relevant_docs, 1):
+    print(f"Document {i}:\n{doc.page_content}\n")
+    if doc.metadata:
+        print(f"Source: {doc.metadata.get('source', 'Unknown')}\n")
