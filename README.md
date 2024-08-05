@@ -12,7 +12,8 @@
  - `python.exe -m pip install --upgrade pip` 
  - `pip install --upgrade langchain`
 
-3. if any error occurs when installing the specific versions, try following the step-by-step guide listed below
+3. If any error occurs when installing the specific versions, try following the **step-by-step guide** listed below
+4. you can use the ***.env_sample*** and ***gitignore_sample.txt*** simply by renaming them and replacing the secret values
 
  
 
