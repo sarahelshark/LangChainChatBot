@@ -1,5 +1,21 @@
 
 # E-commerce Digital Assistant with LangChain and OpenAI
+## !!!! Important note on dependencies.txt
+1. To install all the project dependencies, after having set the environment (see below), run:
+   ```
+   pip install -r dependencies.txt
+   ```
+2. The previous dependencies work only with the **legacy version** of langchain, specifically used in all the **_deprecated.py** files. 
+
+   To access the latest version implementation (0.2x) you should change directory
+ `cd ./learning_playground` and simply update the pip & langchain dependencies to the latest updates  
+ - `python.exe -m pip install --upgrade pip` 
+ - `pip install --upgrade langchain`
+
+3. if any error occurs when installing the specific versions, try following the step-by-step guide listed below
+
+ 
+
 
 ## 1 > productDescription_deprecated.py 
 This project implements a digital assistant for e-commerce product descriptions using Flask, LangChain, and OpenAI's GPT models. The assistant generates product descriptions in Italian based on user input and can also perform translations.
