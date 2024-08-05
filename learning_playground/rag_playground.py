@@ -21,6 +21,7 @@ import os
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
 from langchain_community.vectorstores import FAISS
+# for python==3.12.4
 from langchain_openai import OpenAIEmbeddings
 
 # Define the directory containing the text file and the persistent directory

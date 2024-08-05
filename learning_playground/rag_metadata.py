@@ -1,6 +1,7 @@
 import os
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
+# for python==3.12.4
 from langchain_openai import OpenAIEmbeddings
 from langchain.schema import Document
 
@@ -87,31 +88,26 @@ else:
     
     
 #2
-
-
 # Define the persistent directory
 persistent_directory = os.path.join(current_dir, "romeo_juliet_metadata", "db", "faiss_index")
-
 # Define the embedding model
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-
 # Load the existing vector store with the embedding function
 db = FAISS.load_local(persistent_directory, embeddings)
-#set allow_dangerous_deserialization: bool = True, if you want to load the vector store from a remote source
-
 
 #define question
 query = "How did Juliet Die?"
-
 # Retrieve relevant documents based on the query
 retriever = db.as_retriever(
     search_type="similarity_score_threshold",
-    search_kwargs={"k": 2, "score_threshold": 0.1},
+    search_kwargs={"k": 3, "score_threshold": 0.1},
 )
 relevant_docs = retriever.invoke(query)
-
 # Display the relevant results with metadata
 print("\n--- Relevant Documents ---")
 for i, doc in enumerate(relevant_docs, 1):
     print(f"Document {i}:\n{doc.page_content}\n")
     print(f"Source: {doc.metadata['source']}\n")
+
+
+
