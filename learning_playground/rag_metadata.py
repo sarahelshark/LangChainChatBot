@@ -27,7 +27,9 @@ class CustomTextLoader:
 current_dir = os.path.dirname(os.path.abspath(__file__))
 books_dir = os.path.join(current_dir, "books")
 db_dir = os.path.join(current_dir, "db")
-persistent_directory = os.path.join(db_dir, "db", "faiss_index")
+
+# Define the persistent directory
+persistent_directory = os.path.join(current_dir, "romeo_juliet_metadata", "db", "faiss_index")
 
 print(f"Books directory: {books_dir}")
 print(f"Persistent directory: {persistent_directory}")
@@ -49,10 +51,14 @@ if not os.path.exists(persistent_directory):
     documents = []
     for book_file in book_files:
         file_path = os.path.join(books_dir, book_file)
+        #load books 
         loader = CustomTextLoader(file_path)
         book_docs = loader.load()
-        documents.extend(book_docs)
-
+        for doc in book_docs:
+            # Add metadata to each document indicating its source
+            doc.metadata = {"source": book_file}
+            documents.append(doc)
+            
     # Split the documents into chunks
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     docs = text_splitter.split_documents(documents)
@@ -78,3 +84,34 @@ if not os.path.exists(persistent_directory):
 else:
     print("Vector store already exists. No need to initialize.")
     print(f"Persistent directory: {persistent_directory}")
+    
+    
+#2
+
+
+# Define the persistent directory
+persistent_directory = os.path.join(current_dir, "romeo_juliet_metadata", "db", "faiss_index")
+
+# Define the embedding model
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+
+# Load the existing vector store with the embedding function
+db = FAISS.load_local(persistent_directory, embeddings)
+#set allow_dangerous_deserialization: bool = True, if you want to load the vector store from a remote source
+
+
+#define question
+query = "How did Juliet Die?"
+
+# Retrieve relevant documents based on the query
+retriever = db.as_retriever(
+    search_type="similarity_score_threshold",
+    search_kwargs={"k": 2, "score_threshold": 0.1},
+)
+relevant_docs = retriever.invoke(query)
+
+# Display the relevant results with metadata
+print("\n--- Relevant Documents ---")
+for i, doc in enumerate(relevant_docs, 1):
+    print(f"Document {i}:\n{doc.page_content}\n")
+    print(f"Source: {doc.metadata['source']}\n")
