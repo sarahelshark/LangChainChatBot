@@ -27,7 +27,7 @@ if not api_key:
 
 llm = ChatOpenAI(
     model="gpt-4",
-    temperature=0.2,
+    temperature=0.2, #risposta accurata vicina allo 0, risposta creativa va verso 1
     max_tokens=300,
     openai_api_key=api_key,
     openai_organization=organization,
