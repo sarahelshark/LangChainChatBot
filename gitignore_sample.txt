@@ -1,0 +1,70 @@
+# Ignore .env file
+.env
+*.venv
+*.db
+*.log
+*.log-txt
+__pycache__/
+*.pyc
+*.venv/
+*.pyvenv.cfg
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+pip-wheel-metadata/
+*.par
+*.pyz
+*.pyzw
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Logs
+*.log
+log.txt
+
+# Environment variables
+.env
+
+# Build files
+dist/
+build/
+*.out
+*.o
+*.class
+
+# Dependency directories
+vendor/
+
+# Virtual environments
+venv/
+.env/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
