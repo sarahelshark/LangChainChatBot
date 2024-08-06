@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     modelSelect.appendChild(geminiOption);
     sendButton.parentNode.insertBefore(modelSelect, sendButton);
 
+
     /**
      * Appends a new message to the chatbox.
      * 
@@ -44,7 +45,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const input = userInput.value.trim();
         if (!input) return;
 
-        const selectedModel = modelSelect.value;
 
         appendMessage(input, "user");
         userInput.value = "";
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message: input, model: selectedModel })
+                body: JSON.stringify({ message: input, model: modelSelect.value }),
             });
 
             if (!response.ok) {
