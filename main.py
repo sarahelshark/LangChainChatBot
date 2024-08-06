@@ -30,7 +30,7 @@ model = ChatOpenAI(
 
 # Initialize chat history
 chat_history = []
-system_message = SystemMessage(content="You are a helpful AI assistant.")
+system_message = SystemMessage(content="You are a helpful AI assistant")
 chat_history.append(system_message)
 
 @app.route('/')
@@ -51,9 +51,10 @@ def chat():
         if user_message.lower() == 'exit':
             print("---- Message History ----")
             print(chat_history)
-            return jsonify({'content': "Grazie per aver utilizzato l'assistente di descrizione del prodotto. Arrivederci!"})
+            return jsonify({'content': "Grazie per aver utilizzato l'assistente AI. Arrivederci!"})
         
         if model_choice == 'chatgpt':
+            print("---- ChatGPT mode ----")
             # ChatGPT logic
             # Add user message to chat history
             chatgpt_history.append(HumanMessage(content=user_message))
@@ -64,6 +65,7 @@ def chat():
             chatgpt_history.append(AIMessage(content=response))
         elif model_choice == 'gemini':
             # Gemini logic
+            print("---- Gemini mode ----")
             response = GeminiPro.get_response(user_message)
         else:
             return jsonify({'error': 'Invalid model choice.'}), 400
