@@ -8,6 +8,19 @@ document.addEventListener("DOMContentLoaded", function () {
     resetButton.style.marginLeft = "10px";
     sendButton.parentNode.insertBefore(resetButton, sendButton.nextSibling);
 
+    // Add model selection dropdown
+    const modelSelect = document.createElement("select");
+    modelSelect.id = "modelSelect";
+    const chatgptOption = document.createElement("option");
+    chatgptOption.value = "chatgpt";
+    chatgptOption.textContent = "ChatGPT";
+    const geminiOption = document.createElement("option");
+    geminiOption.value = "gemini";
+    geminiOption.textContent = "Gemini";
+    modelSelect.appendChild(chatgptOption);
+    modelSelect.appendChild(geminiOption);
+    sendButton.parentNode.insertBefore(modelSelect, sendButton);
+
     /**
      * Appends a new message to the chatbox.
      * 
@@ -31,6 +44,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const input = userInput.value.trim();
         if (!input) return;
 
+        const selectedModel = modelSelect.value;
+
         appendMessage(input, "user");
         userInput.value = "";
         placeholder.innerHTML = '';
@@ -41,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message: input })
+                body: JSON.stringify({ message: input, model: selectedModel })
             });
 
             if (!response.ok) {
@@ -82,13 +97,11 @@ document.addEventListener("DOMContentLoaded", function () {
             appendMessage("Sorry, there was an error resetting the conversation.", "system");
         }
     }
-
+    
     // Attach sendMessage function to the button
     sendButton.addEventListener("click", sendMessage);
-
     // Attach resetConversation function to the reset button
     resetButton.addEventListener("click", resetConversation);
-
     // Allow pressing "Enter" to send the message
     userInput.addEventListener("keypress", function(event) {
         if (event.key === "Enter") {

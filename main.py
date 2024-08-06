@@ -6,6 +6,9 @@ from flask_cors import CORS
 import os
 from dotenv import load_dotenv 
 
+import constants
+from models import GeminiPro
+
 from langchain_openai import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 load_dotenv()
@@ -36,46 +39,49 @@ def index():
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    global chat_history
+    global chatgpt_history
     try:
         data = request.get_json()
         if not data:
             return jsonify({'error': 'Invalid JSON payload.'}), 400
         
         user_message = data.get('message', '')
+        model_choice = data.get('model', 'chatgpt')  # Default to ChatGPT if not specified
         
         if user_message.lower() == 'exit':
             print("---- Message History ----")
             print(chat_history)
             return jsonify({'content': "Grazie per aver utilizzato l'assistente di descrizione del prodotto. Arrivederci!"})
         
-        # Add user message to chat history
-        chat_history.append(HumanMessage(content=user_message))
-        
-        # Get AI response using history
-        result = model.invoke(chat_history)
-        response = result.content
-        
-        # Add AI message to chat history
-        chat_history.append(AIMessage(content=response))
+        if model_choice == 'chatgpt':
+            # ChatGPT logic
+            # Add user message to chat history
+            chatgpt_history.append(HumanMessage(content=user_message))
+            # Get AI response using history
+            result = model.invoke(chatgpt_history)
+            response = result.content
+            # Add AI message to chat history
+            chatgpt_history.append(AIMessage(content=response))
+        elif model_choice == 'gemini':
+            # Gemini logic
+            response = GeminiPro.get_response(user_message)
+        else:
+            return jsonify({'error': 'Invalid model choice.'}), 400
         
         return jsonify({'content': response})
     
-    except ValueError as ve:
-        return jsonify({'error': f'ValueError: {str(ve)}'}), 400
-    except KeyError as ke:
-        return jsonify({'error': f'KeyError: {str(ke)}'}), 400
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
-
 @app.route('/api/reset', methods=['POST'])
 def reset_conversation():
-    global chat_history
+    global chatgpt_history
     try:
-        chat_history = [system_message]
+        chatgpt_history = [system_message]
         return jsonify({'status': 'Conversation reset successfully.'})
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
 
 if __name__ == '__main__':
+    # Set up Gemini credentials
+    os.environ[constants.googleApplicationCredentials] = constants.alpeniteVertexai
     app.run(debug=True)

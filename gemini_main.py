@@ -24,3 +24,7 @@ while myinput != "exit":
     response = GeminiPro.get_response(myinput)
     print(response)
     print("")
+
+
+
+
