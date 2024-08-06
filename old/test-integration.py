@@ -18,7 +18,7 @@ if not api_key:
 
 
 #istanziare il modello 
-llm = ChatOpenAI(
+model = ChatOpenAI(
     model="gpt-4",
     temperature=0.7,
     max_tokens=300,
@@ -28,7 +28,7 @@ llm = ChatOpenAI(
 
 
 memory = ConversationBufferMemory()
-#conversation = ConversationChain(llm=llm, memory=memory, verbose=True)
+#conversation = ConversationChain(model=model, memory=memory, verbose=True)
 from langchain_core.chat_history import (
     BaseChatMessageHistory, #Abstract base class for storing chat message history.
     InMemoryChatMessageHistory,
@@ -43,7 +43,7 @@ def get_session_history(session_id: str) -> BaseChatMessageHistory:
     return store[session_id]
 
 
-with_message_history = RunnableWithMessageHistory(llm, get_session_history)
+with_message_history = RunnableWithMessageHistory(model, get_session_history)
 
 #We now need to create a config that we pass into the runnable every time. This config contains information that is not part of the input directly, but is still useful. In this case, we want to include a session_id. This should look like:
 config = {"configurable": {"session_id": "abc2"}}
@@ -68,7 +68,7 @@ print(response.content )
 trimmer = trim_messages(
     max_tokens=65,
     strategy="last",
-    token_counter=llm,
+    token_counter=model,
     include_system=True,
     allow_partial=False,
     start_on="human",
@@ -91,7 +91,7 @@ messages = [
 trimmer.invoke(messages)
 print(messages)
 
-#Prompt Templates help to turn raw user information into a format that the LLM can work with.
+#Prompt Templates help to turn raw user information into a format that the model can work with.
 prompt = ChatPromptTemplate.from_messages(
     [
         (
@@ -102,7 +102,7 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-chain = prompt | llm
+chain = prompt | model
 
 response = chain.invoke(
     {

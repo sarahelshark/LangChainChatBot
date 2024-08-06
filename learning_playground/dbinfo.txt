@@ -1,2 +1,0 @@
--chroma db > needs a less recent py version 
--faiss > fits my version 3.12.4
