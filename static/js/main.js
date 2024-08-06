@@ -1,9 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
-
     const chatbox = document.getElementById("chatbox");
     const placeholder = document.getElementById("placeholder");
     const userInput = document.getElementById("userInput");
-    const sendButton = document.querySelector("button");
+    const sendButton = document.getElementById("sendButton");
     const resetButton = document.createElement("button");
     resetButton.textContent = "Reset Conversation";
     resetButton.style.marginLeft = "10px";
