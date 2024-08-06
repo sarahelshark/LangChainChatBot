@@ -1,5 +1,6 @@
 # flask imports
 from flask import Flask, request, jsonify, render_template
+from flask_bootstrap import Bootstrap
 from flask_cors import CORS
 
 import os
@@ -9,10 +10,13 @@ from langchain_openai import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 load_dotenv()
 
+
 # Initialize Flask app
 app = Flask(__name__)
+Bootstrap(app)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 CORS(app)
+
 
 # Initialize the model
 model = ChatOpenAI(

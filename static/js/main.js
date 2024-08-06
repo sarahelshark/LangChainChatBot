@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+
     const chatbox = document.getElementById("chatbox");
     const placeholder = document.getElementById("placeholder");
     const userInput = document.getElementById("userInput");
