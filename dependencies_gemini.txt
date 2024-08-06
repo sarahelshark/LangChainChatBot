@@ -1,0 +1,6 @@
+pandas==2.2.1
+google-cloud-aiplatform==1.43.0
+google-cloud-documentai
+openpyxl
+PyPDF2
+tqdm
