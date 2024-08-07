@@ -79,7 +79,7 @@ def reset_conversation():
     global chatgpt_history
     try:
         chatgpt_history = [system_message]
-        return jsonify({'status': 'Conversation reset successfully.'})
+        return jsonify({'status': 'La conversazione è stata resettata correttamente, puoi iniziarne una nuova.🎉'})
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
 
