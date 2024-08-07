@@ -21,6 +21,13 @@ document.addEventListener("DOMContentLoaded", function () {
     modelSelect.appendChild(geminiOption);
     sendButton.parentNode.insertBefore(modelSelect, sendButton);
 
+    //add dark mode
+    const darkMode = document.getElementById("darkModeToggle");
+    darkMode.addEventListener("click", function() {
+        console.log("dark mode clicked");
+    });
+
+
 
     /**
      * Appends a new message to the chatbox.
@@ -44,13 +51,13 @@ document.addEventListener("DOMContentLoaded", function () {
     async function sendMessage() {
         const input = userInput.value.trim();
         if (!input) return;
-
-
+        
         appendMessage(input, "user");
         userInput.value = "";
         placeholder.innerHTML = '';
-
+        
         try {
+            console.log("Sending request to /api/chat");
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
@@ -58,16 +65,35 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: JSON.stringify({ message: input, model: modelSelect.value }),
             });
-
+            
+            console.log("Response received. Status:", response.status);
+            console.log("Response headers:", response.headers);
+            
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
-            const data = await response.json();
-            if (data.content) {
+            
+            const responseText = await response.text();
+            console.log("Raw response text:", responseText);
+            
+            let data;
+            try {
+                data = JSON.parse(responseText);
+                console.log("Parsed JSON data:", data);
+            } catch (parseError) {
+                console.error("Error parsing JSON:", parseError);
+                appendMessage("Error: Received invalid JSON from server.", "system");
+                return;
+            }
+            
+            if (data && data.content) {
                 appendMessage(data.content, "assistant");
+            } else if (data && data.error) {
+                console.error("API returned an error:", data.error);
+                appendMessage("An error occurred: " + data.error, "assistant");
             } else {
                 console.error("Unexpected response format:", data);
+                appendMessage("Received an unexpected response format.", "assistant");
             }
         } catch (error) {
             console.error("Error sending message:", error);

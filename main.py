@@ -29,9 +29,9 @@ model = ChatOpenAI(
 )
 
 # Initialize chat history
-chat_history = []
+chatgpt_history = []
 system_message = SystemMessage(content="You are a helpful AI assistant")
-chat_history.append(system_message)
+chatgpt_history.append(system_message)
 
 @app.route('/')
 def index():
