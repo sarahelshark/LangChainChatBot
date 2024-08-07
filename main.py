@@ -36,6 +36,9 @@ chatgpt_history.append(system_message)
 @app.route('/')
 def index():
     return render_template('index.html')
+@app.route('/docs')
+def docs():
+    return render_template('docs.html')
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
