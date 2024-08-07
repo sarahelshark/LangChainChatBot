@@ -1,12 +1,12 @@
-<header class="w-100">
+<nav aria-label="Main navigation" class="w-100">
                
   <ul class="navbar-nav d-flex flex-row  justify-content-between me-auto mt-2 mt-lg-0 ">
     
     <li class="nav-item p-4  ">
-       <ul class="navbar-nav d-flex flex-row gap-3">
-          <li><a href="#" class="nav-link active" aria-current="page">Home</a></li>
-          <li><a href="/docs" class="nav-link ">Docs</a></li>
-            
+       <ul class="navbar-nav d-flex flex-row gap-3 text-primary">
+          <li><a href="#" id="nav-home"  class="nav-link active custom-hover-light" aria-current="page">Home</a></li>
+          <li><a href="#" id="nav-docs" class="nav-link custom-hover-light ">Docs</a></li>
+          
         </ul>   
    </li>
     
@@ -14,15 +14,15 @@
       <ul class="navbar-bar d-flex flex-row gap-3 form-check form-switch" >
         <input class="form-check-input" type="checkbox" id="darkModeSwitch" checked=checked>
         <label class="form-check-label" for="darkModeSwitch">
-          <i class="fa-regular fa-moon d-none"></i>
-          <i class="fa-regular fa-sun "></i>
+          <i class="fa-regular fa-lg fa-moon d-none" title="dark mode" aria-hidden="true"></i>
+          <i class="fa-regular fa-lg fa-sun " title="light mode" aria-hidden="true"></i>
         </label>
       </ul>
     </li>
 
    
   </ul>
-</header>
+</nav>
 
 
 

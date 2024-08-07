@@ -1,9 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
     const chatbox = document.getElementById("chatbox");
     const placeholder = document.getElementById("placeholder");
+    
     const userInput = document.getElementById("userInput");
     const sendButton = document.getElementById("sendButton");
     const resetButton = document.createElement("button");
+    resetButton.classList.add("btn", "border" ,"border-danger", "btn-outline-danger", "rounded" );
     resetButton.textContent = "Reset Conversation";
     resetButton.style.marginLeft = "10px";
     sendButton.parentNode.insertBefore(resetButton, sendButton.nextSibling);
@@ -11,6 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add model selection dropdown
     const modelSelect = document.createElement("select");
     modelSelect.id = "modelSelect";
+    modelSelect.classList.add("border-primary");
+    
     const chatgptOption = document.createElement("option");
     chatgptOption.value = "chatgpt";
     chatgptOption.textContent = "ChatGPT";
@@ -143,6 +147,9 @@ document.addEventListener("DOMContentLoaded", function () {
      const switchElement = document.getElementById("darkModeSwitch");
      const darkIcon = document.querySelector(".fa-moon");
      const lightIcon = document.querySelector(".fa-sun");
+     const docsLink = document.getElementById("nav-docs");
+     const homeLink = document.getElementById("nav-home");
+     footerDark = document.getElementById("footer-dark");
 
       // Function to set the theme
      function setTheme(isDark) {
@@ -152,6 +159,9 @@ document.addEventListener("DOMContentLoaded", function () {
         lightIcon.classList.toggle('d-none', isDark);
         bodyElement.classList.toggle('bg-dark', isDark);
         bodyElement.classList.toggle('text-white', isDark);
+        docsLink.classList.toggle('custom-hover-dark', isDark);
+        homeLink.classList.toggle('custom-hover-dark', isDark);
+        footerDark.classList.toggle('text-white', isDark);
         switchElement.checked = !isDark;
      }
 
@@ -176,5 +186,5 @@ document.addEventListener("DOMContentLoaded", function () {
     
 
 
-    // navigazione finta:  quando clicco docs, si cancella tutta la chat e renderizzo il readme con una singola funzione 
 });
+

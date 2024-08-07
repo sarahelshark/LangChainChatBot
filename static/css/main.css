@@ -40,6 +40,16 @@ footer{
   text-align: left;
 }
 
-.input-group {
-  margin-top: 10px;
+
+
+.custom-hover-light, .custom-hover-dark {
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+  display: inline-block;
+  padding: 10px 15px; 
+  border-radius: 4px; 
+}
+
+.custom-hover-light:hover, .custom-hover-dark:hover {
+  box-shadow: 4px 4px 8px #0D6EFD;
 }
