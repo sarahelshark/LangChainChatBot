@@ -51,7 +51,7 @@ def chat():
         if user_message.lower() == 'exit':
             print("---- Message History ----")
             print(chatgpt_history)
-            return jsonify({'content': "Grazie per aver utilizzato l'assistente AI. Arrivederci!"})
+            return jsonify({'content': "Grazie per aver utilizzato l'assistente AI. Arrivederci!👋"})
         
         if model_choice == 'chatgpt':
             print("---- ChatGPT mode ----")
