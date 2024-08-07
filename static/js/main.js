@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             chatbox.innerHTML = ''; 
-            appendMessage("Conversation reset. You can start a new chat now.", "system");
+            appendMessage("La conversazione è stata resettata correttamente, puoi iniziarne una nuova.🎉", "system");
         } catch (error) {
             console.error("Error resetting conversation:", error);
             appendMessage("Sorry, there was an error resetting the conversation.", "system");
