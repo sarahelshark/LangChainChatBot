@@ -37,7 +37,10 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function appendMessage(content, sender) {
         const messageElement = document.createElement("div");
-        messageElement.className = `message ${sender}`;
+        messageElement.className = `message ${sender}`; 
+        if (messageElement.className === "message system") {
+            messageElement.className = "message system text-white";
+        }
         messageElement.innerText = content;
         chatbox.appendChild(messageElement);
         chatbox.scrollTop = chatbox.scrollHeight;
@@ -135,4 +138,6 @@ document.addEventListener("DOMContentLoaded", function () {
             sendMessage();
         }
     });
+
+    // navigazione finta:  quando clicco docs, si cancella tutta la chat e renderizzo il readme con una singola funzione 
 });
