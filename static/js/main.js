@@ -21,13 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
     modelSelect.appendChild(geminiOption);
     sendButton.parentNode.insertBefore(modelSelect, sendButton);
 
-    //add dark mode
-    const darkMode = document.getElementById("darkModeToggle");
-    darkMode.addEventListener("click", function() {
-        console.log("dark mode clicked");
-    });
-
-
 
     /**
      * Appends a new message to the chatbox.
@@ -38,9 +31,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function appendMessage(content, sender) {
         const messageElement = document.createElement("div");
         messageElement.className = `message ${sender}`; 
-        if (messageElement.className === "message system") {
-            messageElement.className = "message system text-white";
-        }
         messageElement.innerText = content;
         chatbox.appendChild(messageElement);
         chatbox.scrollTop = chatbox.scrollHeight;
@@ -138,6 +128,53 @@ document.addEventListener("DOMContentLoaded", function () {
             sendMessage();
         }
     });
+
+
+    /**
+    * Toggles dark mode and updates the UI accordingly.
+    * This function handles the dark mode toggle functionality, including:
+    * - Switching between light and dark themes
+    * - Updating the UI (body classes and icon visibility)
+    * - Persisting the user's preference in localStorage
+    * - Initializing the theme based on the user's previous preference or system preference
+    * */
+   function initializeDarkMode() {
+     const bodyElement = document.body;
+     const switchElement = document.getElementById("darkModeSwitch");
+     const darkIcon = document.querySelector(".fa-moon");
+     const lightIcon = document.querySelector(".fa-sun");
+
+      // Function to set the theme
+     function setTheme(isDark) {
+        bodyElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
+        localStorage.setItem('bsTheme', isDark ? 'dark' : 'light');
+        darkIcon.classList.toggle('d-none', !isDark);
+        lightIcon.classList.toggle('d-none', isDark);
+        bodyElement.classList.toggle('bg-dark', isDark);
+        bodyElement.classList.toggle('text-white', isDark);
+        switchElement.checked = !isDark;
+     }
+
+     // Initialize theme based on localStorage or system preference
+     const storedTheme = localStorage.getItem('bsTheme');
+     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+     const initialTheme = storedTheme || (prefersDarkScheme ? 'dark' : 'light');
+     setTheme(initialTheme === 'dark');
+ 
+     // Event listener for theme toggle
+     switchElement.addEventListener("change", () => setTheme(!switchElement.checked));
+
+     // Listen for system theme changes
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('bsTheme')) {
+            setTheme(e.matches);
+        }
+      });
+    }
+    
+    initializeDarkMode();
+    
+
 
     // navigazione finta:  quando clicco docs, si cancella tutta la chat e renderizzo il readme con una singola funzione 
 });

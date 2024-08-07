@@ -1,15 +1,29 @@
 <header class="w-100">
                
-    <ul class="navbar-nav d-flex flex-row  justify-content-center me-auto  mt-2 mt-lg-0 ">
-      <li class="nav-item p-4 ">
-        <a href="#" class="nav-link active" aria-current="page">Home</a>
-     </li>
-      <li class="nav-item p-4">
-         <a href="/docs" class="nav-link "  >Docs</a>
-     </li>
-      
-      <li class="nav-item p-4" >
-        <button id="darkModeToggle">Dark Mode</button>
-      </li>
-    </ul>
+  <ul class="navbar-nav d-flex flex-row  justify-content-between me-auto mt-2 mt-lg-0 ">
+    
+    <li class="nav-item p-4  ">
+       <ul class="navbar-nav d-flex flex-row gap-3">
+          <li><a href="#" class="nav-link active" aria-current="page">Home</a></li>
+          <li><a href="/docs" class="nav-link ">Docs</a></li>
+            
+        </ul>   
+   </li>
+    
+    <li class="nav-item p-4 ">
+      <ul class="navbar-bar d-flex flex-row gap-3 form-check form-switch" >
+        <input class="form-check-input" type="checkbox" id="darkModeSwitch" checked=checked>
+        <label class="form-check-label" for="darkModeSwitch">
+          <i class="fa-regular fa-moon d-none"></i>
+          <i class="fa-regular fa-sun "></i>
+        </label>
+      </ul>
+    </li>
+
+   
+  </ul>
 </header>
+
+
+
+
