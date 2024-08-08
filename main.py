@@ -69,12 +69,14 @@ def chat():
         if user_message.lower() == 'exit':
             print("---- Message History ----")
             print(chatgpt_history)
-            # Serialize each message in the history
+            # Serialize each message in the history & convert to JSON
             serialized_history = [serialize_message(msg) for msg in chatgpt_history]
             json_gpt_data = json.dumps(serialized_history) 
-           
             print('chatGPT conversation history converted to json', json_gpt_data)
+            
+            
             return jsonify({'content': "Grazie per aver utilizzato l'assistente AI. Arrivederci!👋"})
+   
                 
         if model_choice == 'chatgpt':
             print("---- ChatGPT mode ----")
@@ -99,14 +101,15 @@ def chat():
     
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
+    
 # Helper function to serialize messages
 def serialize_message(message):
     return {
         'type': type(message).__name__,
         'content': message.content
     }
-   
-    
+
+
 @app.route('/api/reset', methods=['POST'])
 def reset_conversation():
     global chatgpt_history
