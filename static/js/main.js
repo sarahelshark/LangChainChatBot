@@ -1,14 +1,22 @@
 
     const chatbox = document.getElementById("chatbox");
     const placeholder = document.getElementById("placeholder");
-    
     const userInput = document.getElementById("userInput");
+
+   
+    
     const sendButton = document.getElementById("sendButton");
     const resetButton = document.createElement("button");
     resetButton.classList.add("btn", "border" ,"border-danger", "btn-outline-danger", "rounded" );
     resetButton.textContent = "Reset Conversation";
     resetButton.style.marginLeft = "10px";
-    sendButton.parentNode.insertBefore(resetButton, sendButton.nextSibling);
+
+    
+    //sendButton.parentNode.insertBefore(resetButton, sendButton.nextSibling);
+    sendButton.insertAdjacentElement('afterend', resetButton);
+
+
+    
 
     // Add model selection dropdown
     const modelSelect = document.createElement("select");
@@ -201,5 +209,3 @@
      
 
    
-
-    
