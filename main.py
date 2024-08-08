@@ -5,6 +5,8 @@ from flask_cors import CORS
 
 import os
 from dotenv import load_dotenv 
+import json
+from datetime import datetime
 
 import constants
 from models import GeminiPro
@@ -12,6 +14,13 @@ from models import GeminiPro
 from langchain_openai import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 load_dotenv()
+
+
+#imports for vectorization
+from langchain.text_splitter import CharacterTextSplitter
+from langchain_community.document_loaders import TextLoader
+from langchain_community.vectorstores import FAISS
+from langchain_openai import OpenAIEmbeddings
 
 
 # Initialize Flask app
@@ -33,6 +42,8 @@ chatgpt_history = []
 system_message = SystemMessage(content="You are a helpful AI assistant")
 chatgpt_history.append(system_message)
 
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -41,22 +52,30 @@ def index():
 def docs():
     return render_template('docs.html')
 
+    
 @app.route('/api/chat', methods=['POST'])
 def chat():
     global chatgpt_history
+    
     try:
         data = request.get_json()
         if not data:
             return jsonify({'error': 'Invalid JSON payload.'}), 400
         
         user_message = data.get('message', '')
-        model_choice = data.get('model', 'chatgpt')  # Default to ChatGPT if not specified
+        model_choice = data.get('model', 'chatgpt')  # Default to ChatGPT if not specified  
+        
         
         if user_message.lower() == 'exit':
             print("---- Message History ----")
             print(chatgpt_history)
+            # Serialize each message in the history
+            serialized_history = [serialize_message(msg) for msg in chatgpt_history]
+            json_gpt_data = json.dumps(serialized_history) 
+           
+            print('chatGPT conversation history converted to json', json_gpt_data)
             return jsonify({'content': "Grazie per aver utilizzato l'assistente AI. Arrivederci!👋"})
-        
+                
         if model_choice == 'chatgpt':
             print("---- ChatGPT mode ----")
             # ChatGPT logic
@@ -67,6 +86,8 @@ def chat():
             response = result.content
             # Add AI message to chat history
             chatgpt_history.append(AIMessage(content=response))
+            
+            
         elif model_choice == 'gemini':
             # Gemini logic
             print("---- Gemini mode ----")
@@ -78,6 +99,14 @@ def chat():
     
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
+# Helper function to serialize messages
+def serialize_message(message):
+    return {
+        'type': type(message).__name__,
+        'content': message.content
+    }
+   
+    
 @app.route('/api/reset', methods=['POST'])
 def reset_conversation():
     global chatgpt_history
