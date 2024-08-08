@@ -25,6 +25,7 @@
     modelSelect.appendChild(geminiOption);
     sendButton.parentNode.insertBefore(modelSelect, sendButton);
 
+    
 
     /**
      * Appends a new message to the chatbox.
@@ -184,8 +185,21 @@
     
     initializeDarkMode();
     
-    //se il bottone dellla nav è cliccato, allora aggiungi alla class custom box-shadow: 4px 4px 8px #0D6EFD; così dà indizacione del menu di navigazione 
+    
+    /**
+    * Handles the navigation state by updating the active class on navigation items.
+    * 
+    * This function simulates a navigation action for the "docs" link by removing the "active" class 
+    * from the "nav-home" element and adding it to the "nav-docs" element. This visually indicates 
+    * that the "docs" section is now active and the "home" section is inactive.
+    * 
+    */
+    function homeNotActive() {
+        document.getElementById("nav-home").classList.remove("active");
+        document.getElementById("nav-docs").classList.add("active");
+    }
+     
 
+   
 
-
-
+    
