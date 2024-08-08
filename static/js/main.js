@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+
     const chatbox = document.getElementById("chatbox");
     const placeholder = document.getElementById("placeholder");
     
@@ -184,7 +184,8 @@ document.addEventListener("DOMContentLoaded", function () {
     
     initializeDarkMode();
     
+    //se il bottone dellla nav è cliccato, allora aggiungi alla class custom box-shadow: 4px 4px 8px #0D6EFD; così dà indizacione del menu di navigazione 
 
 
-});
+
 
