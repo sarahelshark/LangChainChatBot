@@ -2,35 +2,43 @@
     const chatbox = document.getElementById("chatbox");
     const placeholder = document.getElementById("placeholder");
     const userInput = document.getElementById("userInput");
-
-    // Add reset button   
     const sendButton = document.getElementById("sendButton");
-    const resetButton = document.createElement("button");
-    resetButton.classList.add("btn", "border" ,"border-danger", "btn-outline-danger", "rounded" );
-    resetButton.textContent = "Reset Conversation";
-    resetButton.style.marginLeft = "10px";
 
+    // Initialize GLOBAL UI elements
     
-    sendButton.insertAdjacentElement('afterend', resetButton);
-    
+    initializeDarkMode();
 
+    /**
+     * Initializes the reset button and adds it to the DOM.
+     */
+    function initializeResetButton() {
+        const resetButton = document.createElement("button");
+        resetButton.classList.add("btn", "border", "border-danger", "btn-outline-danger", "rounded");
+        resetButton.textContent = "Reset Conversation";
+        resetButton.style.marginLeft = "10px";
+        sendButton.insertAdjacentElement('afterend', resetButton);
+        resetButton.addEventListener("click", resetConversation);
+    }
 
-    // Add model selection dropdown
-    const modelSelect = document.createElement("select");
-    modelSelect.id = "modelSelect";
-    modelSelect.classList.add("border-primary");
-    
-    const chatgptOption = document.createElement("option");
-    chatgptOption.value = "chatgpt";
-    chatgptOption.textContent = "ChatGPT";
-    const geminiOption = document.createElement("option");
-    geminiOption.value = "gemini";
-    geminiOption.textContent = "Gemini";
-    modelSelect.appendChild(chatgptOption);
-    modelSelect.appendChild(geminiOption);
-    sendButton.parentNode.insertBefore(modelSelect, sendButton);
+    /**
+     * Initializes the model selection dropdown and adds it to the DOM.
+     */
+    function initializeModelSelect() {
+        const modelSelect = document.createElement("select");
+        modelSelect.id = "modelSelect";
+        modelSelect.classList.add("border-primary");
 
-    
+        const chatgptOption = document.createElement("option");
+        chatgptOption.value = "chatgpt";
+        chatgptOption.textContent = "ChatGPT";
+
+        const geminiOption = document.createElement("option");
+        geminiOption.value = "gemini";
+        geminiOption.textContent = "Gemini";
+
+        modelSelect.append(chatgptOption, geminiOption);
+        sendButton.parentNode.insertBefore(modelSelect, sendButton);
+    }
 
     /**
      * Appends a new message to the chatbox.
@@ -69,37 +77,19 @@
                 body: JSON.stringify({ message: input, model: modelSelect.value }),
             });
             
-            console.log("Response received. Status:", response.status);
-            console.log("Response headers:", response.headers);
-            
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
-            const responseText = await response.text();
-            console.log("Raw response text:", responseText);
-            
-            let data;
-            try {
-                data = JSON.parse(responseText);
-                console.log("Parsed JSON data:", data);
-            } catch (parseError) {
-                console.error("Error parsing JSON:", parseError);
-                appendMessage("Error: Received invalid JSON from server.", "system");
-                return;
-            }
-            
+
+            const data = await response.json();
             if (data && data.content) {
                 appendMessage(data.content, "assistant");
             } else if (data && data.error) {
-                console.error("API returned an error:", data.error);
                 appendMessage("An error occurred: " + data.error, "assistant");
             } else {
-                console.error("Unexpected response format:", data);
                 appendMessage("Received an unexpected response format.", "assistant");
             }
         } catch (error) {
-            console.error("Error sending message:", error);
             appendMessage("Sorry, there was an error processing your request.", "assistant");
         }
     }
@@ -127,18 +117,18 @@
         }
     }
     
-    // Attach sendMessage function to the button
-    sendButton.addEventListener("click", sendMessage);
-    // Attach resetConversation function to the reset button
-    resetButton.addEventListener("click", resetConversation);
-    // Allow pressing "Enter" to send the message
-    userInput.addEventListener("keypress", function(event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            sendMessage();
-        }
-    });
-
+    /**
+     * Initializes event listeners for the send button and user input.
+     */
+    function initializeEventListeners() {
+        sendButton.addEventListener("click", sendMessage);
+        userInput.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+    }
 
     /**
     * Toggles dark mode and updates the UI accordingly.
@@ -155,9 +145,8 @@
      const lightIcon = document.querySelector(".fa-sun");
      const docsLink = document.getElementById("nav-docs");
      const homeLink = document.getElementById("nav-home");
-     footerDark = document.getElementById("footer-dark");
+     const footerDark = document.getElementById("footer-dark");
 
-      // Function to set the theme
      function setTheme(isDark) {
         bodyElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
         localStorage.setItem('bsTheme', isDark ? 'dark' : 'light');
@@ -188,21 +177,33 @@
       });
     }
     
-    initializeDarkMode();
-    
-    
     /**
     * Handles the navigation state by updating the active class on navigation items.
-    * 
-    * This function simulates a navigation action for the "docs" link by removing the "active" class 
-    * from the "nav-home" element and adding it to the "nav-docs" element. This visually indicates 
-    * that the "docs" section is now active and the "home" section is inactive.
-    * 
     */
     function homeNotActive() {
         document.getElementById("nav-home").classList.remove("active");
         document.getElementById("nav-docs").classList.add("active");
     }
-     
+    document.getElementById("nav-docs").addEventListener("click", homeNotActive);
 
+
+    function fetchReadmeContent() {
+            fetch('/static/images/README.md')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(markdown => {
+                    const readmeContent = document.getElementById('readme-content');
+                    readmeContent.innerHTML = marked.parse(markdown);
+                })
+                .catch(error => {
+                    console.error('Error fetching and rendering README.md:', error);
+                    const readmeContent = document.getElementById('readme-content');
+                    readmeContent.innerHTML = '<p class="text-danger">Error loading README.md content.</p>';
+                });
+        }
+    
 

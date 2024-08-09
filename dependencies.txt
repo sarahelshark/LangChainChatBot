@@ -19,3 +19,12 @@ langchain-community==0.0.28
 langchain-core==0.2.22
 langdetect==1.0.9
 faiss-cpu==1.8.0
+
+
+# Gemini 
+pandas==2.2.1
+google-cloud-aiplatform==1.43.0
+google-cloud-documentai
+openpyxl
+PyPDF2
+tqdm

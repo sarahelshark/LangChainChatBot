@@ -43,7 +43,6 @@ system_message = SystemMessage(content="You are a helpful AI assistant")
 chatgpt_history.append(system_message)
 
 
-
 @app.route('/')
 def index():
     return render_template('index.html')

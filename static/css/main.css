@@ -1,61 +1,86 @@
+/* Global Styles */
+:root {
+  --primary-color: #0D6EFD;
+  --primary-darker: #0a58ca;
+  --background-color: #f4f4f4;
+  --user-message-bg: #cce5ff;
+  --assistant-message-bg: white;
+  --box-shadow: 4px 4px 8px var(--primary-color);
+  --transparent-scrollbar: #f4f4f400;
+}
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  background-color: var(--background-color);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /*height: 100vh;*/
-  margin: 0 ;
+  margin: 0;
 }
 
-footer{
+/* Footer Styles */
+footer {
   position: fixed;
   bottom: 0;
   width: 100%;
   text-align: center;
-  margin:0 ;
+  margin: 0;
   padding: 0;
-  > p {
-    margin: 0;
-    padding: 0;
-  }
 }
+footer p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Chatbox Styles */
 .chatbox {
-  background-color: white;
+  background-color: var(--assistant-message-bg);
   border-radius: 8px;
 }
 
+/* Message Styles */
 .message {
   margin: 10px 0;
   padding: 10px;
   border-radius: 5px;
 }
 .message.user {
-  background-color: #cce5ff;
+  background-color: var(--user-message-bg);
   text-align: right;
 }
 .message.assistant {
-  background-color: white;
+  background-color: var(--assistant-message-bg);
   text-align: left;
 }
 
-
-
+/* Hover and Active Styles */
 .custom-hover-light, .custom-hover-dark {
   cursor: pointer;
   transition: box-shadow 0.3s ease;
   display: inline-block;
-  padding: 10px 15px; 
-  border-radius: 4px; 
-  
+  padding: 10px 15px;
+  border-radius: 4px;
 }
-
 .custom-hover-light:hover, .custom-hover-dark:hover {
-  box-shadow: 4px 4px 8px #0D6EFD;
+  box-shadow: var(--box-shadow);
+}
+.active {
+  box-shadow: var(--box-shadow);
 }
 
 
-.active{
-  box-shadow: 4px 4px 8px #0D6EFD;
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 12px; 
+}
+::-webkit-scrollbar-track {
+  background: var(--transparent-scrollbar);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color); 
+  border-radius: 10px;
+  border: 3px solid var(--background-color); 
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--primary-darker);
 }

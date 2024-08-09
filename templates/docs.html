@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,12 +12,11 @@
 <body  theme="light" >
     
     {% include 'navbar.html' %}
-    <div class="container mt-2" id="docs-container" role="main">
+    <div class="container mt-2 " id="docs-container" role="main">
         <h1 id="digital-assistant-docs" class="text-center w-100 font-monospace text-uppercase">  <i class="fa fa-quote-left" aria-hidden="true"></i> Hello Docs!  <i class="fa fa-quote-right" aria-hidden="true"></i></h1>
         <div id="readme-content" class="container border  border-primary p-5 mb-3 fs-5" style="height: 400px; overflow-y: auto;" aria-live="polite">
             <!-- Your README.md content will be rendered here -->
         </div>
-
     </div>
     {% include 'footer.html' %}
 
@@ -28,15 +27,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             initializeDarkMode();
             homeNotActive(); 
-            fetch('/static/images/README.md')
-                .then(response => response.text())
-                .then(markdown => {
-                    const readmeContent = document.getElementById('readme-content');
-                    readmeContent.innerHTML = marked.parse(markdown);
-                })
-                .catch(error => {
-                    console.error('Error fetching and rendering README.md:', error);
-                });
+            fetchReadmeContent();
         });
     </script>
 </body>
