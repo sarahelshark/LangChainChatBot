@@ -32,20 +32,8 @@ This project implements a digital assistant for e-commerce product descriptions 
    - Windows: `.\venv\Scripts\activate`
    - macOS/Linux: `source venv/bin/activate`
 
-3. Install dependencies:
-   ```
-   pip install flask flask-cors python-dotenv
-   ```
-   ```powershell
-   pip install langchain langchain-openai
-   pip install -qU langchain-openai
-   # (You might need to run an upgrade, e.g., `python.exe -m pip install --upgrade pip`)
-   
-   pip install langchain_community 
-   ```
-   
 
-4. Create a `.env` file in the project root with your OpenAI API key & flask SECRET_KEY :
+3. Create a `.env` file in the project root with your OpenAI API key & flask SECRET_KEY :
    ```
    OPENAI_API_KEY="your_api_key_here"
    OPENAI_ORGANIZATION="your_organization_id_here"
