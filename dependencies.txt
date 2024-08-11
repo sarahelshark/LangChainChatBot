@@ -1,7 +1,15 @@
 # pip install -r dependencies.txt
 
+flask 
+flask-cors 
+flask-bootstrap
+python-dotenv
+langchain 
+langchain-openai
+
+
 # Python version
-python==3.12.4
+# python==3.12.4
 # Pip version
 pip==23.1.2
 
@@ -15,8 +23,8 @@ openai==1.35.14
 # Project dependencies deprecated 
 langchain==0.1.13
 langchain-openai==0.0.8
-langchain-community==0.0.28
-langchain-core==0.2.22
+#langchain-community==0.0.28
+#langchain-core==0.2.22
 langdetect==1.0.9
 faiss-cpu==1.8.0
 
