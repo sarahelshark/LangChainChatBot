@@ -1,7 +1,10 @@
 import datetime
+import json
+
 
 googleApplicationCredentials = "GOOGLE_APPLICATION_CREDENTIALS"
 alpeniteVertexai = "alpenite-vertexai.json"
+
 main = "__main__"
 embedding = "embedding"
 endProgram = "End of the program"
@@ -23,11 +26,11 @@ timestamp = now.strftime("%Y%m%d_%H%M%S")
 fileNameXLSX = f"output_{timestamp}.xlsx"
 
 # Constants for the XLSX file reading - scripts/readXLS.pyå
-# inputPath = "input_*.xlsx"
-# noDataFound = "Nessun dato trovato nei file XLSX nella sotto-cartella."
-# nofilesFound = "Nessun file trovato."
-# record = "records"
-# knfd = "NFKD"
+inputPath = "input_*.xlsx"
+noDataFound = "Nessun dato trovato nei file XLSX nella sotto-cartella."
+nofilesFound = "Nessun file trovato."
+record = "records"
+knfd = "NFKD"
 
 # # Constants for the DOCX file reading - scripts/readfileDOCXToString.py
 # fixedPart = "You are a digital assistant that helps creating short description about products. The user will provide you with some data and you will have to generate a marketing description of the product. The description must consider this briefing :"
@@ -35,14 +38,14 @@ fileNameXLSX = f"output_{timestamp}.xlsx"
 # guideLines = "guidelines.docx"
 
 # # Constants for the PDF file reading - scripts/readFilePDF.py
-# project = "alpenite-vertexai"
-# bucket = "alpenite-canali-bucket"
-# successEmbedding = "Embeddings indexed successfully."
+project = "alpenite-vertexai"
+bucket = "alpenite-canali-bucket"
+successEmbedding = "Embeddings indexed successfully."
 # pdf= ".pdf"
 # txt = ".txt"
-# pathOutputEmbeddings = "testum/embeddings/result.json"
-# embedding = "embedding"
-# textEmbedding = "textembedding-gecko@001"
-# region = "eu"
+pathOutputEmbeddings = "testum/embeddings/result.json"
+embedding = "embedding"
+textEmbedding = "textembedding-gecko@001"
+region = "europe-west3"
 # mineType = "application/pdf"
 # processorId = "41802978c1f66082"
