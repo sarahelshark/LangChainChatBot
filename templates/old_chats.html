@@ -15,12 +15,25 @@
   </div>
   
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const oldChatsOffcanvas = document.getElementById('oldChatsOffcanvas');
-      const oldChatModelSelect = document.getElementById('oldChatModelSelect');
     
-      function loadOldChats(modelType) {
-        fetch(`/api/get_old_chats?model=${modelType}`)
+  document.addEventListener('DOMContentLoaded', function() {
+   
+    function updateNavActiveState(clickedNavId) {
+        const navItems = document.querySelectorAll('.navbar-nav .nav-link');
+        navItems.forEach(item => item.classList.remove('active'));
+        document.getElementById(clickedNavId).classList.add('active');
+      }
+    
+      document.getElementById("nav-home").addEventListener("click", () => updateNavActiveState('nav-home'));
+      document.getElementById("nav-docs").addEventListener("click", () => updateNavActiveState('nav-docs'));
+    
+      const oldChatsNavItem = document.getElementById("nav-old-chats");
+      oldChatsNavItem.addEventListener("click", () => updateNavActiveState('nav-old-chats'));
+    
+      const oldChatsOffcanvas = document.getElementById('oldChatsOffcanvas');
+      oldChatsOffcanvas.addEventListener('show.bs.offcanvas', function () {
+        updateNavActiveState('nav-old-chats');
+        fetch('/api/get_old_chats')
           .then(response => response.json())
           .then(data => {
             const oldChatsContent = document.getElementById('oldChatsContent');
@@ -37,15 +50,7 @@
             });
           })
           .catch(error => console.error('Errore nel recupero delle vecchie conversazioni:', error));
-      }
-    
-      oldChatModelSelect.addEventListener('change', function() {
-        loadOldChats(this.value);
       });
     
-      oldChatsOffcanvas.addEventListener('show.bs.offcanvas', function () {
-        loadOldChats(oldChatModelSelect.value);
-      });
-    });
-    </script>
- 
+  });
+  </script>
