@@ -3,30 +3,24 @@
       <h5 class="offcanvas-title" id="oldChatsOffcanvasLabel">Vecchie Conversazioni</h5>
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body" id="oldChatsContent">
-      <!-- Qui verranno inserite le vecchie conversazioni -->
+    <div class="offcanvas-body">
+      <select id="oldChatModelSelect" class="form-select mb-3">
+        <option value="chatgpt">ChatGPT</option>
+        <option value="gemini">Gemini</option>
+      </select>
+      <div id="oldChatsContent">
+        <!-- Le vecchie conversazioni saranno caricate qui -->
+      </div>
     </div>
   </div>
   
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-   
-    function updateNavActiveState(clickedNavId) {
-        const navItems = document.querySelectorAll('.navbar-nav .nav-link');
-        navItems.forEach(item => item.classList.remove('active'));
-        document.getElementById(clickedNavId).classList.add('active');
-      }
-    
-      document.getElementById("nav-home").addEventListener("click", () => updateNavActiveState('nav-home'));
-      document.getElementById("nav-docs").addEventListener("click", () => updateNavActiveState('nav-docs'));
-    
-      const oldChatsNavItem = document.getElementById("nav-old-chats");
-      oldChatsNavItem.addEventListener("click", () => updateNavActiveState('nav-old-chats'));
-    
+    document.addEventListener('DOMContentLoaded', function() {
       const oldChatsOffcanvas = document.getElementById('oldChatsOffcanvas');
-      oldChatsOffcanvas.addEventListener('show.bs.offcanvas', function () {
-        updateNavActiveState('nav-old-chats');
-        fetch('/api/get_old_chats')
+      const oldChatModelSelect = document.getElementById('oldChatModelSelect');
+    
+      function loadOldChats(modelType) {
+        fetch(`/api/get_old_chats?model=${modelType}`)
           .then(response => response.json())
           .then(data => {
             const oldChatsContent = document.getElementById('oldChatsContent');
@@ -43,7 +37,15 @@
             });
           })
           .catch(error => console.error('Errore nel recupero delle vecchie conversazioni:', error));
+      }
+    
+      oldChatModelSelect.addEventListener('change', function() {
+        loadOldChats(this.value);
       });
     
-  });
-  </script>
+      oldChatsOffcanvas.addEventListener('show.bs.offcanvas', function () {
+        loadOldChats(oldChatModelSelect.value);
+      });
+    });
+    </script>
+ 
