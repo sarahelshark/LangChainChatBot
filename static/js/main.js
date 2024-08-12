@@ -54,13 +54,20 @@
         chatbox.scrollTop = chatbox.scrollHeight;
     }
 
+    function createLoader() {
+        const loader = document.createElement('div');
+        loader.className = 'loader hidden';
+        document.body.appendChild(loader);
+        return loader;
+    }
+
     /**
      * Sends a message to the chat API and appends the user's message to the chat window.
      * @async
      * @function sendMessage
      */
     async function sendMessage() {
-        const loader = document.getElementById("loader");
+        const loader = createLoader();
         
         const input = userInput.value.trim();
         if (!input) return;
@@ -68,7 +75,10 @@
         appendMessage(input, "user");
         userInput.value = "";
         placeholder.innerHTML = '';
-        
+
+         // Show loader
+        loader.classList.remove("hidden");
+
         try {
             console.log("Sending request to /api/chat");
             const response = await fetch('/api/chat', {
@@ -93,6 +103,10 @@
             }
         } catch (error) {
             appendMessage("Sorry, there was an error processing your request.", "assistant");
+        }  finally {
+            // Hide loader 
+            loader.classList.add("hidden");
+            setTimeout(() => loader.remove(), 300); // Remove after transition
         }
     }
 
