@@ -5,8 +5,6 @@ from flask_cors import CORS
 
 import os
 from dotenv import load_dotenv 
-import json
-from datetime import datetime
 
 import constants
 from models import GeminiPro
@@ -18,7 +16,6 @@ load_dotenv()
 
 #imports for vectorization
 from langchain.text_splitter import CharacterTextSplitter
-from langchain_community.document_loaders import TextLoader
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
 
@@ -64,14 +61,32 @@ def chat():
         user_message = data.get('message', '')
         model_choice = data.get('model', 'chatgpt')  # Default to ChatGPT if not specified  
         
+        # funzione per vettorializzare e salvare la storia della chat
+        def vectorize_and_store_chat_history(chat_history):
+         # Converti la storia della chat direttamente in un unico documento di testo
+         full_text = "\n".join([f"{type(msg).__name__}: {msg.content}" for msg in chat_history])
+         # Dividi il testo in chunks
+         text_splitter = CharacterTextSplitter(chunk_size=250, chunk_overlap=50)
+         texts = text_splitter.split_text(full_text)
+         # Crea embeddings
+         embeddings = OpenAIEmbeddings()
+         # Crea e salva il vector store
+         vectorstore = FAISS.from_texts(texts, embeddings)
+         # Salva il vector store su disco
+         vectorstore.save_local("faiss_index")
+         print("Chat history vectorized and stored successfully.")
         
         if user_message.lower() == 'exit':
             print("---- Message History ----")
             print(chatgpt_history)
-            # Serialize each message in the history & convert to JSON
-            serialized_history = [serialize_message(msg) for msg in chatgpt_history]
-            json_gpt_data = json.dumps(serialized_history) 
-            print('chatGPT conversation history converted to json', json_gpt_data)
+            
+            # Serialize each message in the history & convert to JSON  <<< non serve più
+            # serialized_history = [serialize_message(msg) for msg in chatgpt_history]
+            # json_gpt_data = json.dumps(serialized_history) 
+            # print('chatGPT conversation history converted to json', json_gpt_data)
+            
+            # Vettorializza e salva la storia della chat
+            vectorize_and_store_chat_history(chatgpt_history)
             
             
             return jsonify({'content': "Grazie per aver utilizzato l'assistente AI. Arrivederci!👋"})
@@ -101,12 +116,12 @@ def chat():
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
     
-# Helper function to serialize messages
-def serialize_message(message):
-    return {
-        'type': type(message).__name__,
-        'content': message.content
-    }
+# Helper function to serialize messages <<< non serve più
+#def serialize_message(message):
+#    return {
+#        'type': type(message).__name__,
+#        'content': message.content
+#    }
 
 
 @app.route('/api/reset', methods=['POST'])
