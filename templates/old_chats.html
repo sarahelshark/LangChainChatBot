@@ -1,0 +1,49 @@
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="oldChatsOffcanvas" aria-labelledby="oldChatsOffcanvasLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="oldChatsOffcanvasLabel">Vecchie Conversazioni</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body" id="oldChatsContent">
+      <!-- Qui verranno inserite le vecchie conversazioni -->
+    </div>
+  </div>
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+   
+    function updateNavActiveState(clickedNavId) {
+        const navItems = document.querySelectorAll('.navbar-nav .nav-link');
+        navItems.forEach(item => item.classList.remove('active'));
+        document.getElementById(clickedNavId).classList.add('active');
+      }
+    
+      document.getElementById("nav-home").addEventListener("click", () => updateNavActiveState('nav-home'));
+      document.getElementById("nav-docs").addEventListener("click", () => updateNavActiveState('nav-docs'));
+    
+      const oldChatsNavItem = document.getElementById("nav-old-chats");
+      oldChatsNavItem.addEventListener("click", () => updateNavActiveState('nav-old-chats'));
+    
+      const oldChatsOffcanvas = document.getElementById('oldChatsOffcanvas');
+      oldChatsOffcanvas.addEventListener('show.bs.offcanvas', function () {
+        updateNavActiveState('nav-old-chats');
+        fetch('/api/get_old_chats')
+          .then(response => response.json())
+          .then(data => {
+            const oldChatsContent = document.getElementById('oldChatsContent');
+            oldChatsContent.innerHTML = '';
+            data.conversations.forEach(conversation => {
+              const conversationElement = document.createElement('div');
+              conversationElement.className = 'card mb-3';
+              conversationElement.innerHTML = `
+                <div class="card-body">
+                  <p class="card-text">${conversation}</p>
+                </div>
+              `;
+              oldChatsContent.appendChild(conversationElement);
+            });
+          })
+          .catch(error => console.error('Errore nel recupero delle vecchie conversazioni:', error));
+      });
+    
+  });
+  </script>

@@ -123,6 +123,23 @@ def chat():
 #        'content': message.content
 #    }
 
+@app.route('/api/get_old_chats', methods=['GET'])
+def get_old_chats():
+    try:
+        # Carica il vector store
+        embeddings = OpenAIEmbeddings()
+        vectorstore = FAISS.load_local("faiss_index", embeddings)
+        
+        # Esegui una query generica per ottenere tutte le conversazioni
+        query = "Mostra tutte le conversazioni"
+        results = vectorstore.similarity_search(query, k=10)  # Recupera le top 10 conversazioni
+        
+        # Formatta i risultati
+        conversations = [result.page_content for result in results]
+        
+        return jsonify({'conversations': conversations})
+    except Exception as e:
+        return jsonify({'error': f'Errore nel recupero delle conversazioni: {str(e)}'}), 500
 
 @app.route('/api/reset', methods=['POST'])
 def reset_conversation():

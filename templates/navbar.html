@@ -4,8 +4,10 @@
     
     <li class="nav-item p-4  ">
        <ul class="navbar-nav d-flex flex-row gap-3 text-primary">
-          <li><a href="/" id="nav-home"  class="nav-link active custom-hover-light" aria-current="page">Home</a></li>
-          <li><a href="/docs" id="nav-docs" class="nav-link custom-hover-light ">Docs</a></li>
+          <li><a href="/" id="nav-home"  class="nav-item nav-link active custom-hover-light" aria-current="page">Home</a></li>
+          <li><a href="/docs" id="nav-docs" class="nav-item nav-link custom-hover-light ">Docs</a></li>
+          <li><a href="#" id="nav-old-chats" class="nav-item nav-link custom-hover-light "  type="button" data-bs-toggle="offcanvas" data-bs-target="#oldChatsOffcanvas" aria-controls="oldChatsOffcanvas">Chats</a></li>
+          {% include 'old_chats.html' %}
       </ul>   
    </li>
     
