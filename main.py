@@ -109,6 +109,9 @@ def get_old_chats():
     try:
         model_type = request.args.get('model', 'chatgpt')
         
+        if model_type not in ['chatgpt', 'gemini']:
+            return jsonify({'error': 'Invalid model type specified.'}), 400
+        
         embeddings = openai_embeddings
         vectorstore = FAISS.load_local(f"faiss_index_{model_type}", embeddings)
         
