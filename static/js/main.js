@@ -56,7 +56,7 @@
 
     function createLoader() {
         const loader = document.createElement('div');
-        loader.className = 'loader hidden';
+        loader.className = 'loader d-none';
         document.body.appendChild(loader);
         return loader;
     }
@@ -77,7 +77,7 @@
         placeholder.innerHTML = '';
 
          // Show loader
-        loader.classList.remove("hidden");
+        loader.classList.remove("d-none");
 
         try {
             console.log("Sending request to /api/chat");
@@ -105,7 +105,7 @@
             appendMessage("Sorry, there was an error processing your request.", "assistant");
         }  finally {
             // Hide loader 
-            loader.classList.add("hidden");
+            loader.classList.add("d-none");
             setTimeout(() => loader.remove(), 300); // Remove after transition
         }
     }

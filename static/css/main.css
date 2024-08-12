@@ -7,6 +7,8 @@
   --assistant-message-bg: white;
   --box-shadow: 4px 4px 8px var(--primary-color);
   --transparent-scrollbar: #f4f4f400;
+  --secondary-loader: rgba(0, 0, 0, 0.1);
+  --primary-loader: #3498db;
 }
 body {
   font-family: Arial, sans-serif;
@@ -87,21 +89,18 @@ footer p {
 
 /* Loader Styles */
 .loader {
-  border: 4px solid rgba(0, 0, 0, 0.1); /* Light grey */
-  border-left: 4px solid #3498db; /* Blue */
+  border: 4px solid var(--secondary-loader); 
+  border-left: 4px solid var(--primary-loader); 
   border-radius: 50%;
   width: 24px;
   height: 24px;
   animation: spin 1s linear infinite;
   display: inline-block;
+  margin-top: .5rem;
   margin-right: 8px;
 }
-
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-.hidden {
-  display: none;
-}
