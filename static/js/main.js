@@ -60,6 +60,8 @@
      * @function sendMessage
      */
     async function sendMessage() {
+        const loader = document.getElementById("loader");
+        
         const input = userInput.value.trim();
         if (!input) return;
         
@@ -101,15 +103,21 @@
      */
     async function resetConversation() {
         try {
+            const modelType = modelSelect.value; // Ottieni il modello selezionato
             const response = await fetch('/api/reset', {
-                method: 'POST',
+                method: 'POST',   
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ model: modelType }), // Invia il tipo di modello
             });
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
+            const data = await response.json();
             chatbox.innerHTML = ''; 
+            console.log(data.status);
             appendMessage("La conversazione è stata resettata correttamente, puoi iniziarne una nuova.🎉", "system");
         } catch (error) {
             console.error("Error resetting conversation:", error);
@@ -205,5 +213,6 @@
                     readmeContent.innerHTML = '<p class="text-danger">Error loading README.md content.</p>';
                 });
         }
-    
+
+
 

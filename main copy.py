@@ -46,9 +46,29 @@ system_message = SystemMessage(content="You are a helpful AI assistant")
 chatgpt_history.append(system_message)
 
 
+# Carica le credenziali dal file JSON
+credentials, project_id = load_credentials_from_file('C:\\Users\\SarahElSharkawy\\LangchainChatbot\\alpenite-vertexai.json')
+model_name = "gemini-pro"
+from langchain_google_vertexai.embeddings import GoogleEmbeddingModelType
+
+
+
 # Inizializzare le embeddings per Gemini
-##### placeholder for Gemini embeddings
-gemini_embeddings = []
+aiplatform.init(project=constants.project, location=constants.region)
+
+# Ensure 'model_name' matches one of the values in GoogleEmbeddingModelType
+model_name = GoogleEmbeddingModelType("gemini-pro")
+
+gemini_embeddings = VertexAIEmbeddings(
+    credentials=credentials,
+    project=constants.project,
+    location=constants.region,
+    model_name=model_name, 
+    embeddings=constants.embedding,
+    request_parallelism=5
+)
+
+
 
 @app.route('/')
 def index():
@@ -172,11 +192,9 @@ def reset_conversation():
         model_type = request.json.get('model', 'chatgpt')
         if model_type == 'chatgpt':
             chatgpt_history = [system_message]
-        elif model_type == 'gemini':
-            gemini_history = []
         else:
-            return jsonify({'error': 'Invalid model type specified.'}), 400
-           
+            gemini_history = []
+            
         return jsonify({'status': f'{model_type.capitalize()} conversation reset successfully.'})
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500

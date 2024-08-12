@@ -8,17 +8,19 @@
         <option value="chatgpt">ChatGPT</option>
         <option value="gemini">Gemini</option>
       </select>
+      <div id="loaderOldChats" class="loader hidden"></div>
       <div id="oldChatsContent">
         <!-- Le vecchie conversazioni saranno caricate qui -->
+        
       </div>
     </div>
   </div>
   
   <script>
-    
+
   document.addEventListener('DOMContentLoaded', function() {
    
-    function updateNavActiveState(clickedNavId) {
+      function updateNavActiveState(clickedNavId) {
         const navItems = document.querySelectorAll('.navbar-nav .nav-link');
         navItems.forEach(item => item.classList.remove('active'));
         document.getElementById(clickedNavId).classList.add('active');
@@ -33,6 +35,7 @@
       const oldChatsOffcanvas = document.getElementById('oldChatsOffcanvas');
       oldChatsOffcanvas.addEventListener('show.bs.offcanvas', function () {
         updateNavActiveState('nav-old-chats');
+
         fetch('/api/get_old_chats')
           .then(response => response.json())
           .then(data => {
@@ -50,6 +53,7 @@
             });
           })
           .catch(error => console.error('Errore nel recupero delle vecchie conversazioni:', error));
+          
       });
     
   });
