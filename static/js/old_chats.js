@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-    function updateNavActiveState(clickedNavId) {
+    
+  function updateNavActiveState(clickedNavId) {
       const navItems = document.querySelectorAll('.navbar-nav .nav-link');
       navItems.forEach(item => item.classList.remove('active'));
       document.getElementById(clickedNavId).classList.add('active');
     }
-  
     document.getElementById("nav-home").addEventListener("click", () => updateNavActiveState('nav-home'));
     document.getElementById("nav-docs").addEventListener("click", () => updateNavActiveState('nav-docs'));
   
@@ -21,7 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
       // Show loader
       loader.classList.remove("d-none");
       oldChatsContent.innerHTML = '';
-  
+
+      
+
       try {
         const response = await fetch(`/api/get_old_chats?model=${modelType}`);
         const data = await response.json();

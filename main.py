@@ -69,17 +69,27 @@ def chat():
                 full_text = "\n".join(gemini_history)
                 embeddings = openai_embeddings
                 
+            # Aggiungi un timestamp al testo per differenziare le sessioni
+            full_text = f"Session {datetime.now().isoformat()}\n{full_text}"    
             # Dividi il testo in chunks
-            text_splitter = CharacterTextSplitter(chunk_size=250, chunk_overlap=50)
+            text_splitter = CharacterTextSplitter(chunk_size=450, chunk_overlap=50)
             texts = text_splitter.split_text(full_text)
             
-            # Aggiungi un timestamp al testo per differenziare le sessioni
-            full_text = f"Session {datetime.now().isoformat()}\n{full_text}"
-    
-            # Crea e salva il vector store con FAISS
-            vectorstore = FAISS.from_texts(texts, embeddings)
-            vectorstore.save_local(f"faiss_index_{model_type}")
+            # Carica il vector store esistente se esiste, altrimenti creane uno nuovo
+            index_path = f"faiss_index_{model_type}"
+            try:
+                vectorstore = FAISS.load_local(index_path, embeddings)
+                print(f"Loaded existing vector store for {model_type}")
+            except Exception:
+                vectorstore = FAISS.from_texts(texts, embeddings)
+                print(f"Created new vector store for {model_type}")
+                print(f"Chat history for {model_type} vectorized and stored successfully.")
+            # Aggiungi i nuovi testi al vector store esistente
+            vectorstore.add_texts(texts)
+            vectorstore.save_local(index_path)
             print(f"Chat history for {model_type} vectorized and stored successfully.")
+    
+            
         
         if user_message.lower() == 'exit':
             if model_choice == 'chatgpt':
@@ -151,10 +161,9 @@ def reset_conversation():
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
 
-@app.route('/api/reset', methods=['POST'])
+
 
 if __name__ == '__main__':
     # Set up Gemini credentials
     os.environ[constants.googleApplicationCredentials] = constants.alpeniteVertexai
     app.run(debug=True)
-

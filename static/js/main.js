@@ -7,12 +7,13 @@
     // Initialize GLOBAL UI elements
     
     initializeDarkMode();
-    document.addEventListener("DOMContentLoaded", function () {
-        initializeResetButton();
-        initializeModelSelect();
-        initializeEventListeners();
-    });
+    
 
+    //deleting conversation, creating the function to be used in the old_chat.js
+    async function deleteConversation(id, model) {
+        console.log('Deleting conversation', id, model);
+              
+    }
     /**
      * Initializes the reset button and adds it to the DOM.
      */
