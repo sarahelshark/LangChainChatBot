@@ -32,26 +32,7 @@
     const oldChatsOffcanvas = document.getElementById('oldChatsOffcanvas');
     const oldChatModelSelect = document.getElementById('oldChatModelSelect');
 
-    function deleteConversation(id, modelType) {
-      fetch(`/api/delete_conversation?model=${modelType}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: id, model: modelType }),
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status) {
-          // Rimuovi la conversazione dall'interfaccia utente
-          document.getElementById(`conversation-${id}`).remove();
-        } else {
-          console.error('Error deleting conversation:', data.error);
-        }
-      })
-      .catch(error => console.error('Error:', error));
-    }
-
+  
     function loadOldChats(modelType) {
       const loader = document.getElementById('loaderOldChats');
       const oldChatsContent = document.getElementById('oldChatsContent');

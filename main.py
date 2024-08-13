@@ -151,6 +151,8 @@ def reset_conversation():
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
 
+@app.route('/api/reset', methods=['POST'])
+
 if __name__ == '__main__':
     # Set up Gemini credentials
     os.environ[constants.googleApplicationCredentials] = constants.alpeniteVertexai
