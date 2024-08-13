@@ -1,66 +1,105 @@
-  <div class="offcanvas offcanvas-end" tabindex="-1" id="oldChatsOffcanvas" aria-labelledby="oldChatsOffcanvasLabel">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="oldChatsOffcanvasLabel">Vecchie Conversazioni</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-      <select id="oldChatModelSelect" class="form-select mb-3">
-        <option value="chatgpt">ChatGPT</option>
-        <option value="gemini">Gemini</option>
-      </select>
-      <div id="loaderOldChats" class="loader d-none"></div>
-      <div id="oldChatsContent">
-        <!-- Le vecchie conversazioni saranno caricate qui -->
-        
-      </div>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="oldChatsOffcanvas" aria-labelledby="oldChatsOffcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="oldChatsOffcanvasLabel">Vecchie Conversazioni</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <select id="oldChatModelSelect" class="form-select mb-3">
+      <option value="chatgpt">ChatGPT</option>
+      <option value="gemini">Gemini</option>
+    </select>
+    <div id="loaderOldChats" class="loader d-none"></div>
+    <div id="oldChatsContent">
+      <!-- Le vecchie conversazioni saranno caricate qui -->
     </div>
   </div>
-  
-  <script>
+</div>
 
+<script>
   document.addEventListener('DOMContentLoaded', function() {
-   
-      function updateNavActiveState(clickedNavId) {
-        const navItems = document.querySelectorAll('.navbar-nav .nav-link');
-        navItems.forEach(item => item.classList.remove('active'));
-        document.getElementById(clickedNavId).classList.add('active');
-      }
-    
-      document.getElementById("nav-home").addEventListener("click", () => updateNavActiveState('nav-home'));
-      document.getElementById("nav-docs").addEventListener("click", () => updateNavActiveState('nav-docs'));
-    
-      const oldChatsNavItem = document.getElementById("nav-old-chats");
-      oldChatsNavItem.addEventListener("click", () => updateNavActiveState('nav-old-chats'));
-    
-      const oldChatsOffcanvas = document.getElementById('oldChatsOffcanvas');
-      oldChatsOffcanvas.addEventListener('show.bs.offcanvas', function () {
-        updateNavActiveState('nav-old-chats');
-        const loader = document.getElementById('loaderOldChats');
-        // Show loader
-        loader.classList.remove("d-none");
+    function updateNavActiveState(clickedNavId) {
+      const navItems = document.querySelectorAll('.navbar-nav .nav-link');
+      navItems.forEach(item => item.classList.remove('active'));
+      document.getElementById(clickedNavId).classList.add('active');
+    }
 
-        fetch('/api/get_old_chats')
-          .then(response => response.json())
-          .then(data => {
-            const oldChatsContent = document.getElementById('oldChatsContent');
-            oldChatsContent.innerHTML = '';
+    document.getElementById("nav-home").addEventListener("click", () => updateNavActiveState('nav-home'));
+    document.getElementById("nav-docs").addEventListener("click", () => updateNavActiveState('nav-docs'));
+
+    const oldChatsNavItem = document.getElementById("nav-old-chats");
+    oldChatsNavItem.addEventListener("click", () => updateNavActiveState('nav-old-chats'));
+
+    const oldChatsOffcanvas = document.getElementById('oldChatsOffcanvas');
+    const oldChatModelSelect = document.getElementById('oldChatModelSelect');
+
+    function deleteConversation(id, modelType) {
+      fetch(`/api/delete_conversation?model=${modelType}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: id, model: modelType }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status) {
+          // Rimuovi la conversazione dall'interfaccia utente
+          document.getElementById(`conversation-${id}`).remove();
+        } else {
+          console.error('Error deleting conversation:', data.error);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+
+    function loadOldChats(modelType) {
+      const loader = document.getElementById('loaderOldChats');
+      const oldChatsContent = document.getElementById('oldChatsContent');
+      
+      // Show loader
+      loader.classList.remove("d-none");
+      oldChatsContent.innerHTML = '';
+
+      fetch(`/api/get_old_chats?model=${modelType}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.conversations && data.conversations.length > 0) {
             data.conversations.forEach(conversation => {
               const conversationElement = document.createElement('div');
+              conversationElement.id = `conversation-${conversation.id}`;
               conversationElement.className = 'card mb-3';
               conversationElement.innerHTML = `
                 <div class="card-body">
-                  <p class="card-text">${conversation}</p>
+                  <button type="button" class="btn-close float-end" aria-label="Close" onclick="deleteConversation(${conversation.id}, '${modelType}')"></button>
+                  <p class="card-text">${conversation.content}</p>
                 </div>
               `;
               oldChatsContent.appendChild(conversationElement);
-              // Hide loader 
-            loader.classList.add("d-none");
-            setTimeout(() => loader.remove(), 300); // Remove after transition
             });
-          })
-          .catch(error => console.error('Errore nel recupero delle vecchie conversazioni:', error));
-          
-      });
-    
+          } else {
+            oldChatsContent.innerHTML = '<p>Nessuna conversazione precedente trovata.</p>';
+          }
+        })
+        .catch(error => {
+          console.error('Errore nel recupero delle vecchie conversazioni:', error);
+          oldChatsContent.innerHTML = '<p class="text-danger">Errore nel caricamento delle vecchie conversazioni.</p>';
+        })
+        .finally(() => {
+          // Hide loader
+          loader.classList.add("d-none");
+        });
+    }
+
+    oldChatsOffcanvas.addEventListener('show.bs.offcanvas', function () {
+      updateNavActiveState('nav-old-chats');
+      loadOldChats(oldChatModelSelect.value);
+    });
+
+    oldChatModelSelect.addEventListener('change', function() {
+      loadOldChats(this.value);
+    });
+
+    // Aggiungi questa funzione globale per la cancellazione delle conversazioni
+    window.deleteConversation = deleteConversation;
   });
-  </script>
+</script>
