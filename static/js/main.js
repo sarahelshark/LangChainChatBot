@@ -56,6 +56,13 @@
         chatbox.scrollTop = chatbox.scrollHeight;
     }
 
+    /**
+     * Creates and appends a loader element to the document body.
+     * @function
+     * @name createLoader
+     * @description This function creates a new div element with the class 'loader' and appends it to the document body.
+     *  
+     */
     function createLoader() {
         const loader = document.createElement('div');
         loader.className = 'loader d-none';
@@ -210,7 +217,17 @@
     }
     document.getElementById("nav-docs").addEventListener("click", homeNotActive);
 
-
+    /**
+    * Fetches and renders the content of README.md file.
+    * @function
+    * @name fetchReadmeContent
+    * @description This function performs an HTTP GET request to fetch the content of
+    * the README.md file from the '/static/images/' directory. It then parses the
+    * markdown content and renders it as HTML in the element with id 'readme-content'.
+    * @throws {Error} Throws an error if the HTTP request fails.
+    * 
+    * @requires marked - A library for parsing markdown into HTML.
+    */
     function fetchReadmeContent() {
             fetch('/static/images/README.md')
                 .then(response => {

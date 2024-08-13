@@ -1,22 +1,26 @@
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    
-  function updateNavActiveState(clickedNavId) {
-      const navItems = document.querySelectorAll('.navbar-nav .nav-link');
-      navItems.forEach(item => item.classList.remove('active'));
-      document.getElementById(clickedNavId).classList.add('active');
-    }
-    document.getElementById("nav-home").addEventListener("click", () => updateNavActiveState('nav-home'));
-    document.getElementById("nav-docs").addEventListener("click", () => updateNavActiveState('nav-docs'));
+/**
+ * Updates the active state of the navigation items.
+ * @param {string} clickedNavId -   Id of the clicked navigation item
+ */
+function updateNavActiveState(clickedNavId) {
+  const navItems = document.querySelectorAll('.navbar-nav .nav-link');
+  navItems.forEach(item => item.classList.remove('active'));
+  document.getElementById(clickedNavId).classList.add('active');
+}
+  document.getElementById("nav-home").addEventListener("click", () => updateNavActiveState('nav-home'));
+  document.getElementById("nav-docs").addEventListener("click", () => updateNavActiveState('nav-docs'));
   
-    const oldChatsNavItem = document.getElementById("nav-old-chats");
-    oldChatsNavItem.addEventListener("click", () => updateNavActiveState('nav-old-chats'));
+  const oldChatsNavItem = document.getElementById("nav-old-chats");
+  oldChatsNavItem.addEventListener("click", () => updateNavActiveState('nav-old-chats'));
   
-    const oldChatsOffcanvas = document.getElementById('oldChatsOffcanvas');
-    const oldChatModelSelect = document.getElementById('oldChatModelSelect');
+  const oldChatsOffcanvas = document.getElementById('oldChatsOffcanvas');
+  const oldChatModelSelect = document.getElementById('oldChatModelSelect');
   
-    async function loadOldChats(modelType) {
+/**
+ * Loads the previous conversations for the selected model.
+ * @param {string} modelType - Model type for which to load the old chats
+ */
+  async function loadOldChats(modelType) {
       const loader = document.getElementById('loaderOldChats');
       const oldChatsContent = document.getElementById('oldChatsContent');
       
@@ -53,18 +57,31 @@ document.addEventListener('DOMContentLoaded', function() {
         // Hide loader
         loader.classList.add("d-none");
       }
-    }
+  }
   
-    oldChatsOffcanvas.addEventListener('show.bs.offcanvas', function () {
+/**
+ * Adds a listener for the 'show.bs.offcanvas' event on the oldChatsOffcanvas element.
+ * When the offcanvas is shown, updates the active state of the navigation and loads the old conversations.
+ */
+  oldChatsOffcanvas.addEventListener('show.bs.offcanvas', function () {
       updateNavActiveState('nav-old-chats');
       loadOldChats(oldChatModelSelect.value);
-    });
+  });
   
-    oldChatModelSelect.addEventListener('change', function() {
+/**
+ * Adds a listener for the 'change' event on the oldChatModelSelect element.
+ * When the selected model changes, loads the old conversations based on the newly selected model.
+  */
+  oldChatModelSelect.addEventListener('change', function() {
       loadOldChats(this.value);
-    });
+  });
   
-    async function deleteConversation(id, model) {
+ /**
+ * DELETES a specific conversation
+ * @param {number} id - ID of the conversation to be deleted
+ * @param {string} model - Model type of the conversation to be deleted
+ */
+  async function deleteConversation(id, model) {
       console.log('Deleting conversation', id, model);
       try {
         const response = await fetch('/api/delete_conversation', {
@@ -94,15 +111,20 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Error deleting conversation:', error);
         alert(`Failed to delete conversation: ${error.message}`);
       }
-    }
+  }
   
-    // Confirmation dialog function
-    window.confirmDeleteConversation = function(id, model) {
+
+/**
+ * It displays a confirmation dialog to delete a conversation.
+ * @param {number} id - ID of the conversation to be deleted
+ * @param {string} model - Model type of the conversation to be deleted
+ */
+  // Confirmation dialog function
+  window.confirmDeleteConversation = function(id, model) {
       if (confirm('Are you sure you want to delete this conversation?')) {
         deleteConversation(id, model);
       }
-    };
-  
-    // Make deleteConversation function globally available
-    window.deleteConversation = deleteConversation;
-  });
+  };
+
+  // Make deleteConversation function globally available
+  window.deleteConversation = deleteConversation;
