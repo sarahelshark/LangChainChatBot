@@ -1,3 +1,5 @@
+
+
 document.addEventListener('DOMContentLoaded', function() {
     
   function updateNavActiveState(clickedNavId) {
@@ -35,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
             conversationElement.className = 'card mb-3';
             conversationElement.innerHTML = `
               <div class="card-body">
-                <button type="button" class="btn-close float-end" aria-label="Close" onclick="deleteConversation(${conversation.id}, '${modelType}')"></button>
+                <button type="button" class="btn-close float-end" aria-label="Close" onclick="confirmDeleteConversation(${conversation.id}, '${modelType}')"></button>
                 <p class="card-text">${conversation.content}</p>
               </div>
             `;
@@ -61,4 +63,46 @@ document.addEventListener('DOMContentLoaded', function() {
     oldChatModelSelect.addEventListener('change', function() {
       loadOldChats(this.value);
     });
+  
+    async function deleteConversation(id, model) {
+      console.log('Deleting conversation', id, model);
+      try {
+        const response = await fetch('/api/delete_conversation', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id, model }),
+        });
+
+        const data = await response.json();
+  
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to delete conversation');
+        }
+  
+        // Remove the conversation element from the DOM
+        const conversationElement = document.getElementById(`conversation-${id}`);
+        if (conversationElement) {
+          conversationElement.remove();
+        }
+  
+        console.log('Conversation deleted successfully');
+        // Show a success message to the user
+        alert('Conversation deleted successfully');
+      } catch (error) {
+        console.error('Error deleting conversation:', error);
+        alert(`Failed to delete conversation: ${error.message}`);
+      }
+    }
+  
+    // Confirmation dialog function
+    window.confirmDeleteConversation = function(id, model) {
+      if (confirm('Are you sure you want to delete this conversation?')) {
+        deleteConversation(id, model);
+      }
+    };
+  
+    // Make deleteConversation function globally available
+    window.deleteConversation = deleteConversation;
   });

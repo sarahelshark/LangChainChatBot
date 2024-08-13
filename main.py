@@ -122,7 +122,46 @@ def chat():
     
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
-    
+
+@app.route('/api/delete_conversation', methods=['POST'])
+def delete_conversation():
+    try:
+        data = request.get_json()
+        conversation_id = data.get('id')
+        model_type = data.get('model')
+
+        if not conversation_id or not model_type:
+            return jsonify({'error': 'Missing conversation ID or model type.'}), 400
+
+        index_path = f"faiss_index_{model_type}"
+        embeddings = openai_embeddings
+
+        try:
+            vectorstore = FAISS.load_local(index_path, embeddings)
+        except Exception:
+            return jsonify({'error': 'Vector store not found.'}), 404
+        
+        # Esegui una query generica per ottenere tutte le conversazioni
+        query = "Mostra tutte le conversazioni"
+        # Retrieve all conversations
+        all_conversations = vectorstore.similarity_search(query, k=3)
+        
+        # Filter out the conversation to be deleted
+        remaining_conversations = [conv for i, conv in enumerate(all_conversations) if i != conversation_id]
+
+        # Create a new FAISS index with the remaining conversations
+        new_texts = [conv.page_content for conv in remaining_conversations]
+        new_vectorstore = FAISS.from_texts(new_texts, embeddings)
+
+        # Save the new index, replacing the old one
+        new_vectorstore.save_local(index_path)
+
+        print(f"Deleted conversation {conversation_id} from {model_type} vector store")
+
+        return jsonify({'status': 'Conversation deleted successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
+        
 @app.route('/api/get_old_chats', methods=['GET'])
 def get_old_chats():
     try:
