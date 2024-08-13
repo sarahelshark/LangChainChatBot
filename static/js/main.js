@@ -7,6 +7,11 @@
     // Initialize GLOBAL UI elements
     
     initializeDarkMode();
+    document.addEventListener("DOMContentLoaded", function () {
+        initializeResetButton();
+        initializeModelSelect();
+        initializeEventListeners();
+    });
 
     /**
      * Initializes the reset button and adds it to the DOM.
