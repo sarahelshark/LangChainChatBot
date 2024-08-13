@@ -63,6 +63,7 @@
       fetch(`/api/get_old_chats?model=${modelType}`)
         .then(response => response.json())
         .then(data => {
+          console.log('Dati ricevuti:', data); // Rimuovere questa riga in produzione
           if (data.conversations && data.conversations.length > 0) {
             data.conversations.forEach(conversation => {
               const conversationElement = document.createElement('div');
