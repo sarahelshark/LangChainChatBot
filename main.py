@@ -16,6 +16,8 @@ load_dotenv()
 # Imports per la vettorializzazione
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
+import uuid
+from langchain.schema import Document
 from datetime import datetime
 
 # Initialize Flask app
@@ -26,7 +28,7 @@ CORS(app)
 
 # Inizializzazione dei modelli
 chatgpt_model = ChatOpenAI(model="gpt-4", temperature=0.7, max_tokens=300)
-openai_embeddings = OpenAIEmbeddings()
+openai_embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
 # Initialize chat history
 chatgpt_history = []
@@ -61,6 +63,9 @@ def chat():
                 print(f"No chat history to save for {model_type}")
                 return
             
+            # Genera un UID per questa sessione di chat
+            session_uid = str(uuid.uuid4())
+            
             # Converti la storia della chat direttamente in un unico documento di testo
             if model_type == 'chatgpt':
                 full_text = "\n".join([f"{type(msg).__name__}: {msg.content}" for msg in chat_history])
@@ -69,25 +74,40 @@ def chat():
                 full_text = "\n".join(gemini_history)
                 embeddings = openai_embeddings
                 
-            # Aggiungi un timestamp al testo per differenziare le sessioni
-            full_text = f"Session {datetime.now().isoformat()}\n{full_text}"    
-            # Dividi il testo in chunks
-            text_splitter = CharacterTextSplitter(chunk_size=450, chunk_overlap=50)
-            texts = text_splitter.split_text(full_text)
+            # Aggiungi un UID e timestamp al testo per differenziare le sessioni
+            full_text = f"UID: {session_uid}\nTimestamp: {datetime.now().isoformat()}\n{full_text}"
             
-            # Carica il vector store esistente se esiste, altrimenti creane uno nuovo
-            index_path = f"faiss_index_{model_type}"
-            try:
-                vectorstore = FAISS.load_local(index_path, embeddings)
-                print(f"Loaded existing vector store for {model_type}")
-            except Exception:
-                vectorstore = FAISS.from_texts(texts, embeddings)
-                print(f"Created new vector store for {model_type}")
-                print(f"Chat history for {model_type} vectorized and stored successfully.")
-            # Aggiungi i nuovi testi al vector store esistente
-            vectorstore.add_texts(texts)
+            # Dividi il testo in chunks
+            text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=50)
+            texts = text_splitter.split_text(full_text) 
+            # Crea documenti con metadati che includono l'UID della sessione
+            documents = [Document(page_content=text, metadata={"session_uid": session_uid}) for text in texts]
+    
+            # Definisci il percorso per il vector store
+            index_path = f"faiss_index_{model_type}"   
+            
+            # Verifica se il percorso esiste
+            if os.path.exists(index_path):
+             # Se esiste, carica il vector store esistente e aggiungi i nuovi document
+             try:
+                 vectorstore = FAISS.load_local(index_path, embeddings)
+                 print(f"Loaded existing vector store for {model_type}")
+                 vectorstore.add_documents(documents)
+                 print(f"Added new session (UID: {session_uid}) to existing vector store for {model_type}")
+             except Exception as e:
+                  print(f"Error loading or updating existing vector store: {e}")
+                  print("Creating a new vector store...")
+                  vectorstore = FAISS.from_documents(documents, embeddings)
+                  print(f"Created new vector store for {model_type} with session UID: {session_uid}")
+            else:
+                 # Se non esiste, crea un nuovo vector store
+                 vectorstore = FAISS.from_documents(documents, embeddings)
+                 print(f"Created new vector store for {model_type} with session UID: {session_uid}")
+            
+            # Salva il vector store
             vectorstore.save_local(index_path)
-            print(f"Chat history for {model_type} vectorized and stored successfully.")
+            print(f"Chat history for {model_type} (UID: {session_uid}) vectorized and stored successfully.")
+            return session_uid
     
             
         
@@ -124,44 +144,51 @@ def chat():
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
 
 @app.route('/api/delete_conversation', methods=['POST'])
-def delete_conversation():
+def delete_conversations():
     try:
+        # Estrai i dati JSON dalla richiesta
         data = request.get_json()
-        conversation_id = data.get('id')
-        model_type = data.get('model')
+        model_type = data.get('model_type')
+        uids_to_delete = data.get('uids_to_delete')
 
-        if not conversation_id or not model_type:
-            return jsonify({'error': 'Missing conversation ID or model type.'}), 400
+        # Assicurati che entrambi i parametri siano forniti
+        if not model_type or not uids_to_delete:
+            return {"error": "model_type and uids_to_delete are required"}, 400
 
-        index_path = f"faiss_index_{model_type}"
         embeddings = openai_embeddings
+        index_path = f"faiss_index_{model_type}"
 
-        try:
-            vectorstore = FAISS.load_local(index_path, embeddings)
-        except Exception:
-            return jsonify({'error': 'Vector store not found.'}), 404
-        
-        # Esegui una query generica per ottenere tutte le conversazioni
-        query = "Mostra tutte le conversazioni"
-        # Retrieve all conversations
-        all_conversations = vectorstore.similarity_search(query, k=3)
-        
-        # Filter out the conversation to be deleted
-        remaining_conversations = [conv for i, conv in enumerate(all_conversations) if i != conversation_id]
+        if not os.path.exists(index_path):
+            print(f"No vector store found for {model_type}")
+            return {"error": f"No vector store found for {model_type}"}, 404
 
-        # Create a new FAISS index with the remaining conversations
-        new_texts = [conv.page_content for conv in remaining_conversations]
-        new_vectorstore = FAISS.from_texts(new_texts, embeddings)
+        # Carica il vector store esistente
+        vectorstore = FAISS.load_local(index_path, embeddings)
+        print(f"Loaded existing vector store for {model_type}")
 
-        # Save the new index, replacing the old one
-        new_vectorstore.save_local(index_path)
+        # Trova gli ID da eliminare dal vector store basandoti su uids_to_delete
+        ids_to_delete = []
+        for doc_id, doc in vectorstore.docstore._dict.items():
+            if doc.metadata.get("session_uid") in uids_to_delete:
+                ids_to_delete.append(doc_id)
 
-        print(f"Deleted conversation {conversation_id} from {model_type} vector store")
+        if not ids_to_delete:
+            print("No matching documents found to delete.")
+            return {"error": "No matching documents found to delete"}, 404
 
-        return jsonify({'status': 'Conversation deleted successfully'}), 200
+        # Elimina i vettori dal vector store usando gli ID
+        vectorstore.delete(ids=ids_to_delete)
+
+        # Salva il vector store aggiornato
+        vectorstore.save_local(index_path)
+
+        print(f"Successfully deleted conversations with UIDs: {uids_to_delete}")
+        return {"success": True}, 200
+
     except Exception as e:
-        return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
-        
+        print(f"Error during deletion process: {e}")
+        return {"error": str(e)}, 500
+    
 @app.route('/api/get_old_chats', methods=['GET'])
 def get_old_chats():
     try:
@@ -173,11 +200,24 @@ def get_old_chats():
         embeddings = openai_embeddings
         vectorstore = FAISS.load_local(f"faiss_index_{model_type}", embeddings)
         
-        # Esegui una query generica per ottenere tutte le conversazioni
+        # Esegui una query generica per ottenere tutte le conversazion
         query = "Mostra tutte le conversazioni"
         results = vectorstore.similarity_search(query, k=5)  # Recupera le top 5 conversazioni
+        # Crea una lista di dizionari con `session_uid` come ID e `page_content` come contenuto
+        conversations = []
+        for result in results:
+        # Cerca il session_uid originale nel documento
+         session_uid = None
+         for doc_id, doc in vectorstore.docstore._dict.items():
+            if doc.page_content == result.page_content:
+                session_uid = doc.metadata.get("session_uid")
+                break
         
-        conversations = [{'id': id, 'content': result.page_content} for id, result in enumerate(results)]
+        # Aggiungi la conversazione alla lista con `session_uid` come ID
+        conversations.append({
+            "id": session_uid,  # Passa `session_uid` al frontend
+            "content": result.page_content
+        })
         
         return jsonify({'conversations': conversations})
     except Exception as e:
@@ -187,6 +227,7 @@ def get_old_chats():
 def reset_conversation():
     global chatgpt_history
     global gemini_history
+
     try:
         model_type = request.json.get('model', 'chatgpt')
         if model_type == 'chatgpt':

@@ -41,7 +41,7 @@ function updateNavActiveState(clickedNavId) {
             conversationElement.className = 'card mb-3';
             conversationElement.innerHTML = `
               <div class="card-body">
-                <button type="button" class="btn-close float-end" aria-label="Close" onclick="confirmDeleteConversation(${conversation.id}, '${modelType}')"></button>
+                <button type="button" class="btn-close float-end" aria-label="Close" onclick="deleteConversation(${conversation.id}, '${modelType}')"></button>
                 <p class="card-text">${conversation.content}</p>
               </div>
             `;
@@ -76,55 +76,47 @@ function updateNavActiveState(clickedNavId) {
       loadOldChats(this.value);
   });
   
- /**
- * DELETES a specific conversation
- * @param {number} id - ID of the conversation to be deleted
+/**
+ * DELETES a specific conversation 
  * @param {string} model - Model type of the conversation to be deleted
+ * @param {number} uid - ID of the conversation to be deleted
  */
-  async function deleteConversation(id, model) {
-      console.log('Deleting conversation', id, model);
-      try {
-        const response = await fetch('/api/delete_conversation', {
+async function deleteConversation(model, uid) {
+  if (!model || !uid) {
+      alert("Invalid model or UID");
+      return;
+  }
+
+  console.log('Deleting conversation', model, uid);
+  try {
+      const response = await fetch('/api/delete_conversation', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+              'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ id, model }),
-        });
+          body: JSON.stringify({ model_type: model, uids_to_delete: [uid] }),
+      });
 
-        const data = await response.json();
-  
-        if (!response.ok) {
+      const data = await response.json();
+
+      if (!response.ok) {
           throw new Error(data.error || 'Failed to delete conversation');
-        }
-  
-        // Remove the conversation element from the DOM
-        const conversationElement = document.getElementById(`conversation-${id}`);
-        if (conversationElement) {
-          conversationElement.remove();
-        }
-  
-        console.log('Conversation deleted successfully');
-        // Show a success message to the user
-        alert('Conversation deleted successfully');
-      } catch (error) {
-        console.error('Error deleting conversation:', error);
-        alert(`Failed to delete conversation: ${error.message}`);
       }
-  }
-  
 
-/**
- * It displays a confirmation dialog to delete a conversation.
- * @param {number} id - ID of the conversation to be deleted
- * @param {string} model - Model type of the conversation to be deleted
- */
-  // Confirmation dialog function
-  window.confirmDeleteConversation = function(id, model) {
-      if (confirm('Are you sure you want to delete this conversation?')) {
-        deleteConversation(id, model);
+      // Remove the conversation element from the DOM
+      const conversationElement = document.getElementById(`conversation-${uid}`);
+      if (conversationElement) {
+          conversationElement.remove();
       }
-  };
+
+      console.log('Conversation deleted successfully');
+      alert('Conversation deleted successfully');
+  } catch (error) {
+      console.error('Error deleting conversation:', error);
+      alert(`Failed to delete conversation: ${error.message}`);
+  }
+}
+
 
   // Make deleteConversation function globally available
   window.deleteConversation = deleteConversation;
