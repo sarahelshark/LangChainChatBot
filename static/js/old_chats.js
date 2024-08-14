@@ -41,7 +41,7 @@ function updateNavActiveState(clickedNavId) {
             conversationElement.className = 'card mb-3';
             conversationElement.innerHTML = `
               <div class="card-body">
-                <button type="button" class="btn-close float-end" aria-label="Close" onclick="deleteConversation(${conversation.id}, '${modelType}')"></button>
+                <button type="button" class="btn-close float-end" aria-label="Close" onclick="deleteConversation('${conversation.id}', '${modelType}')"></button>
                 <p class="card-text">${conversation.content}</p>
               </div>
             `;
@@ -81,20 +81,19 @@ function updateNavActiveState(clickedNavId) {
  * @param {string} model - Model type of the conversation to be deleted
  * @param {number} uid - ID of the conversation to be deleted
  */
-async function deleteConversation(model, uid) {
+async function deleteConversation(uid,model) {
   if (!model || !uid) {
       alert("Invalid model or UID");
       return;
   }
-
-  console.log('Deleting conversation', model, uid);
+  console.log('Deleting conversation', uid, model);
   try {
       const response = await fetch('/api/delete_conversation', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ model_type: model, uids_to_delete: [uid] }),
+          body: JSON.stringify({  uids_to_delete: [uid], model_type: model }),
       });
 
       const data = await response.json();
@@ -103,7 +102,7 @@ async function deleteConversation(model, uid) {
           throw new Error(data.error || 'Failed to delete conversation');
       }
 
-      // Remove the conversation element from the DOM
+      //Remove the conversation element from the DOM
       const conversationElement = document.getElementById(`conversation-${uid}`);
       if (conversationElement) {
           conversationElement.remove();
@@ -118,5 +117,4 @@ async function deleteConversation(model, uid) {
 }
 
 
-  // Make deleteConversation function globally available
-  window.deleteConversation = deleteConversation;
+
