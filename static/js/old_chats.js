@@ -76,6 +76,7 @@ function updateNavActiveState(clickedNavId) {
       loadOldChats(this.value);
   });
   
+
 /**
  * DELETES a specific conversation 
  * @param {string} model - Model type of the conversation to be deleted
@@ -88,7 +89,7 @@ async function deleteConversation(uid,model) {
   }
   console.log('Deleting conversation', uid, model);
   try {
-      const response = await fetch('/api/delete_conversation', {
+      const response = await fetch(`/api/delete_conversation?model=${model}&uids_to_delete=${uid}`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
