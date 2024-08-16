@@ -40,7 +40,33 @@
 
         modelSelect.append(chatgptOption, geminiOption);
         sendButton.parentNode.insertBefore(modelSelect, sendButton);
+
+        modelSelect.addEventListener("change", () => {
+            console.log("Selected model:", modelSelect.value);
+
+            const overlayHTML = `
+            <div id="overlay">
+               <div id="overlay-text" class="display-1">
+               ${modelSelect.value} 
+               </div>
+            </div>
+            `;
+            document.body.insertAdjacentHTML('afterbegin', overlayHTML);
+            const overlay = document.getElementById("overlay");
+             // Rimuovi l'overlay dopo 2 secondi
+             setTimeout(function() {
+                overlay.classList.add("hidden");
+                setTimeout(function() {
+                    overlay.remove();
+                }); 
+            }, 500);
+        });
     }
+
+
+
+    // Event listener for theme toggle
+    switchElement.addEventListener("change", () => setTheme(!switchElement.checked));
 
     /**
      * Appends a new message to the chatbox.
