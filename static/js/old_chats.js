@@ -33,6 +33,7 @@ function updateNavActiveState(clickedNavId) {
       try {
         const response = await fetch(`/api/get_old_chats?model=${modelType}`);
         const data = await response.json();
+        console.log('Old chats:', data);
   
         if (data.conversations && data.conversations.length > 0) {
           data.conversations.forEach(conversation => {
@@ -43,7 +44,8 @@ function updateNavActiveState(clickedNavId) {
               <div class="card-body">
                 <button type="button" class="btn-close float-end" aria-label="Close" onclick="deleteConversation('${conversation.id}', '${modelType}')"></button>
                 <p class="card-text">${conversation.content}</p>
-              </div>
+                <p class="blockquote-footer">${conversation.timestamp}</p>
+            </div>
             `;
             oldChatsContent.appendChild(conversationElement);
           });

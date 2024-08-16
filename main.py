@@ -65,6 +65,8 @@ def chat():
             
             # Genera un UID per questa sessione di chat
             session_uid = str(uuid.uuid4())
+            # genera un timestamp per questa sessione di chat
+            session_timestamp = datetime.now().isoformat()   
             
             # Converti la storia della chat direttamente in un unico documento di testo
             if model_type == 'chatgpt':
@@ -73,15 +75,15 @@ def chat():
             elif model_type == 'gemini':
                 full_text = "\n".join(gemini_history)
                 embeddings = openai_embeddings
-                
+             
             # Aggiungi un UID e timestamp al testo per differenziare le sessioni
-            full_text = f"UID: {session_uid}\nTimestamp: {datetime.now().isoformat()}\n{full_text}"
+            full_text = f"\n{full_text}"
             
             # Dividi il testo in chunks
             text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=50)
             texts = text_splitter.split_text(full_text) 
             # Crea documenti con metadati che includono l'UID della sessione
-            documents = [Document(page_content=text, metadata={"session_uid": session_uid}) for text in texts]
+            documents = [Document(page_content=text, metadata={"session_uid": session_uid, "session_timestamp":session_timestamp}) for text in texts]
     
             # Definisci il percorso per il vector store
             index_path = f"faiss_index_{model_type}"   
@@ -107,7 +109,7 @@ def chat():
             # Salva il vector store
             vectorstore.save_local(index_path)
             print(f"Chat history for {model_type} (UID: {session_uid}) vectorized and stored successfully.")
-            return session_uid
+            return session_uid, session_timestamp
     
             
         
@@ -191,6 +193,7 @@ def delete_conversations():
     
 @app.route('/api/get_old_chats', methods=['GET'])
 def get_old_chats():
+    
     try:
         model_type = request.args.get('model', 'chatgpt')
         
@@ -208,15 +211,18 @@ def get_old_chats():
         for result in results:
         # Cerca il session_uid originale nel documento
          session_uid = None
+         session_timestamp = None
          for doc_id, doc in vectorstore.docstore._dict.items():
             if doc.page_content == result.page_content:
                 session_uid = doc.metadata.get("session_uid")
+                session_timestamp=doc.metadata.get("session_timestamp")
                 break
         
-        # Aggiungi la conversazione alla lista con `session_uid` come ID
+        # Aggiungi i dati della conversazione alla lista da passare a fe 
         conversations.append({
             "id": session_uid,  # Passa `session_uid` al frontend
-            "content": result.page_content
+            "content": result.page_content,
+            "timestamp": session_timestamp
         })
         
         return jsonify({'conversations': conversations})
