@@ -1,7 +1,7 @@
 /* Global Styles */
 :root {
   --primary-color: #0D6EFD;
-  --primary-overlay: #3498db94;
+  --primary-overlay: rgba(0, 123, 255, 0.5);
   --primary-darker: #0a58ca;
   --background-color: #f4f4f4;
   --user-message-bg: #cce5ff;
@@ -104,14 +104,12 @@ footer p {
   border-width: 10px;
   border-style: solid;
 }
-
 .message.assistant::before {
   left: 0;
   border-radius: 0% 100% 100% 0% / 100% 0% 100% 0%;
   border-color: var(--background-color);
   background-color: var(--background-color);
 }
-
 .message.user::before {
   right: 0;
   border-radius: 0% 0% 0% 100% / 0% 100% 0% 100%;
@@ -199,4 +197,13 @@ footer p {
   border: 3px solid white;
   padding: 20px;
   border-radius: 10px;
+}
+
+
+/*Offcanvas*/
+.custom-offcanvas {
+  background-color: var(--primary-overlay); 
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px); 
+  color: var(--background-color); 
 }
