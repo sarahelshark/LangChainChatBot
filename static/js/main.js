@@ -81,7 +81,7 @@
             messageElement.className = `message-system`;
             setTimeout(() => {
                 messageElement.style.display = "none";  
-            }, 7000);           
+            }, 3000);           
         }
         messageElement.innerText = content;
         chatbox.appendChild(messageElement);
