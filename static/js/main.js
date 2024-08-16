@@ -51,6 +51,12 @@
     function appendMessage(content, sender) {
         const messageElement = document.createElement("div");
         messageElement.className = `message ${sender}`; 
+        if (sender === "system") {
+            messageElement.className = `message-system`;
+            setTimeout(() => {
+                messageElement.style.display = "none";  
+            }, 7000);           
+        }
         messageElement.innerText = content;
         chatbox.appendChild(messageElement);
         chatbox.scrollTop = chatbox.scrollHeight;
@@ -83,7 +89,7 @@
         
         appendMessage(input, "user");
         userInput.value = "";
-        placeholder.innerHTML = '';
+        placeholder.style.display = "none";
 
          // Show loader
         loader.classList.remove("d-none");
