@@ -22,11 +22,13 @@ function updateNavActiveState(clickedNavId) {
  */
   async function loadOldChats(modelType) {
       const loader = document.getElementById('loaderOldChats');
+      
       const oldChatsContent = document.getElementById('oldChatsContent');
       
       // Show loader
       loader.classList.remove("d-none");
       oldChatsContent.innerHTML = '';
+      
 
       
 

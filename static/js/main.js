@@ -60,6 +60,8 @@
                     overlay.remove();
                 }); 
             }, 500);
+
+            chatbox.innerHTML = '';
         });
     }
 
