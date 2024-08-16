@@ -30,8 +30,6 @@ function updateNavActiveState(clickedNavId) {
       oldChatsContent.innerHTML = '';
       
 
-      
-
       try {
         const response = await fetch(`/api/get_old_chats?model=${modelType}`);
         const data = await response.json();
@@ -111,6 +109,8 @@ async function deleteConversation(uid,model) {
       const conversationElement = document.getElementById(`conversation-${uid}`);
       if (conversationElement) {
           conversationElement.remove();
+          const oldChatsContent = document.getElementById('oldChatsContent');
+          oldChatsContent.innerHTML = '<p>Nessuna conversazione precedente trovata.</p>';
       }
 
       console.log('Conversation deleted successfully');
