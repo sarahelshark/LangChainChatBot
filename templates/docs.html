@@ -13,6 +13,7 @@
 <body  theme="light" >
     
     {% include 'navbar.html' %}
+
     <div class="container mt-2 " id="docs-container" role="main">
         <h1 id="digital-assistant-docs" class="text-center w-100 font-monospace text-uppercase">  <i class="fa fa-quote-left" aria-hidden="true"></i> Hello Docs!  <i class="fa fa-quote-right" aria-hidden="true"></i></h1>
         <div id="readme-content" class="container border  border-primary rounded p-5 mb-3 fs-5" style="height: 400px; overflow-y: auto;" aria-live="polite">
@@ -21,9 +22,10 @@
     </div>
     {% include 'footer.html' %}
 
+
+    
     <script src="/static/js/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/14.0.0/marked.min.js" integrity="sha512-EnAXYDyFPJkTNa50ueQCSHjQGVOp8I9MiRrb3WMeY7x9IO+qdOElSRNvH35Sfk6+0uS4HV954WbpVDKAxjJPiA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- Optional JavaScript -->
     {{ bootstrap.load_js() }}
     <script src="/static/js/docs.js"></script>
 </body>
