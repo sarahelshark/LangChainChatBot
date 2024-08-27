@@ -1,35 +1,33 @@
+const chatbox = document.getElementById("chatbox");
+const placeholder = document.getElementById("placeholder");
+const userInput = document.getElementById("userInput");
+const sendButton = document.getElementById("sendButton");
 
-    const chatbox = document.getElementById("chatbox");
-    const placeholder = document.getElementById("placeholder");
-    const userInput = document.getElementById("userInput");
-    const sendButton = document.getElementById("sendButton");
+//create model select element
+const modelSelect = document.createElement("select");
+modelSelect.id = "modelSelect";
+modelSelect.classList.add("border-primary");
 
-    // Initialize GLOBAL UI elements
+initializeDarkMode();
     
-    initializeDarkMode();
-    
-
-    
+    // Chat Interface
     /**
-     * Initializes the reset button and adds it to the DOM.
+     * Initializes the reset button and adds it to the DOM, Then an event listener is applied and triggers the resetConversation() funct.
      */
     function initializeResetButton() {
         const resetButton = document.createElement("button");
+
         resetButton.classList.add("btn", "border", "border-danger", "btn-outline-danger", "rounded");
         resetButton.textContent = "Reset Conversation";
         resetButton.style.marginLeft = "10px";
         sendButton.insertAdjacentElement('afterend', resetButton);
+
         resetButton.addEventListener("click", resetConversation);
     }
-
     /**
-     * Initializes the model selection dropdown and adds it to the DOM.
+     * Initializes the model selection dropdown and adds it to the DOM, Then an event is triggered whether the selected option is Chatgpt or Gemini, an overlay with the chosen model is added in order to give give a feedback .
      */
     function initializeModelSelect() {
-        const modelSelect = document.createElement("select");
-        modelSelect.id = "modelSelect";
-        modelSelect.classList.add("border-primary");
-
         const chatgptOption = document.createElement("option");
         chatgptOption.value = "chatgpt";
         chatgptOption.textContent = "ChatGPT";
@@ -41,6 +39,12 @@
         modelSelect.append(chatgptOption, geminiOption);
         sendButton.parentNode.insertBefore(modelSelect, sendButton);
 
+        feedbackOverlay();
+    }
+    /**
+     * An overlay gives a visual feedback to the user when the model is selected.
+     */
+    function feedbackOverlay() {
         modelSelect.addEventListener("change", () => {
             console.log("Selected model:", modelSelect.value);
 
@@ -65,6 +69,62 @@
         });
     }
 
+    /**
+    * Toggles dark mode and updates the UI accordingly.
+    * This function handles the dark mode toggle functionality, including:
+    * - Switching between light and dark themes
+    * - Updating the UI (body classes and icon visibility)
+    * - Persisting the user's preference in localStorage
+    * - Initializing the theme based on the user's previous preference or system preference
+    * */
+   function initializeDarkMode() {
+    const bodyElement = document.body;
+    const switchElement = document.getElementById("darkModeSwitch");
+    const darkIcon = document.querySelector(".fa-moon");
+    const lightIcon = document.querySelector(".fa-sun");
+    const docsLink = document.getElementById("nav-docs");
+    const homeLink = document.getElementById("nav-home");
+    const footerDark = document.getElementById("footer-dark");
+
+    function setTheme(isDark) {
+       bodyElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
+       localStorage.setItem('bsTheme', isDark ? 'dark' : 'light');
+       darkIcon.classList.toggle('d-none', !isDark);
+       lightIcon.classList.toggle('d-none', isDark);
+       bodyElement.classList.toggle('bg-dark', isDark);
+       bodyElement.classList.toggle('text-white', isDark);
+       docsLink.classList.toggle('custom-hover-dark', isDark);
+       homeLink.classList.toggle('custom-hover-dark', isDark);
+       footerDark.classList.toggle('text-white', isDark);
+       switchElement.checked = !isDark;
+    }
+
+    // Initialize theme based on localStorage or system preference
+    const storedTheme = localStorage.getItem('bsTheme');
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = storedTheme || (prefersDarkScheme ? 'dark' : 'light');
+    setTheme(initialTheme === 'dark');
+
+    // Event listener for theme toggle
+    switchElement.addEventListener("change", () => setTheme(!switchElement.checked));
+
+    // Listen for system theme changes
+     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+       if (!localStorage.getItem('bsTheme')) {
+           setTheme(e.matches);
+       }
+     });
+   }
+   
+   /**
+   * Handles the navigation state by updating the active class on navigation items.
+   */
+   function homeNotActive() {
+       document.getElementById("nav-home").classList.remove("active");
+       document.getElementById("nav-docs").classList.add("active");
+   }
+
+   document.getElementById("nav-docs").addEventListener("click", homeNotActive);
 
 
     // Event listener for theme toggle
@@ -195,61 +255,6 @@
         });
     }
 
-    /**
-    * Toggles dark mode and updates the UI accordingly.
-    * This function handles the dark mode toggle functionality, including:
-    * - Switching between light and dark themes
-    * - Updating the UI (body classes and icon visibility)
-    * - Persisting the user's preference in localStorage
-    * - Initializing the theme based on the user's previous preference or system preference
-    * */
-   function initializeDarkMode() {
-     const bodyElement = document.body;
-     const switchElement = document.getElementById("darkModeSwitch");
-     const darkIcon = document.querySelector(".fa-moon");
-     const lightIcon = document.querySelector(".fa-sun");
-     const docsLink = document.getElementById("nav-docs");
-     const homeLink = document.getElementById("nav-home");
-     const footerDark = document.getElementById("footer-dark");
-
-     function setTheme(isDark) {
-        bodyElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
-        localStorage.setItem('bsTheme', isDark ? 'dark' : 'light');
-        darkIcon.classList.toggle('d-none', !isDark);
-        lightIcon.classList.toggle('d-none', isDark);
-        bodyElement.classList.toggle('bg-dark', isDark);
-        bodyElement.classList.toggle('text-white', isDark);
-        docsLink.classList.toggle('custom-hover-dark', isDark);
-        homeLink.classList.toggle('custom-hover-dark', isDark);
-        footerDark.classList.toggle('text-white', isDark);
-        switchElement.checked = !isDark;
-     }
-
-     // Initialize theme based on localStorage or system preference
-     const storedTheme = localStorage.getItem('bsTheme');
-     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-     const initialTheme = storedTheme || (prefersDarkScheme ? 'dark' : 'light');
-     setTheme(initialTheme === 'dark');
- 
-     // Event listener for theme toggle
-     switchElement.addEventListener("change", () => setTheme(!switchElement.checked));
-
-     // Listen for system theme changes
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        if (!localStorage.getItem('bsTheme')) {
-            setTheme(e.matches);
-        }
-      });
-    }
-    
-    /**
-    * Handles the navigation state by updating the active class on navigation items.
-    */
-    function homeNotActive() {
-        document.getElementById("nav-home").classList.remove("active");
-        document.getElementById("nav-docs").classList.add("active");
-    }
-    document.getElementById("nav-docs").addEventListener("click", homeNotActive);
 
     /**
     * Fetches and renders the content of README.md file.
