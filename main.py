@@ -1,6 +1,6 @@
 from langchain_openai import OpenAIEmbeddings
 from flask import Flask, request, jsonify, render_template
-from flask_bootstrap import Bootstrap
+from flask_bootstrap import Bootstrap5
 from flask_cors import CORS
 
 import os
@@ -22,7 +22,7 @@ from datetime import datetime
 
 # Initialize Flask app
 app = Flask(__name__)
-Bootstrap(app)
+bootstrap = Bootstrap5(app)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 CORS(app)
 
@@ -202,7 +202,7 @@ def get_old_chats():
         
         embeddings = openai_embeddings
         vectorstore = FAISS.load_local(f"faiss_index_{model_type}", embeddings)
-        
+    
         # Esegui una query generica per ottenere tutte le conversazion
         query = "Mostra tutte le conversazioni"
         results = vectorstore.similarity_search(query, k=5)  # Recupera le top 5 conversazioni
