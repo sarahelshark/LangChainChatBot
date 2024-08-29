@@ -36,3 +36,6 @@ google-cloud-documentai
 openpyxl
 PyPDF2
 tqdm
+
+
+langchain-google-vertexai

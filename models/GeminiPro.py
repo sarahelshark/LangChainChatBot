@@ -16,7 +16,6 @@ def get_response(prompt: str) -> str:
         return response.text
       except Exception as e:
         print(f"An error occurred: {e}")
-        return 'skip'
+        return 'An error occurred while retrieving the response.'
 
   return get_chat_response(chat, prompt)
-

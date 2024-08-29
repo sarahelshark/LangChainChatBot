@@ -1,0 +1,22 @@
+<div class="offcanvas offcanvas-end custom-offcanvas" tabindex="-1" id="oldChatsOffcanvas" aria-labelledby="oldChatsOffcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title fs-4 text-uppercase mt-2 " id="oldChatsOffcanvasLabel">
+      Chat History
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+
+  <div class="offcanvas-body">
+    <select id="oldChatModelSelect" class="form-select mb-3">
+      <option value="chatgpt">ChatGPT</option>
+      <option value="gemini">Gemini</option>
+    </select>
+    <div id="loaderOldChats" class="loader d-none"></div>
+    <div id="oldChatsContent">
+      <!-- Le vecchie conversazioni saranno caricate qui -->
+    </div>
+  </div>
+  
+</div>
+
+<script src="/static/js/old_chats.js"></script>

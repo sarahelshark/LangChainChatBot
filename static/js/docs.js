@@ -1,0 +1,4 @@
+
+    initializeDarkMode();
+    homeNotActive(); 
+    fetchReadmeContent();
