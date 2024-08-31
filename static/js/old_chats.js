@@ -31,7 +31,7 @@ async function loadOldChats(modelType) {
   try {
     const response = await fetch(`/api/get_old_chats?model=${modelType}`);
     const data = await response.json();
-    console.log('Old chats:', data);
+    console.log(`Old chats ${modelType}:`, data);
     
     if (data.conversations && data.conversations.length > 0) {
       data.conversations.forEach(conversation => {
