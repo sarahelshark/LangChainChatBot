@@ -209,3 +209,10 @@ footer p {
   -webkit-backdrop-filter: blur(10px); 
   color: var(--background-color); 
 }
+
+
+
+.card:hover {
+  transform: scale(1.02);
+  cursor: pointer;
+}
