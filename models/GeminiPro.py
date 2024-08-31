@@ -1,5 +1,6 @@
 import vertexai
 from vertexai.preview.generative_models import GenerativeModel, ChatSession
+import logging
 
 project_id = "alpenite-vertexai"
 location = "us-central1"
@@ -15,7 +16,7 @@ def get_response(prompt: str) -> str:
         response = chat.send_message(prompt)
         return response.text
       except Exception as e:
-        print(f"An error occurred: {e}")
+        logging.error(f"An error occurred: {e}")
         return 'An error occurred while retrieving the response.'
 
   return get_chat_response(chat, prompt)
