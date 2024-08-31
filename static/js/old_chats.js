@@ -58,6 +58,7 @@ async function loadOldChats(modelType) {
     loader.classList.add("d-none");
   }
 }
+
 /**
 * Adds a listener for the 'show.bs.offcanvas' event on the oldChatsOffcanvas element.
 * When the offcanvas is shown, updates the active state of the navigation and loads the old conversations.
@@ -75,13 +76,12 @@ oldChatModelSelect.addEventListener('change', function() {
   loadOldChats(this.value);
 });
   
-  
 /**
 * DELETES a specific conversation 
 * @param {string} model - Model type of the conversation to be deleted
 * @param {number} uid - ID of the conversation to be deleted
 */
-async function deleteConversation(uid,model) {
+async function deleteConversation(uid, model) {
   if (!model || !uid) {
     alert("Invalid model or UID");
     return;
@@ -93,25 +93,26 @@ async function deleteConversation(uid,model) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({  uids_to_delete: [uid], model_type: model }),
+      body: JSON.stringify({ uids_to_delete: [uid], model_type: model }),
     });
-    const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to delete conversation');
-      }
-      //Remove the conversation element from the DOM
-      const conversationElement = document.getElementById(`conversation-${uid}`);
-      if (conversationElement) {
-        conversationElement.remove();
-        const oldChatsContent = document.getElementById('oldChatsContent');
-        oldChatsContent.innerHTML = '<p>Nessuna conversazione precedente trovata.</p>';
-      }
-      console.log('Conversation deleted successfully');
-      alert('Conversation deleted successfully');
-    } catch (error) {
-      console.error('Error deleting conversation:', error);
-      alert(`Failed to delete conversation: ${error.message}`);
-    }
-};
-  
 
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to delete conversation');
+    }
+
+    // Remove the specific conversation element from the DOM
+    const conversationElement = document.getElementById(`conversation-${uid}`);
+    if (conversationElement) {
+      conversationElement.remove();
+    }
+    // Re-render the updated list of conversations
+    loadOldChats(model);
+
+    console.log('Conversation deleted successfully');
+    alert('Conversation deleted successfully');
+  } catch (error) {
+    console.error('Error deleting conversation:', error);
+    alert(`Failed to delete conversation: ${error.message}`);
+  }
+}
