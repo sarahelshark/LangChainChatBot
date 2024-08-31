@@ -200,7 +200,6 @@ def delete_conversations():
     
 @app.route('/api/get_old_chats', methods=['GET'])
 def get_old_chats():
-    
     try:
         model_type = request.args.get('model', 'chatgpt')
         
@@ -210,32 +209,31 @@ def get_old_chats():
         embeddings = openai_embeddings
         vectorstore = FAISS.load_local(f"faiss_index_{model_type}", embeddings)
     
-        # Esegui una query generica per ottenere tutte le conversazion
-        query = "Mostra tutte le conversazioni"
-        results = vectorstore.similarity_search(query, k=5)  # Recupera le top 5 conversazioni
-        # Crea una lista di dizionari con `session_uid` come ID e `page_content` come contenuto
-        conversations = []
-        for result in results:
-        # Cerca il session_uid originale nel documento
-         session_uid = None
-         session_timestamp = None
-         for doc_id, doc in vectorstore.docstore._dict.items():
-            if doc.page_content == result.page_content:
-                session_uid = doc.metadata.get("session_uid")
-                session_timestamp=doc.metadata.get("session_timestamp")
-                break
+        # Get all documents from the vector store
+        all_docs = vectorstore.docstore._dict
+
+        # Create a dictionary to store unique conversations
+        unique_conversations = {}
+
+        for doc_id, doc in all_docs.items():
+            session_uid = doc.metadata.get("session_uid")
+            session_timestamp = doc.metadata.get("session_timestamp")
+            
+            if session_uid not in unique_conversations:
+                unique_conversations[session_uid] = {
+                    "id": session_uid,
+                    "content": doc.page_content,
+                    "timestamp": session_timestamp
+                }
         
-        # Aggiungi i dati della conversazione alla lista da passare a fe 
-        conversations.append({
-            "id": session_uid,  # Passa `session_uid` al frontend
-            "content": result.page_content,
-            "timestamp": session_timestamp
-        })
+        # Convert the dictionary to a list and sort by timestamp (newest first)
+        conversations = list(unique_conversations.values())
+        conversations.sort(key=lambda x: x["timestamp"], reverse=True)
         
         return jsonify({'conversations': conversations})
     except Exception as e:
         return jsonify({'error': f'Errore nel recupero delle conversazioni: {str(e)}'}), 500
-
+    
 @app.route('/api/reset', methods=['POST'])
 def reset_conversation():
     global chatgpt_history

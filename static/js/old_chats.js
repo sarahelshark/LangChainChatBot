@@ -29,34 +29,35 @@ async function loadOldChats(modelType) {
   loader.classList.remove("d-none");
   oldChatsContent.innerHTML = '';
   try {
-      const response = await fetch(`/api/get_old_chats?model=${modelType}`);
-      const data = await response.json();
-      console.log('Old chats:', data);
-      if (data.conversations && data.conversations.length > 0) {
-        data.conversations.forEach(conversation => {
-          const conversationElement = document.createElement('div');
-          conversationElement.id = `conversation-${conversation.id}`;
-          conversationElement.className = 'card mb-3';
-          conversationElement.innerHTML = `
-            <div class="card-body">
-              <button type="button" class="btn-close float-end" aria-label="Close" onclick="deleteConversation('${conversation.id}', '${modelType}')"></button>
-              <p class="card-text">${conversation.content}</p>
-              <p class="blockquote-footer">${conversation.timestamp}</p>
+    const response = await fetch(`/api/get_old_chats?model=${modelType}`);
+    const data = await response.json();
+    console.log('Old chats:', data);
+    
+    if (data.conversations && data.conversations.length > 0) {
+      data.conversations.forEach(conversation => {
+        const conversationElement = document.createElement('div');
+        conversationElement.id = `conversation-${conversation.id}`;
+        conversationElement.className = 'card mb-3';
+        conversationElement.innerHTML = `
+          <div class="card-body">
+            <button type="button" class="btn-close float-end" aria-label="Close" onclick="deleteConversation('${conversation.id}', '${modelType}')"></button>
+            <p class="card-text">${conversation.content}</p>
+            <p class="blockquote-footer">${conversation.timestamp}</p>
           </div>
-          `;
-          oldChatsContent.appendChild(conversationElement);
-        });
-      } else {
-        oldChatsContent.innerHTML = '<p>Nessuna conversazione precedente trovata.</p>';
-      }} catch (error) {
-        console.error('Errore nel recupero delle vecchie conversazioni:', error);
-        oldChatsContent.innerHTML = '<p class="text-danger">Errore nel caricamento delle vecchie conversazioni.</p>';
-      } finally {
-        // Hide loader
-        loader.classList.add("d-none");
-      }
-  
-} 
+        `;
+        oldChatsContent.appendChild(conversationElement);
+      });
+    } else {
+      oldChatsContent.innerHTML = '<p>Nessuna conversazione precedente trovata.</p>';
+    }
+  } catch (error) {
+    console.error('Errore nel recupero delle vecchie conversazioni:', error);
+    oldChatsContent.innerHTML = '<p class="text-danger">Errore nel caricamento delle vecchie conversazioni.</p>';
+  } finally {
+    // Hide loader
+    loader.classList.add("d-none");
+  }
+}
 /**
 * Adds a listener for the 'show.bs.offcanvas' event on the oldChatsOffcanvas element.
 * When the offcanvas is shown, updates the active state of the navigation and loads the old conversations.
@@ -113,3 +114,4 @@ async function deleteConversation(uid,model) {
     }
 };
   
+
