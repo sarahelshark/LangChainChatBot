@@ -19,18 +19,15 @@ const modelSelect = document.createElement("select");
 modelSelect.id = "modelSelect";
 modelSelect.classList.add("border-primary");
 
-
 /**
 * Initializes the reset button and adds it to the DOM, Then an event listener is applied and triggers the resetConversation() funct.
 */
 function initializeResetButton() {
     const resetButton = document.createElement("button");
-
     resetButton.classList.add("btn", "border", "border-danger", "btn-outline-danger", "rounded");
     resetButton.textContent = "Reset Conversation";
     resetButton.style.marginLeft = "10px";
     sendButton.insertAdjacentElement('afterend', resetButton);
-
     resetButton.addEventListener("click", resetConversation);
 }
 /**
@@ -44,10 +41,9 @@ function initializeModelSelect() {
     const geminiOption = document.createElement("option");
     geminiOption.value = "gemini";
     geminiOption.textContent = "Gemini";
-
+    
     modelSelect.append(chatgptOption, geminiOption);
     sendButton.parentNode.insertBefore(modelSelect, sendButton);
-
     feedbackOverlay();
 }
 /**
@@ -56,7 +52,6 @@ function initializeModelSelect() {
 function feedbackOverlay() {
     modelSelect.addEventListener("change", () => {
         console.log("Selected model:", modelSelect.value);
-
         const overlayHTML = `
             <div id="overlay">
                 <div id="overlay-text" class="display-1">
@@ -64,19 +59,17 @@ function feedbackOverlay() {
                 </div>
             </div>
         `;
-        
+
         document.body.insertAdjacentHTML('afterbegin', overlayHTML);
         const overlay = document.getElementById("overlay");
-
         // Aggiungi la classe 'hidden' per nascondere l'overlay dopo 2 secondi
         setTimeout(() => {
             overlay.classList.add("hidden");
             // Rimuovi l'overlay dal DOM dopo che l'animazione di nascondimento è completata
             setTimeout(() => {
-                overlay.remove();
+                overlay.remove(); 
             }, 200); 
         }, 500);
-
         // Pulisci il contenuto della chatbox
         chatbox.innerHTML = '';
     });
@@ -109,10 +102,8 @@ function initializeDarkMode() {
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const initialTheme = storedTheme || (prefersDarkScheme ? 'dark' : 'light');
     setTheme(initialTheme === 'dark');
-
     // Event listener for theme toggle
     switchElement.addEventListener("change", () => setTheme(!switchElement.checked));
-
     // Listen for system theme changes
      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
        if (!localStorage.getItem('bsTheme')) {
@@ -120,6 +111,7 @@ function initializeDarkMode() {
        }
      });
    }
+
 /**
 * Handles the navigation state by updating the active class on navigation items.
 */
@@ -127,11 +119,13 @@ function homeNotActive() {
     document.getElementById("nav-home").classList.remove("active");
     document.getElementById("nav-docs").classList.add("active");
 }
+
 // Event listener for navigation
 document.getElementById("nav-docs").addEventListener("click", homeNotActive);
 
 /**
 * Appends a new message to the chatbox.
+     * 
 * @param {string} content - The content of the message.
 * @param {string} sender - The sender of the message.
 */
@@ -148,7 +142,6 @@ function appendMessage(content, sender) {
     chatbox.appendChild(messageElement);
     chatbox.scrollTop = chatbox.scrollHeight;
 }
-
 /**
 * Creates and appends a loader element to the document body.
 * @function
@@ -162,7 +155,6 @@ function createLoader() {
     document.body.appendChild(loader);
     return loader;
 }
-
 /**
 * Sends a message to the chat API and appends the user's message to the chat window.
 * @async
@@ -215,11 +207,9 @@ async function sendChatRequest(input) {
         },
         body: JSON.stringify({ message: input, model: modelSelect.value }),
     });
-
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
-
     return response;
 }
 async function handleResponse(response) {
@@ -232,7 +222,7 @@ function processResponseData(data) {
         appendMessage("An error occurred: " + data.error, "assistant");
     } else {
         appendMessage("Received an unexpected response format.", "assistant");
-    }
+    }        
 }
 function handleError(error) {
     console.log("Error processing request:", error);
@@ -277,11 +267,12 @@ async function sendResetRequest(modelType) {
         },
         body: JSON.stringify({ model: modelType }),
     });
+
 }
 async function handleResetResponse(response) {
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    }  
     return await response.json();
 }
 function clearChatbox() {
@@ -293,7 +284,7 @@ function logStatus(status) {
 function notifyUser(message) {
     appendMessage(message, "system");
 }
-    
+
 /**
 * Initializes event listeners for the send button and user input.
  */
@@ -307,8 +298,8 @@ function initializeEventListeners() {
     });
 }
 
-// docs page
 
+// docs page
 /**
 * Fetches and renders the content of README.md file in the '/static/images/' directory.
 * @async
@@ -337,6 +328,3 @@ function fetchReadmeContent() {
             readmeContent.innerHTML = '<p class="text-danger">Error loading README.md content.</p>';
         });
 }
-
-
-
