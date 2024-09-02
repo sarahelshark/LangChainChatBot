@@ -8,7 +8,9 @@ from dotenv import load_dotenv
 import logging
 from datetime import datetime
 
-import constants
+from utils.vectorization import vectorize_and_store_chat_history
+import utils.constants as constants
+
 from models import GeminiPro
 
 from langchain_openai import ChatOpenAI
@@ -117,7 +119,6 @@ def chat():
             return session_uid, session_timestamp
     
             
-        
         if user_message.lower() == 'exit':
             if model_choice == 'chatgpt':
                 vectorize_and_store_chat_history(chatgpt_history, 'chatgpt')
@@ -201,21 +202,27 @@ def delete_conversations():
 @app.route('/api/get_old_chats', methods=['GET'])
 def get_old_chats():
     try:
+        # initialization of all varibles to be used
         model_type = request.args.get('model', 'chatgpt')
+        embeddings = None
+        vectorstore = None
+        all_docs = {} # to store all documents from vector store
+        unique_conversations = {} # to store unique conversations
         
         if model_type not in ['chatgpt', 'gemini']:
             return jsonify({'error': 'Invalid model type specified.'}), 400
         
+        # set the embeddings and vectorstore based on the model type
         embeddings = openai_embeddings
         vectorstore = FAISS.load_local(f"faiss_index_{model_type}", embeddings)
     
         # Get all documents from the vector store
         all_docs = vectorstore.docstore._dict
 
-        # Create a dictionary to store unique conversations
+        # Create a dictionary 
         unique_conversations = {}
 
-        for doc_id, doc in all_docs.items():
+        for  doc in all_docs.items():
             session_uid = doc.metadata.get("session_uid")
             session_timestamp = doc.metadata.get("session_timestamp")
             
