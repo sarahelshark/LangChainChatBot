@@ -20,6 +20,7 @@ load_dotenv()
 # Imports per la vettorializzazione
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
+
 import uuid
 from langchain.schema import Document
 
@@ -204,10 +205,10 @@ def get_old_chats():
     try:
         # initialization of all varibles to be used
         model_type = request.args.get('model', 'chatgpt')
-        embeddings = None
-        vectorstore = None
-        all_docs = {} # to store all documents from vector store
-        unique_conversations = {} # to store unique conversations
+        #embeddings = None
+        #vectorstore = None
+        #all_docs = {} # to store all documents from vector store
+        #unique_conversations = {} # to store unique conversations
         
         if model_type not in ['chatgpt', 'gemini']:
             return jsonify({'error': 'Invalid model type specified.'}), 400
@@ -222,7 +223,7 @@ def get_old_chats():
         # Create a dictionary 
         unique_conversations = {}
 
-        for  doc in all_docs.items():
+        for doc_id, doc in all_docs.items():
             session_uid = doc.metadata.get("session_uid")
             session_timestamp = doc.metadata.get("session_timestamp")
             
