@@ -202,6 +202,13 @@ footer p {
   background-color: var(--primary-darker);
 }
 
+.form-control, #modelSelect {
+  background-color: transparent !important;
+}
+/* Eliminare */
+#modelSeelect>option {
+  color: black !important;
+}
 /* Loader Styles */
 .loader {
   border: 4px solid var(--secondary-loader); 
