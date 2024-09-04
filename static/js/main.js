@@ -19,16 +19,25 @@ const modelSelect = document.createElement("select");
 modelSelect.id = "modelSelect";
 modelSelect.classList.add("border-primary");
 
+
 /**
 * Initializes the reset button and adds it to the DOM, Then an event listener is applied and triggers the resetConversation() funct.
 */
-function initializeResetButton() {
+function initializeResetAndUploadButton(){
     const resetButton = document.createElement("button");
     resetButton.classList.add("btn", "border", "border-danger", "btn-outline-danger", "rounded");
     resetButton.textContent = "Reset Conversation";
     resetButton.style.marginLeft = "10px";
     sendButton.insertAdjacentElement('afterend', resetButton);
     resetButton.addEventListener("click", resetConversation);
+    //create input upload element
+    const uploadElement = `
+    <div class="input-group m-3 px-5 ">
+      <input type="file" class="form-control" id="inputGroupFile02">
+      <label class="input-group-text" for="inputGroupFile02">Upload</label>
+    </div>
+    `;
+    resetButton.insertAdjacentHTML('afterend', uploadElement);
 }
 /**
 * Initializes the model selection dropdown and adds it to the DOM, Then an event is triggered whether the selected option is Chatgpt or Gemini, an overlay with the chosen model is added in order to give give a feedback .
