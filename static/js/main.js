@@ -17,7 +17,7 @@ initializeDarkMode();
 //create model select element
 const modelSelect = document.createElement("select");
 modelSelect.id = "modelSelect";
-modelSelect.classList.add("border-primary");
+modelSelect.classList.add("border-white");
 
 
 /**
@@ -25,19 +25,25 @@ modelSelect.classList.add("border-primary");
 */
 function initializeResetAndUploadButton(){
     const resetButton = document.createElement("button");
+    resetButton.id = "resetButton";
     resetButton.classList.add("btn", "border", "border-danger", "btn-outline-danger", "rounded");
-    resetButton.textContent = "Reset Conversation";
+    resetButton.textContent = "Reset";
     resetButton.style.marginLeft = "10px";
     sendButton.insertAdjacentElement('afterend', resetButton);
     resetButton.addEventListener("click", resetConversation);
     //create input upload element
     const uploadElement = `
-    <div class="input-group m-3 px-5 ">
-      <input type="file" class="form-control" id="inputGroupFile02">
-      <label class="input-group-text" for="inputGroupFile02">Upload</label>
-    </div>
-    `;
-    resetButton.insertAdjacentHTML('afterend', uploadElement);
+    <div class="upload d-flex align-items-center mt-2">
+        <p class="mb-0 ">Upload</p>
+        <label class="upload-area">
+            <input type="file" class="d-none">
+            <span class="upload-button btn btn-white">
+                <i class="fas fa-arrow-up"></i>
+            </span>
+        </label>
+    </div>`;
+    sendButton.insertAdjacentHTML('afterend', uploadElement);
+    
 }
 /**
 * Initializes the model selection dropdown and adds it to the DOM, Then an event is triggered whether the selected option is Chatgpt or Gemini, an overlay with the chosen model is added in order to give give a feedback .
@@ -88,12 +94,22 @@ function feedbackOverlay() {
 * @param {boolean} isDark - The theme to set.
 */
 function setTheme(isDark) {
+    const darkBgImage = 'url("/static/images/dark-bg.jpg")';  
+    const lightBgImage = 'url("/static/images/light-bg.jpg")';  
+
     bodyElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
     localStorage.setItem('bsTheme', isDark ? 'dark' : 'light');
     darkIcon.classList.toggle('d-none', !isDark);
     lightIcon.classList.toggle('d-none', isDark);
     bodyElement.classList.toggle('bg-dark', isDark);
     bodyElement.classList.toggle('text-white', isDark);
+    
+    bodyElement.style.backgroundImage = isDark ? darkBgImage : lightBgImage;
+    bodyElement.style.backgroundSize = 'cover'; 
+    bodyElement.style.backgroundRepeat = 'no-repeat'; 
+    bodyElement.style.backgroundPosition = 'center center'; 
+    bodyElement.style.backgroundAttachment = 'fixed';
+
     docsLink.classList.toggle('custom-hover-dark', isDark);
     homeLink.classList.toggle('custom-hover-dark', isDark);
     footerDark.classList.toggle('text-white', isDark);

@@ -24,27 +24,75 @@ body {
   margin: 0; 
 }
 
+.text-shadow {
+  text-shadow: -3px -4px 4px rgba(255, 255, 255, 0.511);
+}
+
+
+/* Upload Styles */
+div.upload {
+  display: flex;
+  align-items: center;
+  z-index: 1000; 
+}
+
+.upload>p {
+  margin: 0;
+  padding: 5px;
+}
+
+label.upload-area {
+  cursor: pointer;
+}
+
+label.upload-area span.upload-button {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  padding: 15px;
+  border: 2px dashed ;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .4s;
+  
+}
+
+label.upload-area span.upload-button i.fas {
+  position: absolute;
+  font-size: 20px;
+}
+
+label.upload-area span.upload-button:hover {
+  transform: scale(1.1); 
+}
+
+input[type="file"] {
+  display: none;
+}
+
+
 /* Footer Styles */
+
 footer {
-  position: fixed;
+  position: fixed; 
   bottom: 0;
   width: 100%;
   text-align: center;
-  margin: 0;
-  padding: 0;
-  
+  padding: 7px 0; 
+  z-index: 999; 
+  box-shadow: var(--box-shadow); 
 }
 
 footer p {
   margin: 0;
-  padding: 0;
-  
+  color: var(--user-message-bg); 
+  font-size: 14px;
 }
 
 /* Chatbox Styles */
-.chatbox {
-  background-color: var(--assistant-message-bg);
-}
+
 
 #placeholder {
   text-align: center;
@@ -214,4 +262,40 @@ footer p {
 .card:hover {
   transform: scale(1.02);
   cursor: pointer;
+}
+
+
+
+
+@media (max-width: 768px) {
+
+  body , #placeholder, .message-system, .message{
+    font-size: 15px;
+  }
+  .upload, .btn , #sendButton {
+      width: 20%;
+      font-size: 13px;
+  }
+  .upload>p {
+    display: none;
+  }
+  .upload{
+    margin-top: 20px;
+  }
+
+  #userInput{
+      width: 55%;
+      font-size: 13px;
+  }
+ #modelSelect {
+      width: 18%;
+      font-size: 13px;
+  }
+  #resetButton {
+      margin-top: 10px;
+      margin-left: 60% !important;
+      
+  }
+  
+  
 }
