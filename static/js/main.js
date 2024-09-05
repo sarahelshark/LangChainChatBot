@@ -107,7 +107,6 @@ function setTheme(isDark) {
     bodyElement.style.backgroundImage = isDark ? darkBgImage : lightBgImage;
     bodyElement.style.backgroundSize = 'cover'; 
     bodyElement.style.backgroundRepeat = 'no-repeat'; 
-    bodyElement.style.backgroundPosition = 'center center'; 
     bodyElement.style.backgroundAttachment = 'fixed';
 
     docsLink.classList.toggle('custom-hover-dark', isDark);
