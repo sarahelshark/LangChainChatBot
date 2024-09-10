@@ -6,8 +6,10 @@ from flask_cors import CORS
 import os
 from dotenv import load_dotenv 
 import logging
-from datetime import datetime
 
+
+
+from werkzeug.utils import secure_filename
 
 from utils.vectorization import vectorize_and_store_chat_history
 import utils.constants as constants
@@ -45,6 +47,51 @@ gemini_history = []
 system_message = SystemMessage(content="You are a helpful AI assistant")
 chatgpt_history.append(system_message)
 
+# Specifica la cartella di upload
+UPLOAD_FOLDER = './uploads'  # Percorso della cartella dove caricare i file
+ALLOWED_EXTENSIONS = {'pdf', 'csv'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# Funzione per controllare se il file ha un'estensione consentita
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+def create_context_from_old_chats(model_type, embeddings, max_context_length=3000):
+    index_path = f"faiss_index_{model_type}"
+    
+    if not os.path.exists(index_path):
+        logging.info(f"No vector store found for {model_type}")
+        return ""
+
+    # Carica il vector store esistente
+    vectorstore = FAISS.load_local(index_path, embeddings)
+    logging.info(f"Loaded vector store for {model_type}")
+
+    # Recupera tutti i documenti (conversazioni) dal vector store
+    all_docs = vectorstore.docstore._dict
+
+    # Crea una lista con il contenuto delle conversazioni, ordinato per timestamp
+    conversations = []
+    for doc_id, doc in all_docs.items():
+        session_uid = doc.metadata.get("session_uid")
+        session_timestamp = doc.metadata.get("session_timestamp")
+        conversations.append({
+            "content": doc.page_content,
+            "timestamp": session_timestamp
+        })
+    
+    # Ordina le conversazioni per timestamp in ordine decrescente
+    conversations.sort(key=lambda x: x["timestamp"], reverse=True)
+
+    # Crea il contesto dalle conversazioni precedenti fino a raggiungere il limite di lunghezza
+    context = ""
+    for conversation in conversations:
+        if len(context) + len(conversation["content"]) > max_context_length:
+            break
+        context += conversation["content"] + "\n"
+    
+    logging.info(f"Context created from old chats with length: {len(context)}")
+    return context
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -76,8 +123,13 @@ def chat():
             
             return jsonify({'content': "Grazie per aver utilizzato l'assistente AI. Arrivederci!👋"})
    
+        # Recupera il contesto dalle conversazioni precedenti
+        context = create_context_from_old_chats(model_choice, openai_embeddings)
+
         if model_choice == 'chatgpt':
             logging.info("-------ChatGPT mode-------")  
+            # Aggiungi il contesto alla cronologia della chat
+            chatgpt_history.insert(1, AIMessage(content=f"Context:\n{context}"))
             chatgpt_history.append(HumanMessage(content=user_message))
             result = chatgpt_model.invoke(chatgpt_history)
             response = result.content
@@ -85,6 +137,8 @@ def chat():
             
         elif model_choice == 'gemini':
             logging.info("-------Gemini mode-------")  
+            # Aggiungi il contesto alla cronologia della chat
+            gemini_history.insert(0, f"Context:\n{context}")
             gemini_history.append(f"User: {user_message}")
             response = GeminiPro.get_response(f"User: {user_message}")
             gemini_history.append(f"AI: {response}")
@@ -97,7 +151,7 @@ def chat():
     except Exception as e:
         logging.error(f'Unexpected error: {str(e)}')
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
-    
+ 
 @app.route('/api/delete_conversation', methods=['POST'])
 def delete_conversations():
     try:
@@ -206,6 +260,31 @@ def reset_conversation():
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
 
 
+# Rotta per gestire l'upload del file
+@app.route('/api/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    
+    file = request.files['file']
+    
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
 
+    if file and allowed_file(file.filename):
+        try:
+            filename = secure_filename(file.filename)
+            # Salva il file in una cartella temporanea (controlla i permessi)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            logging.info(f"File successfully uploaded: {filename}")
+            return jsonify({'message': ' successfully uploaded'}), 200
+        except Exception as e:
+            return jsonify({'error': f'Failed to upload file: {str(e)}'}), 500
+    else:
+        return jsonify({'error': 'File type not allowed'}), 400
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'pdf', 'csv'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+   
 if __name__ == '__main__':
     app.run(debug=True)

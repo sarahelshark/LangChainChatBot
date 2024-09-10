@@ -1,9 +1,9 @@
-<main class="container mt-2" id="main-container" role="main">
+<main class="container" id="main-container" role="main">
 
     <h1 id="digital-assistant" class="text-center text-shadow w-100 font-monospace text-uppercase">
         Digital Assistant
     </h1>
-    <div id="chatbox" class="chatbox border border-primary p-5 mb-3 text-dark fs-5 rounded" style="height: 600px; overflow-y: auto;" aria-live="polite"> 
+    <div id="chatbox" class="chatbox border border-primary p-5 mb-3 text-dark fs-5 rounded" style="height: 400px; overflow-y: auto;" aria-live="polite"> 
         <div id="placeholder" class="text-dark" >
             Salutami per iniziare a chiacchierare immediatamente e scrivi 'exit' quando hai finito 😄
         </div>
@@ -15,6 +15,7 @@
         <input type="text" id="userInput" class="form-control border border-primary rounded-start" placeholder="Type your message here..." aria-label="Type your message">
         <button id="sendButton" class="btn btn-outline-primary rounded-end" onclick="sendMessage()">Send</button>
     </div>
+    
 </main>
 
 <script src="/static/js/chatbox.js"></script>
