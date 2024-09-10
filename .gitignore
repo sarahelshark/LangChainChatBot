@@ -68,3 +68,14 @@ venv.bak/
 
 # Jupyter Notebook
 .ipynb_checkpoints/
+
+# FAISS vector indexes
+faiss_index_chatgpt
+faiss_index_chatgpt/index.faiss
+faiss_index_chatgpt/index.pkl
+
+faiss_index_gemini
+faiss_index_gemini/index.pkl
+faiss_index_gemini/index.faiss
+
+faiss_index_uploaded_docs
