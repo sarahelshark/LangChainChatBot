@@ -13,6 +13,7 @@ from werkzeug.utils import secure_filename
 
 from utils.vectorization import vectorize_and_store_chat_history
 from utils.vectorization import vectorize_and_store_uploaded_docs
+from utils.context import create_enhanced_context
 import utils.constants as constants
 
 from models import GeminiPro
@@ -66,42 +67,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def create_context_from_old_chats(model_type, embeddings, max_context_length=3000):
-    index_path = f"faiss_index_{model_type}"
-    
-    if not os.path.exists(index_path):
-        logging.info(f"No vector store found for {model_type}")
-        return ""
 
-    # Carica il vector store esistente
-    vectorstore = FAISS.load_local(index_path, embeddings)
-    logging.info(f"Loaded vector store for {model_type}")
-
-    # Recupera tutti i documenti (conversazioni) dal vector store
-    all_docs = vectorstore.docstore._dict
-
-    # Crea una lista con il contenuto delle conversazioni, ordinato per timestamp
-    conversations = []
-    for doc_id, doc in all_docs.items():
-        session_uid = doc.metadata.get("session_uid")
-        session_timestamp = doc.metadata.get("session_timestamp")
-        conversations.append({
-            "content": doc.page_content,
-            "timestamp": session_timestamp
-        })
-    
-    # Ordina le conversazioni per timestamp in ordine decrescente
-    conversations.sort(key=lambda x: x["timestamp"], reverse=True)
-
-    # Crea il contesto dalle conversazioni precedenti fino a raggiungere il limite di lunghezza
-    context = ""
-    for conversation in conversations:
-        if len(context) + len(conversation["content"]) > max_context_length:
-            break
-        context += conversation["content"] + "\n"
-    
-    logging.info(f"Context created from old chats with length: {len(context)}")
-    return context
 
 @app.route('/')
 def index():
@@ -135,7 +101,7 @@ def chat():
             return jsonify({'content': "Grazie per aver utilizzato l'assistente AI. Arrivederci!👋"})
    
         # Recupera il contesto dalle conversazioni precedenti
-        context = create_context_from_old_chats(model_choice, openai_embeddings)
+        context = create_enhanced_context(model_choice, openai_embeddings)
 
         if model_choice == 'chatgpt':
             logging.info("-------ChatGPT mode-------")  
