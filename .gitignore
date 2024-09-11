@@ -69,13 +69,16 @@ venv.bak/
 # Jupyter Notebook
 .ipynb_checkpoints/
 
-# FAISS vector indexes
-faiss_index_chatgpt
+
+# Ignore faiss and pkl files 
 faiss_index_chatgpt/index.faiss
 faiss_index_chatgpt/index.pkl
 
-faiss_index_gemini
-faiss_index_gemini/index.pkl
 faiss_index_gemini/index.faiss
+faiss_index_gemini/index.pkl
 
-faiss_index_uploaded_docs
+faiss_index_uploaded_docs/index.faiss
+faiss_index_uploaded_docs/index.pkl
+
+*.faiss
+*.pkl
