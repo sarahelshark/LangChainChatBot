@@ -86,3 +86,6 @@ faiss_index_uploaded_docs/index.pkl
 *.pkl
 
 uploads/*
+
+# Ignore JSON file with credentials
+alpenite-vertexai.json
