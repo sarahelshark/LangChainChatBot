@@ -1,45 +1,39 @@
-from langchain_openai import OpenAIEmbeddings
-from flask import Flask, request, jsonify, render_template
-from flask_bootstrap import Bootstrap5
-from flask_cors import CORS
-
 import os
 from dotenv import load_dotenv 
 import logging
+from langchain_openai import OpenAIEmbeddings
 
-
-
+from flask import Flask, request, jsonify, render_template
+from flask_bootstrap import Bootstrap5
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
-
 from utils.vectorization import vectorize_and_store_chat_history
 from utils.vectorization import vectorize_and_store_uploaded_docs
 from utils.context import create_enhanced_context
 import utils.constants as constants
-
 from models import GeminiPro
-
+from langchain_community.vectorstores import FAISS
 from langchain_openai import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 load_dotenv()
 
-# Imports per la vettorializzazione
-from langchain.text_splitter import CharacterTextSplitter
-from langchain_community.vectorstores import FAISS
-from datetime import datetime
-
-from langchain_community.document_loaders import TextLoader
-
-import uuid
-from langchain.schema import Document
-
-
-# Initialize Flask app
+# initialize the Flask app
 app = Flask(__name__)
 bootstrap = Bootstrap5(app)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 CORS(app)
 
-# Inizializzazione dei modelli
+# constants
+current_dir = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = os.path.abspath('./uploads')
+INDEX_FOLDER = os.path.abspath('./faiss_index_uploaded_docs')     
+ALLOWED_EXTENSIONS = {'pdf', 'csv'}
+
+# Ensure directories exist
+os.makedirs(INDEX_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Initialize models:
 # Set up Gemini credentials
 os.environ[constants.googleApplicationCredentials] = constants.alpeniteVertexai
 # Set up chatgpt model
@@ -53,19 +47,9 @@ system_message = SystemMessage(content="You are a helpful AI assistant")
 chatgpt_history.append(system_message)
 
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-# Specifica la cartella di upload
-UPLOAD_FOLDER = os.path.abspath('./uploads')  # Percorso della cartella dove caricare i file
-INDEX_FOLDER = os.path.abspath('./faiss_index_uploaded_docs')  # Percorso della cartella dove salvare gli indici                   
-if not os.path.exists(INDEX_FOLDER):
-    os.makedirs(INDEX_FOLDER)
-    
-ALLOWED_EXTENSIONS = {'pdf', 'csv'}
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-# Funzione per controllare se il file ha un'estensione consentita
+# function to check if the file type is allowed
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 
 
@@ -237,7 +221,6 @@ def reset_conversation():
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
 
 
-# Rotta per gestire l'upload del file
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:

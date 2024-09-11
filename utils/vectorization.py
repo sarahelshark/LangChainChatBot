@@ -48,7 +48,6 @@ def vectorize_and_store_chat_history(chat_history, model_type, embeddings):
         return None, None
     
 
-
 def vectorize_and_store_uploaded_docs(upload_folder, index_folder, embeddings):
     if not os.path.exists(upload_folder):
         logging.error(f"Upload folder does not exist: {upload_folder}")

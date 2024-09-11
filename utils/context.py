@@ -1,8 +1,6 @@
 import logging
 from datetime import datetime
 import os
-from langchain.schema import Document
-from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 
 
