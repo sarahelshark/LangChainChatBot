@@ -12,6 +12,7 @@ import logging
 from werkzeug.utils import secure_filename
 
 from utils.vectorization import vectorize_and_store_chat_history
+from utils.vectorization import vectorize_and_store_uploaded_docs
 import utils.constants as constants
 
 from models import GeminiPro
@@ -23,6 +24,9 @@ load_dotenv()
 # Imports per la vettorializzazione
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
+from datetime import datetime
+
+from langchain_community.document_loaders import TextLoader
 
 import uuid
 from langchain.schema import Document
@@ -47,13 +51,21 @@ gemini_history = []
 system_message = SystemMessage(content="You are a helpful AI assistant")
 chatgpt_history.append(system_message)
 
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
 # Specifica la cartella di upload
-UPLOAD_FOLDER = './uploads'  # Percorso della cartella dove caricare i file
+UPLOAD_FOLDER = os.path.abspath('./uploads')  # Percorso della cartella dove caricare i file
+INDEX_FOLDER = os.path.abspath('./faiss_index_uploaded_docs')  # Percorso della cartella dove salvare gli indici                   
+if not os.path.exists(INDEX_FOLDER):
+    os.makedirs(INDEX_FOLDER)
+    
 ALLOWED_EXTENSIONS = {'pdf', 'csv'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Funzione per controllare se il file ha un'estensione consentita
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 def create_context_from_old_chats(model_type, embeddings, max_context_length=3000):
     index_path = f"faiss_index_{model_type}"
     
@@ -90,7 +102,6 @@ def create_context_from_old_chats(model_type, embeddings, max_context_length=300
     
     logging.info(f"Context created from old chats with length: {len(context)}")
     return context
-
 
 @app.route('/')
 def index():
@@ -274,17 +285,28 @@ def upload_file():
     if file and allowed_file(file.filename):
         try:
             filename = secure_filename(file.filename)
-            # Salva il file in una cartella temporanea (controlla i permessi)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            logging.info(f"File successfully uploaded: {filename}")
-            return jsonify({'message': ' successfully uploaded'}), 200
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+            
+            # After successful upload, vectorize and store the document
+            session_uid, session_timestamp = vectorize_and_store_uploaded_docs(
+                app.config['UPLOAD_FOLDER'],
+                INDEX_FOLDER,
+                openai_embeddings
+            )
+            
+            if session_uid and session_timestamp:
+                return jsonify({
+                    'message': 'File successfully uploaded and processed',
+                    'session_uid': session_uid,
+                    'session_timestamp': session_timestamp
+                }), 200
+            else:
+                return jsonify({'error': 'File uploaded but processing failed'}), 500
         except Exception as e:
             return jsonify({'error': f'Failed to upload file: {str(e)}'}), 500
     else:
         return jsonify({'error': 'File type not allowed'}), 400
-def allowed_file(filename):
-    ALLOWED_EXTENSIONS = {'pdf', 'csv'}
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-   
+    
 if __name__ == '__main__':
     app.run(debug=True)
