@@ -54,7 +54,7 @@ def vectorize_and_store_uploaded_docs(upload_folder, index_folder, embeddings):
         logging.error(f"Upload folder does not exist: {upload_folder}")
         return
 
-    index_path = os.path.join(index_folder, "faiss_index_uploaded_docs")
+    index_path = os.path.join(index_folder)
     
     documents = []
     for filename in os.listdir(upload_folder):
