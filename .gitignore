@@ -70,10 +70,12 @@ venv.bak/
 .ipynb_checkpoints/
 
 
-# Ignore faiss and pkl files 
+# Ignore faiss and pkl files + uploads
+faiss_index_chatgpt/*
 faiss_index_chatgpt/index.faiss
 faiss_index_chatgpt/index.pkl
 
+faiss_index_gemini/*
 faiss_index_gemini/index.faiss
 faiss_index_gemini/index.pkl
 
@@ -82,3 +84,5 @@ faiss_index_uploaded_docs/index.pkl
 
 *.faiss
 *.pkl
+
+uploads/*
