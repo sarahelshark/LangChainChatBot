@@ -75,7 +75,7 @@ def vectorize_and_store_uploaded_docs(upload_folder, index_folder, embeddings):
 
         try:
             if filename.endswith('.txt'):
-                loader = TextLoader(file_path)
+                loader = TextLoader(file_path,encoding=None)
             elif filename.endswith('.csv'):
                 loader = CSVLoader(file_path)
             elif filename.endswith('.pdf'):
