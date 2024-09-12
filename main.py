@@ -27,7 +27,7 @@ CORS(app)
 current_dir = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.abspath('./uploads')
 INDEX_FOLDER = os.path.abspath('./faiss_index_uploaded_docs')     
-ALLOWED_EXTENSIONS = {'pdf', 'csv'}
+ALLOWED_EXTENSIONS = {'pdf', 'csv', 'txt'}
 
 # Ensure directories exist
 os.makedirs(INDEX_FOLDER, exist_ok=True)
