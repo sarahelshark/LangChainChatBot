@@ -21,6 +21,11 @@ def split_text_into_documents(full_text, session_uid, session_timestamp):
 
 def handle_vectorstore(index_path, documents, embeddings, model_type, session_uid, session_timestamp):
     try:
+        # Verifica e crea la cartella dell'indice se non esiste
+        if not os.path.exists(index_path):
+            os.makedirs(index_path, exist_ok=True)
+            logging.info(f"Created directory for {model_type} vector store at {index_path}")
+
         if os.path.exists(index_path):
             vectorstore = FAISS.load_local(index_path, embeddings)
             logging.info(f"Loaded existing vector store for {model_type}")
@@ -58,6 +63,11 @@ def vectorize_and_store_chat_history(chat_history, model_type, embeddings):
     documents = split_text_into_documents(full_text, session_uid, session_timestamp)
     
     index_path = f"faiss_index_{model_type}"
+    
+    # Creazione della cartella per l'indice vettoriale se non esiste
+    if not os.path.exists(index_path):
+        os.makedirs(index_path, exist_ok=True)
+        
     return handle_vectorstore(index_path, documents, embeddings, model_type, session_uid, session_timestamp)
 
 def vectorize_and_store_uploaded_docs(upload_folder, index_folder, embeddings):
@@ -65,7 +75,12 @@ def vectorize_and_store_uploaded_docs(upload_folder, index_folder, embeddings):
         logging.error(f"Upload folder does not exist: {upload_folder}")
         return
 
+ # Creazione della cartella per l'indice se non esiste
     index_path = os.path.join(index_folder)
+    if not os.path.exists(index_path):
+        os.makedirs(index_path, exist_ok=True)
+        logging.info(f"Created directory for uploaded documents at {index_path}")
+
     documents = []
 
     for filename in os.listdir(upload_folder):
