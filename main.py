@@ -162,12 +162,10 @@ def delete_conversations():
 @app.route('/api/get_old_chats', methods=['GET'])
 def get_old_chats():
     try:
-        # initialization of all varibles to be used
+        # initialization of all variables to be used
         model_type = request.args.get('model', 'chatgpt')
-        #embeddings = None
-        #vectorstore = None
-        #all_docs = {} # to store all documents from vector store
-        #unique_conversations = {} # to store unique conversations
+        offset = int(request.args.get('offset', 0))
+        limit = int(request.args.get('limit', 3))
         
         if model_type not in ['chatgpt', 'gemini']:
             return jsonify({'error': 'Invalid model type specified.'}), 400
@@ -197,10 +195,13 @@ def get_old_chats():
         conversations = list(unique_conversations.values())
         conversations.sort(key=lambda x: x["timestamp"], reverse=True)
         
-        return jsonify({'conversations': conversations})
+        # Apply pagination
+        paginated_conversations = conversations[offset:offset + limit]
+        
+        return jsonify({'conversations': paginated_conversations})
     except Exception as e:
-        return jsonify({'error': f'Errore nel recupero delle conversazioni: {str(e)}'}), 500
-    
+        return jsonify({'error': f'Errore nel recupero delle conversazioni: {str(e)}'}), 500  
+
 @app.route('/api/reset', methods=['POST'])
 def reset_conversation():
     global chatgpt_history
