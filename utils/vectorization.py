@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 import uuid
 import os
-from langchain.schema import Document
+from langchain.schema import Document, SystemMessage
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_community.document_loaders import TextLoader, CSVLoader, PyPDFLoader
@@ -52,10 +52,13 @@ def vectorize_and_store_chat_history(chat_history, model_type, embeddings):
 
     session_uid, session_timestamp = generate_session_info()
 
+    # Filtra i messaggi di sistema e di contesto
+    filtered_history = [msg for msg in chat_history if not isinstance(msg, SystemMessage) and "Context" not in msg.content]
+
     if model_type == 'chatgpt':
-        full_text = "\n".join([f"{type(msg).__name__}: {msg.content}" for msg in chat_history])
+        full_text = "\n".join([f"{type(msg).__name__}: {msg.content}" for msg in filtered_history])
     elif model_type == 'gemini':
-        full_text = "\n".join(chat_history)
+        full_text = "\n".join(filtered_history)
     else:
         raise ValueError(f"Unsupported model type: {model_type}")
 
@@ -75,7 +78,7 @@ def vectorize_and_store_uploaded_docs(upload_folder, index_folder, embeddings):
         logging.error(f"Upload folder does not exist: {upload_folder}")
         return
 
- # Creazione della cartella per l'indice se non esiste
+    # Creazione della cartella per l'indice se non esiste
     index_path = os.path.join(index_folder)
     if not os.path.exists(index_path):
         os.makedirs(index_path, exist_ok=True)
@@ -90,7 +93,7 @@ def vectorize_and_store_uploaded_docs(upload_folder, index_folder, embeddings):
 
         try:
             if filename.endswith('.txt'):
-                loader = TextLoader(file_path,encoding=None)
+                loader = TextLoader(file_path, encoding=None)
             elif filename.endswith('.csv'):
                 loader = CSVLoader(file_path)
             elif filename.endswith('.pdf'):
