@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv 
 import logging
-from langchain_openai import OpenAIEmbeddings
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 from flask import Flask, request, jsonify, render_template
 from flask_bootstrap import Bootstrap5
@@ -13,8 +13,9 @@ from utils.context import create_enhanced_context
 import utils.constants as constants
 from models import GeminiPro
 from langchain_community.vectorstores import FAISS
-from langchain_openai import ChatOpenAI
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+
+
 load_dotenv()
 
 # initialize the Flask app
