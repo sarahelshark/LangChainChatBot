@@ -100,9 +100,11 @@ def chat():
             logging.info("-------Gemini mode-------")  
             # Aggiungi il contesto alla cronologia della chat
             gemini_history.insert(0, f"Context:\n{context}")
+            logging.info(f"Gemini history after adding context: {gemini_history}")
             gemini_history.append(f"User: {user_message}")
-            response = GeminiPro.get_response(f"User: {user_message}")
+            response = GeminiPro.get_response(f"Context:\n{context}\nUser: {user_message}")
             gemini_history.append(f"AI: {response}")
+            logging.info(f"Gemini response: {response}")
             
         else:
             return jsonify({'error': 'Invalid model choice.'}), 400
