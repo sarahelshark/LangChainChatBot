@@ -52,12 +52,15 @@ def vectorize_and_store_chat_history(chat_history, model_type, embeddings):
 
     session_uid, session_timestamp = generate_session_info()
 
-    # Filtra i messaggi di sistema e di contesto
-    filtered_history = [msg for msg in chat_history if not isinstance(msg, SystemMessage) and "Context" not in msg.content]
+   
 
     if model_type == 'chatgpt':
+        # Filtra i messaggi di sistema e di contesto  attenzione, per gemini non è una lista di stringhe
+        filtered_history = [msg for msg in chat_history if not isinstance(msg, SystemMessage) and "Context" not in msg.content]
         full_text = "\n".join([f"{type(msg).__name__}: {msg.content}" for msg in filtered_history])
     elif model_type == 'gemini':
+        # Per Gemini, assumiamo che chat_history sia già una lista di stringhe
+        filtered_history = [msg for msg in chat_history if "Context" not in msg]
         full_text = "\n".join(filtered_history)
     else:
         raise ValueError(f"Unsupported model type: {model_type}")
