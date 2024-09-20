@@ -2,6 +2,8 @@ import logging
 from datetime import datetime
 import os
 from langchain_community.vectorstores import FAISS
+# Configura il logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 
@@ -52,4 +54,5 @@ def create_enhanced_context(model_type, embeddings, max_context_length=3000):
         context += conversation["content"] + "\n"
 
     print(f"Enhanced context created with length: {len(context)}")
+    logging.debug(f"Enhanced context content: {context}")
     return context

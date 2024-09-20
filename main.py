@@ -86,6 +86,7 @@ def chat():
    
         # Recupera il contesto dalle conversazioni precedenti
         context = create_enhanced_context(model_choice, openai_embeddings)
+        logging.info(f"Context created: {context}")
 
         if model_choice == 'chatgpt':
             logging.info("-------ChatGPT mode-------")  
