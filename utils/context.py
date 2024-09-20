@@ -4,6 +4,7 @@ import os
 from langchain_community.vectorstores import FAISS
 
 
+
 def create_enhanced_context(model_type, embeddings, max_context_length=3000):
     chat_index_path = f"faiss_index_{model_type}"
     upload_index_path = os.path.abspath('./faiss_index_uploaded_docs')
@@ -50,5 +51,5 @@ def create_enhanced_context(model_type, embeddings, max_context_length=3000):
             break
         context += conversation["content"] + "\n"
 
-    logging.info(f"Enhanced context created with length: {len(context)}")
+    print(f"Enhanced context created with length: {len(context)}")
     return context

@@ -2,7 +2,6 @@ import os
 from dotenv import load_dotenv 
 import logging
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-
 from flask import Flask, request, jsonify, render_template
 from flask_bootstrap import Bootstrap5
 from flask_cors import CORS

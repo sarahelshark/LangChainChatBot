@@ -2,7 +2,8 @@ import logging
 from datetime import datetime
 import uuid
 import os
-from langchain.schema import Document, SystemMessage
+from langchain_core.documents import Document
+from langchain_core.messages import  SystemMessage
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_community.document_loaders import TextLoader, CSVLoader, PyPDFLoader
