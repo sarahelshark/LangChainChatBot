@@ -56,12 +56,11 @@ def vectorize_and_store_chat_history(chat_history, model_type, embeddings):
    
 
     if model_type == 'chatgpt':
-        # Filtra i messaggi di sistema e di contesto  attenzione, per gemini non è una lista di stringhe
+        # Filtra i messaggi di sistema e di contesto
         filtered_history = [msg for msg in chat_history if not isinstance(msg, SystemMessage) and "Context" not in msg.content]
         full_text = "\n".join([f"{type(msg).__name__}: {msg.content}" for msg in filtered_history])
     elif model_type == 'gemini':
-        # Per Gemini, assumiamo che chat_history sia già una lista di stringhe
-        filtered_history = [msg for msg in chat_history if "Context" not in msg]
+        filtered_history = [msg for msg in chat_history if "Context:" not in msg]
         full_text = "\n".join(filtered_history)
     else:
         raise ValueError(f"Unsupported model type: {model_type}")
@@ -84,6 +83,7 @@ def vectorize_and_store_uploaded_docs(upload_folder, index_folder, embeddings):
 
     # Creazione della cartella per l'indice se non esiste
     index_path = os.path.join(index_folder)
+    
     if not os.path.exists(index_path):
         os.makedirs(index_path, exist_ok=True)
         logging.info(f"Created directory for uploaded documents at {index_path}")
