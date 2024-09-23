@@ -1,116 +1,73 @@
+# Basic Digital Assistant 
+***LangChain and OpenAI / Gemini***
 
-
-# E-commerce Digital Assistant with LangChain and OpenAI
----
-
-
-
-## Overview
-This project implements a digital assistant for e-commerce product descriptions and product search using Flask, LangChain, and OpenAI's GPT models. The assistant can generate product descriptions in Italian, perform translations, and help users find specific products.
-
-
----
-
-## Setup Instructions
-
-### 1. Virtual Environment Setup
-1. **Create a virtual environment:**
-   ```bash
+### Setup
+1. Create a virtual environment:
+   ```
    python -m venv venv
    ```
-2. **Activate the environment:**
-   - **Windows:**
-     ```bash
-     .\venv\Scripts\activate
-     ```
-   - **macOS/Linux:**
-     ```bash
-     source venv/bin/activate
-     ```
-
-### 2. Install Dependencies
-To install the project dependencies:
-
-1. **Install Flask, Flask-CORS, and python-dotenv:**
-   ```bash
-   pip install flask flask-cors python-dotenv
+2. Activate the environment:
    ```
-
-2. **Install LangChain and OpenAI packages:**
-   ```bash
-   pip install langchain langchain-openai
-   pip install -qU langchain-openai
+   - Windows: `.\venv\Scripts\activate`
+   - macOS/Linux: `source venv/bin/activate`
    ```
-
-3. **Upgrade pip and LangChain dependencies:**
-   ```bash
-   python.exe -m pip install --upgrade pip
-   pip install --upgrade langchain
+3. Create a `.env` file in the project root with your OpenAI API key & flask SECRET_KEY :
    ```
+   OPENAI_API_KEY="your_api_key_here"
+   OPENAI_ORGANIZATION="your_organization_id_here"
+   OPENAI_PROJECT = "your_open_ai_project"
 
-4. **Install additional LangChain community tools:**
-   ```bash
-   pip install langchain_community
+   SECRET_KEY = "your_flask_secret_key"
    ```
+### dependencies.txt
+1. To install all the project dependencies, after having set the environment (previous paragraph), run:
+   ```
+   pip install -r dependencies.txt
+   ```
+3. If any error occurs when installing the specific versions, try following the **step-by-step guide** listed below.
+4. You can use the ***.env_sample*** and ***gitignore_sample.txt*** simply by renaming them and replacing the secret values
+5. You can use ***your-credentials.json*** to fill it with your vertexAi secret values, and finally rename it 
 
-### 3. Configuration
-Create a `.env` file in the project root directory with the following content, replacing the placeholder values with your actual API keys:
+### Project Structure
 
-```plaintext
-OPENAI_API_KEY="your_api_key_here"
-OPENAI_ORGANIZATION="your_organization_id_here"
-OPENAI_PROJECT="your_open_ai_project"
-SECRET_KEY="your_flask_secret_key"
-```
+- `main.js`: Client-side JavaScript for handling user interactions
+- `index.html`: HTML template for the chat interface
+- `main.py`: Server-side Python script for handling API requests
+- `utils/`:
+  - `context.py`: Functions for creating enhanced context from chat history & uploaded documents
+  - `vectorization.py`: Functions for vectorizing and storing chat history and uploaded documents
+  - `helpers.py`: Helper functions for session management and text splitting (to be implemented)
+- `faiss_index_chatgpt/`: Directory for storing FAISS index files for ChatGPT
+- `faiss_index_gemini/`: Directory for storing FAISS index files for Gemini
+- `faiss_index_uploaded_docs/`: Directory for storing FAISS index files for uploaded documents
+- `uploads/`: Directory for storing uploaded documents
 
-### 4. Project Structure and Running the Applications
+### Running the Application
+1. python main.py
+2. Open the development server directly from the terminal (e.g.`http://localhost:5000`) to interact with the assistant.
 
-#### **Description Generator**
-- **File:** `productDescription_deprecated.py`
-- **Functionality:** Generates product descriptions in Italian and performs translations upon request.
-- **Run the Application:**
-  ```bash
-  python productDescription_deprecated.py
-  ```
-- **Access:** Open a web browser and navigate to [http://localhost:5000](http://localhost:5000).
+### Features
+- Basic chatbot interaction
+- Reset of conversation
+- Memory of the conversations in a vector store & retrieval augmented generation
+- Reset conversation functionality
+- Delete conversation
+- Upload of .pdf, .txt, . csv files, enhancing the context of the llm
 
-#### **Product Search**
-- **File:** `searchDB_deprecated.py`
-- **Functionality:** Searches for products based on user input, supports multiple European languages.
-- **Database Setup:**
-  - **Create the database:**
-    ```bash
-    python create_db.py
-    ```
-  - **Check if the database is populated:**
-    ```bash
-    python check_db.py
-    ```
-- **Run the Application:**
-  ```bash
-  python productDescription_deprecated.py
-  ```
-- **Access:** Open a web browser and navigate to [http://localhost:5000](http://localhost:5000).
+### Usage
+- Start a conversation by greeting the assistant
+- Type 'exit' to end the conversation and store it with a session uid and timestamp
+- Use the "Reset Conversation" button to start a new chat session, the conversation is not saved
+- Switch between the chatGPT and gemini models
+- Easily delete the undesired conversations both visually and on the vector store by clicking on the X button 
+- Upload short documents (.pdf, .txt, . csv files), in order to generate more accurate responses
 
-### 5. Usage Instructions
-- **Description Generator:**
-  - Start a conversation by greeting the assistant.
-  - Provide product information to generate descriptions.
-  - Ask for translations of generated descriptions.
-  - Type `exit` to end the conversation.
-  - Use the "Reset Conversation" button to start a new chat session.
+### Dependencies
+- Flask
+- Flask-CORS
+- LangChain
+- OpenAI API
 
-- **Product Search:**
-  - Start a conversation by greeting the assistant and asking about its skills.
-  - Ask the assistant to help find a specific product by description, price, or name, in a European language.
-  - Type `exit` to end the conversation.
-  - Use the "Reset Conversation" button to start a new chat session.
+### Note
+This project uses environment variables for API keys and other sensitive information. Make sure to keep your `.env`, `.json` file secure and ***never*** commit it to version control.
 
-### 6. Work in Progress
-- **File:** `test-integration.py`
-- **Goal:** Integrate the description generator/translator and product search/purchase advice into a single application with an enhanced user interface.
-
-### 7. Notes
-- This project uses environment variables for API keys and other sensitive information. Make sure to keep your `.env` file secure and never commit it to version control.
-
----

@@ -53,8 +53,6 @@ def vectorize_and_store_chat_history(chat_history, model_type, embeddings):
 
     session_uid, session_timestamp = generate_session_info()
 
-   
-
     if model_type == 'chatgpt':
         # Filtra i messaggi di sistema e di contesto
         filtered_history = [msg for msg in chat_history if not isinstance(msg, SystemMessage) and "Context" not in msg.content]
