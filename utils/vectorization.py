@@ -6,8 +6,8 @@ from langchain_core.documents import Document
 from langchain_core.messages import  SystemMessage
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_community.document_loaders import TextLoader, CSVLoader, PyPDFLoader
-
+from langchain_community.document_loaders import TextLoader,  PyPDFLoader
+from langchain_community.document_loaders.csv_loader import CSVLoader
 # helpers for vectorization functions
 def generate_session_info():
     session_uid = str(uuid.uuid4())
