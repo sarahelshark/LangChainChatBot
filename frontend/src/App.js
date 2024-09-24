@@ -1,5 +1,5 @@
 import './index.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Moon, Sun, MessageSquare, FileText, Home, X } from 'lucide-react';
 
 const NavItem = ({ icon: Icon, label, onClick }) => (
@@ -59,7 +59,7 @@ const Chat = () => {
       <div className="mt-4 flex">
         <input
           type="text"
-          className="flex-grow p-2 border border-gray-300 rounded dark:border-gray-600bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+          className="flex-grow p-2 border border-gray-300 rounded dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Scrivi un messaggio..."
@@ -75,25 +75,6 @@ const Chat = () => {
   );
 };
 
-const ChatOffCanvas = ({ isOpen, onClose }) => (
-  <div
-    className={`fixed inset-y-0 right-0 w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out ${
-      isOpen ? 'translate-x-0' : 'translate-x-full'
-    }`}
-  >
-    <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
-      <h2 className="text-xl font-semibold">Chat</h2>
-      <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
-        <X size={24} />
-      </button>
-    </div>
-    <div className="p-4">
-      <p>Chat content goes here</p>
-    </div>
-  </div>
-);
-
-// Nuovo componente Footer
 const Footer = () => (
   <footer className="bg-gray-200 dark:bg-gray-800 text-center p-4 mt-auto">
     <p className="text-gray-600 dark:text-gray-400">&copy; 2024 Chatbot App. All rights reserved.</p>
@@ -102,15 +83,30 @@ const Footer = () => (
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
-  const [chatOpen, setChatOpen] = useState(false);
 
-  const toggleDarkMode = () => setDarkMode(!darkMode);
-  const toggleChat = () => setChatOpen(!chatOpen);
+
+  const saveThemePreference = (isDarkMode) => {
+    localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
+  };
+
+
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem('darkMode');
+    if (savedDarkMode) {
+      setDarkMode(savedDarkMode === 'true');
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    saveThemePreference(newDarkMode);
+  };
 
   return (
     <div className={`min-h-screen flex flex-col ${darkMode ? 'dark' : ''}`}>
       <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white flex-grow">
-        <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} toggleChat={toggleChat} />
+        <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
         <main className="p-4 flex-grow">
           <h1 className="text-2xl font-bold mb-4">Welcome to the Chatbot</h1>
           <p>
@@ -119,9 +115,7 @@ const App = () => {
           </p>
           <Chat />
         </main>
-        <ChatOffCanvas isOpen={chatOpen} onClose={() => setChatOpen(false)} />
       </div>
-      {/* Aggiunta del footer */}
       <Footer />
     </div>
   );
