@@ -28,6 +28,24 @@ const Navbar = ({ darkMode, toggleDarkMode, toggleChat }) => (
   </nav>
 );
 
+const ChatOffCanvas = ({ isOpen, onClose }) => (
+  <div
+    className={`fixed inset-y-0 right-0 w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out ${
+      isOpen ? 'translate-x-0' : 'translate-x-full'
+    }`}
+  >
+    <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+      <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Chat</h2>
+      <button onClick={onClose} className="p-1 rounded-full text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
+        <X size={24} />
+      </button>
+    </div>
+    <div className="p-4 text-gray-900 dark:text-white">
+      <p>Chat content goes here</p>
+    </div>
+  </div>
+);
+
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -83,12 +101,13 @@ const Footer = () => (
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
-
+  const [chatOpen, setChatOpen] = useState(false);
 
   const saveThemePreference = (isDarkMode) => {
     localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
   };
 
+  const toggleChat = () => setChatOpen(!chatOpen);
 
   useEffect(() => {
     const savedDarkMode = localStorage.getItem('darkMode');
@@ -106,7 +125,7 @@ const App = () => {
   return (
     <div className={`min-h-screen flex flex-col ${darkMode ? 'dark' : ''}`}>
       <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white flex-grow">
-        <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+        <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} toggleChat={toggleChat} />
         <main className="p-4 flex-grow">
           <h1 className="text-2xl font-bold mb-4">Welcome to the Chatbot</h1>
           <p>
@@ -117,6 +136,7 @@ const App = () => {
         </main>
       </div>
       <Footer />
+      <ChatOffCanvas isOpen={chatOpen} onClose={toggleChat} />
     </div>
   );
 };
