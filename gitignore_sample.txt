@@ -71,21 +71,21 @@ venv.bak/
 
 
 # Ignore faiss and pkl files + uploads
-faiss_index_chatgpt/*
-faiss_index_chatgpt/index.faiss
-faiss_index_chatgpt/index.pkl
+db/faiss_index_chatgpt/*
+db/faiss_index_chatgpt/index.faiss
+db/faiss_index_chatgpt/index.pkl
 
-faiss_index_gemini/*
-faiss_index_gemini/index.faiss
-faiss_index_gemini/index.pkl
+db/faiss_index_gemini/*
+db/faiss_index_gemini/index.faiss
+db/faiss_index_gemini/index.pkl
 
-faiss_index_uploaded_docs/index.faiss
-faiss_index_uploaded_docs/index.pkl
+db/faiss_index_uploaded_docs/index.faiss
+db/faiss_index_uploaded_docs/index.pkl
 
 *.faiss
 *.pkl
 
-uploads/*
+db/uploads/*
 
 # Ignore JSON file with credentials
 alpenite-vertexai.json
