@@ -35,6 +35,7 @@ pip-wheel-metadata/
 *.pyz
 *.pyzw
 
+
 # Node.js
 node_modules/
 npm-debug.log
@@ -86,6 +87,8 @@ db/faiss_index_uploaded_docs/index.pkl
 *.pkl
 
 db/uploads/*
+/db/
+/db/*
 
 # Ignore JSON file with credentials
 alpenite-vertexai.json
