@@ -25,8 +25,8 @@ CORS(app)
 
 # constants
 current_dir = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_FOLDER = os.path.abspath('./uploads')
-INDEX_FOLDER = os.path.abspath('./faiss_index_uploaded_docs')     
+UPLOAD_FOLDER = os.path.abspath('./db/uploads')
+INDEX_FOLDER = os.path.abspath('./db/faiss_index_uploaded_docs')     
 ALLOWED_EXTENSIONS = {'pdf', 'csv', 'txt'}
 
 # Ensure directories exist
@@ -50,8 +50,6 @@ chatgpt_history.append(system_message)
 # function to check if the file type is allowed
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 
 @app.route('/')
 def index():

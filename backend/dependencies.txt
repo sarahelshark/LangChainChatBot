@@ -1,21 +1,21 @@
 # pip install -r dependencies.txt
 
 pypdf
-
 flask 
 flask-cors 
+Flask-Cors
 flask-bootstrap
+Flask-Bootstrap
+
 Bootstrap-Flask 
 python-dotenv
 langchain 
 langchain-openai
 
-
 # Python version
 # python==3.12.4
 # Pip version
 pip==23.1.2
-
 
 # Project dependencies
 flask==3.0.3
@@ -23,16 +23,9 @@ flask-cors==4.0.1
 python-dotenv==1.0.1
 openai==1.35.14
 
-# Project dependencies deprecated 
-langchain==0.1.13
-langchain-openai==0.0.8
-#langchain-community==0.0.28
-#langchain-core==0.2.22
-langdetect==1.0.9
-faiss-cpu==1.8.0
-
 
 # Gemini 
+
 pandas==2.2.1
 google-cloud-aiplatform==1.43.0
 google-cloud-documentai
