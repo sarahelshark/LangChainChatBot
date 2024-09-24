@@ -59,7 +59,7 @@ const Chat = () => {
       <div className="mt-4 flex">
         <input
           type="text"
-          className="flex-grow p-2 border border-gray-300 rounded dark:border-gray-600"
+          className="flex-grow p-2 border border-gray-300 rounded dark:border-gray-600bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Scrivi un messaggio..."
