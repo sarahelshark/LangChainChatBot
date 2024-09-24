@@ -7,7 +7,6 @@ import Navbar from './components/Navbar';
 import Chat from './components/Chat';
 
 
-
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
