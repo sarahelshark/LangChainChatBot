@@ -89,6 +89,7 @@ db/faiss_index_uploaded_docs/index.pkl
 db/uploads/*
 /db/
 /db/*
+backend/db/uploads/
 
 # Ignore JSON file with credentials
 alpenite-vertexai.json
