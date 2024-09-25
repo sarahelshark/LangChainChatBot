@@ -8,11 +8,16 @@ const Chat = () => {
     if (input) {
       setMessages([...messages, { text: input, sender: 'User' }]);
       setInput('');
-    }
+    };
   };
+  const sendEnter = (e) => {
+    if (e.key === 'Enter') {
+      console.log('Enter key pressed');
+    }
+  }
 
   return (
-    <div className="mt-8">
+    <section className="mt-8">
       <h1 className="text-2xl font-bold mb-4">Welcome to the Chatbot</h1>
       <div className="h-64 p-4 bg-gray-100 dark:bg-gray-700 overflow-y-auto rounded">
         {messages.length > 0 ? (
@@ -43,12 +48,13 @@ const Chat = () => {
         />
         <button
           onClick={handleSend}
+          onKeyDown={sendEnter}
           className="ml-2 p-2 bg-blue-500 text-white rounded"
         >
           Invia
         </button>
       </div>
-    </div>
+    </section>
   );
 };
 
