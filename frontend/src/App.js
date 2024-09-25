@@ -1,18 +1,20 @@
-
-import React, { useState, useEffect } from 'react';
 import './index.css';
 import Navbar from './components/Navbar';
 import Chat from './components/Chat';
 import ChatOffCanvas from './components/ChatOffCanvas';
 import Docs from './components/Docs';
 import Footer from './components/Footer';
-import { useThemePreference } from './hooks/useThemePreference';
 import { toggleChat, toggleDarkMode } from './utils/toggleFunctions';
+import useAppState from './hooks/useAppState';
 const App = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [chatOpen, setChatOpen] = useState(false);
-  const [activePage, setActivePage] = useState('home');
-  useThemePreference(setDarkMode);
+  const {
+    darkMode,
+    setDarkMode,
+    chatOpen,
+    setChatOpen,
+    activePage,
+    setActivePage,
+  } = useAppState();
 
   return (
     <div className={`min-h-screen flex flex-col ${darkMode ? 'dark' : ''}`}>
