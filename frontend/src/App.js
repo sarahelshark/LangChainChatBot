@@ -1,20 +1,18 @@
 
 import React, { useState, useEffect } from 'react';
 import './index.css';
-import Footer from './components/Footer';
-import ChatOffCanvas from './components/ChatOffCanvas';
 import Navbar from './components/Navbar';
 import Chat from './components/Chat';
+import ChatOffCanvas from './components/ChatOffCanvas';
 import Docs from './components/Docs';
+import Footer from './components/Footer';
+import { saveThemePreference } from './utils/saveThemePreference';
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [activePage, setActivePage] = useState('home');
 
-  const saveThemePreference = (isDarkMode) => {
-    localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
-  };
   const toggleChat = () => setChatOpen(!chatOpen);
   useEffect(() => {
     const savedDarkMode = localStorage.getItem('darkMode');
