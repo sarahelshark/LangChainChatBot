@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import {handleSend , sendEnter} from '../utils/sendInputs';
-import { ArrowUp } from 'lucide-react';
+import {sendEnter} from '../utils/sendInputs';
+import SendButton from './SendButton';
+import ResetButton from './ResetButton';
+import UploadButton from './UploadButton';
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -8,12 +10,6 @@ const Chat = () => {
   const resetConversation = () => {
     setMessages([]);
     setInput('');
-  };
-
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    // Handle the file upload logic here
-    console.log('File uploaded:', file);
   };
 
   return (
@@ -47,32 +43,10 @@ const Chat = () => {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Scrivi un messaggio..."
         />
-        <button
-          onClick={() => handleSend(input, messages, setMessages, setInput)}
-          className="ml-2 p-2 bg-blue-500 text-white rounded hover:bg-sky-700 "
-        >
-          Invia
-        </button>
-        <button
-          onClick={resetConversation}
-          className="ml-2 p-2 border border-red-500 text-red-500 hover:bg-red-200 rounded"
-        >
-          Reset
-        </button>
+        <SendButton input={input} messages={messages} setMessages={setMessages} setInput={setInput} />
+        <ResetButton resetConversation={resetConversation} />
       </div>
-      <div className="upload flex items-center mt-2">
-        <label className="upload-area">
-          <input
-            type="file"
-            className="hidden"
-            id="fileUpload"
-            onChange={handleFileUpload}
-          />
-          <span className="upload-button btn ">
-            <ArrowUp className="text-xl" />
-          </span>
-        </label>
-      </div>
+        <UploadButton input={input} messages={messages} setMessages={setMessages} setInput={setInput} />
     </section>
   );
 };

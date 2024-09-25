@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 
 const ChatOffCanva = ({ isOpen, onClose }) => (
   <div
-    className={`fixed inset-y-0 right-0 w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out ${
+    className={`fixed inset-y-0 right-0 w-64 bg-white dark:bg-gray-800  shadow-lg transform transition-transform duration-300 ease-in-out ${
       isOpen ? 'translate-x-0' : 'translate-x-full'
     }`}
   >
@@ -18,5 +18,4 @@ const ChatOffCanva = ({ isOpen, onClose }) => (
     </div>
   </div>
 );
-
 export default ChatOffCanva;
