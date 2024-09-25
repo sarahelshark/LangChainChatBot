@@ -28,7 +28,7 @@
 4. You can use the ***.env_sample*** and ***gitignore_sample.txt*** simply by renaming them and replacing the secret values
 5. You can use ***your-credentials.json*** to fill it with your vertexAi secret values, and finally rename it 
 
-### Project Structure
+### Project Structure (Backend folder)
 
 - `main.js`: Client-side JavaScript for handling user interactions
 - `index.html`: HTML template for the chat interface
