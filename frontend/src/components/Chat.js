@@ -12,7 +12,7 @@ const Chat = () => {
   };
   const sendEnter = (e) => {
     if (e.key === 'Enter') {
-      console.log('Enter key pressed');
+      handleSend();
     }
   }
 
@@ -43,12 +43,13 @@ const Chat = () => {
           type="text"
           className="flex-grow p-2 border border-gray-300 rounded dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
           value={input}
+          onKeyDown={sendEnter}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Scrivi un messaggio..."
         />
         <button
           onClick={handleSend}
-          onKeyDown={sendEnter}
+          
           className="ml-2 p-2 bg-blue-500 text-white rounded"
         >
           Invia
