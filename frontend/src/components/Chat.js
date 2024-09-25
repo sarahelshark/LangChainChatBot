@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
 import {sendEnter} from '../utils/sendInputs';
 import SendButton from './SendButton';
 import ResetButton from './ResetButton';
 import UploadButton from './UploadButton';
+import useResetConversation from '../hooks/useResetConversation';
+
 
 const Chat = () => {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  const resetConversation = () => {
-    setMessages([]);
-    setInput('');
-  };
+    const {
+        messages,
+        setMessages,
+        input,
+        setInput,
+        resetConversation,
+    } = useResetConversation();
 
   return (
     <section className="mt-8 mx-5 md:mx-11">
