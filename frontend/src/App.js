@@ -6,8 +6,8 @@ import Chat from './components/Chat';
 import ChatOffCanvas from './components/ChatOffCanvas';
 import Docs from './components/Docs';
 import Footer from './components/Footer';
-import { useThemePreference , toggleChat ,toggleDarkMode } from './utils/getThemePreference';
-
+import { useThemePreference } from './hooks/useThemePreference';
+import { toggleChat, toggleDarkMode } from './utils/toggleFunctions';
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
