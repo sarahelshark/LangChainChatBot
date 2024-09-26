@@ -16,23 +16,19 @@ code {
     monospace;
 }
 
-
 /* Upload Styles */
 div.upload {
   display: flex;
   align-items: center;
   z-index: 1000; 
 }
-
 .upload>p {
   margin: 0;
   padding: 5px;
 }
-
 label.upload-area {
   cursor: pointer;
 }
-
 label.upload-area span.upload-button {
   position: relative;
   width: 30px;
@@ -46,17 +42,25 @@ label.upload-area span.upload-button {
   transition: transform .4s;
   
 }
-
 label.upload-area span.upload-button .lucide {
   position: absolute;
   font-size: 20px;
 }
-
 label.upload-area span.upload-button:hover {
   transform: scale(1.1); 
 }
-
 input[type="file"] {
   display: none;
+}
+
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 12px; 
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  border: 3px solid ; 
 }
 
