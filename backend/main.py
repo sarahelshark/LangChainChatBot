@@ -14,8 +14,29 @@ from models import GeminiPro
 from langchain_community.vectorstores import FAISS
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
-
 load_dotenv()
+# constants
+current_dir = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = os.path.join(current_dir, 'db', 'uploads')
+INDEX_FOLDER = os.path.join(current_dir, 'db', 'faiss_index_uploaded_docs')
+ALLOWED_EXTENSIONS = {'pdf', 'csv', 'txt'}
+
+from deserializer import load_pickle
+# Lista dei percorsi dei file pickle
+file_paths = [
+    os.path.join(current_dir, 'db', 'faiss_index_chatgpt', 'index.pkl'),
+    os.path.join(current_dir, 'db', 'faiss_index_gemini', 'index.pkl'),
+    os.path.join(current_dir, 'db', 'faiss_index_uploaded_docs', 'index.pkl')
+]
+all_data = {}
+for file_path in file_paths:
+    try:
+        data = load_pickle(file_path, allow_dangerous_deserialization=True)
+        if data is not None:
+            all_data[file_path] = data
+    except Exception as e:
+        print(f"Error loading {file_path}: {e}")
+
 
 # initialize the Flask app
 app = Flask(__name__)
@@ -23,11 +44,6 @@ bootstrap = Bootstrap5(app)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 CORS(app)
 
-# constants
-current_dir = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_FOLDER = os.path.abspath('./db/uploads')
-INDEX_FOLDER = os.path.abspath('./db/faiss_index_uploaded_docs')     
-ALLOWED_EXTENSIONS = {'pdf', 'csv', 'txt'}
 
 # Ensure directories exist
 os.makedirs(INDEX_FOLDER, exist_ok=True)
@@ -83,8 +99,12 @@ def chat():
             return jsonify({'content': "Grazie per aver utilizzato l'assistente AI. Arrivederci!👋"})
    
         # Recupera il contesto dalle conversazioni precedenti
-        context = create_enhanced_context(model_choice, openai_embeddings)
-        logging.info(f"Context created: {context}")
+        try:
+            context = create_enhanced_context(model_choice, openai_embeddings)
+            logging.info(f"Context created: {context}")
+        except Exception as context_error:
+            logging.error(f"Error creating context: {str(context_error)}")
+            context = ""  # Proceed with an empty context if there's an error
 
         if model_choice == 'chatgpt':
             logging.info("-------ChatGPT mode-------")  
@@ -111,9 +131,8 @@ def chat():
         return jsonify({'content': response})
     
     except Exception as e:
-        logging.error(f'Unexpected error: {str(e)}')
-        return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
- 
+        logging.error(f'Unexpected error in chat endpoint: {str(e)}', exc_info=True)
+        return jsonify({'error': f'An unexpected error occurred. Please try again later.'}), 500
 @app.route('/api/delete_conversation', methods=['POST'])
 def delete_conversations():
     try:

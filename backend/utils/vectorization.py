@@ -19,20 +19,15 @@ def split_text_into_documents(full_text, session_uid, session_timestamp):
     texts = text_splitter.split_text(full_text)
     documents = [Document(page_content=text, metadata={"session_uid": session_uid, "session_timestamp": session_timestamp}) for text in texts]
     return documents
-
 def handle_vectorstore(index_path, documents, embeddings, model_type, session_uid, session_timestamp):
     try:
-        # Verifica e crea la cartella dell'indice se non esiste
-        if not os.path.exists(index_path):
-            os.makedirs(index_path, exist_ok=True)
-            logging.info(f"Created directory for {model_type} vector store at {index_path}")
-
-        if os.path.exists(index_path):
-            vectorstore = FAISS.load_local(index_path, embeddings)
+        if os.path.exists(os.path.join(index_path, "index.faiss")):
+            vectorstore = FAISS.load_local(index_path, embeddings, allow_dangerous_deserialization=True)
             logging.info(f"Loaded existing vector store for {model_type}")
             vectorstore.add_documents(documents)
             logging.info(f"Added new session (UID: {session_uid}) to existing vector store for {model_type}")
         else:
+            logging.info(f"Creating new vector store for {model_type}")
             vectorstore = FAISS.from_documents(documents, embeddings)
             logging.info(f"Created new vector store for {model_type} with session UID: {session_uid}")
 
@@ -40,9 +35,8 @@ def handle_vectorstore(index_path, documents, embeddings, model_type, session_ui
         logging.info(f"Data for {model_type} (UID: {session_uid}) vectorized and stored successfully.")
         return session_uid, session_timestamp
     except Exception as e:
-        logging.error(f"Error in vectorizing and storing data: {e}")
+        logging.error(f"Error in vectorizing and storing data: {e}", exc_info=True)
         return None, None
-
 # /helpers for vectorization functions
 
 # vectorization functions
