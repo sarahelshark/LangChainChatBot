@@ -2,7 +2,6 @@ import os
 from dotenv import load_dotenv 
 import logging
 from langchain_openai import OpenAIEmbeddings
-
 from flask import Flask, request, jsonify, render_template
 from flask_bootstrap import Bootstrap5
 from flask_cors import CORS
@@ -15,19 +14,23 @@ from models import GeminiPro
 from langchain_community.vectorstores import FAISS
 from langchain_openai import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
+import pickle  # Importa pickle se necessario
 load_dotenv()
 
-# initialize the Flask app
+# Initialize the Flask app
 app = Flask(__name__)
 bootstrap = Bootstrap5(app)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 CORS(app)
 
-# constants
+# Costanti
 current_dir = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.abspath('./uploads')
 INDEX_FOLDER = os.path.abspath('./faiss_index_uploaded_docs')     
 ALLOWED_EXTENSIONS = {'pdf', 'csv', 'txt'}
+
+# Variabile per la deserializzazione
+ALLOW_DANGEROUS_DESERIALIZATION = True  
 
 # Ensure directories exist
 os.makedirs(INDEX_FOLDER, exist_ok=True)
@@ -46,12 +49,9 @@ gemini_history = []
 system_message = SystemMessage(content="You are a helpful AI assistant")
 chatgpt_history.append(system_message)
 
-
-# function to check if the file type is allowed
+# Function to check if the file type is allowed
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 
 @app.route('/')
 def index():
@@ -89,7 +89,6 @@ def chat():
 
         if model_choice == 'chatgpt':
             logging.info("-------ChatGPT mode-------")  
-            # Aggiungi il contesto alla cronologia della chat
             chatgpt_history.insert(1, AIMessage(content=f"Context:\n{context}"))
             chatgpt_history.append(HumanMessage(content=user_message))
             result = chatgpt_model.invoke(chatgpt_history)
@@ -98,7 +97,6 @@ def chat():
             
         elif model_choice == 'gemini':
             logging.info("-------Gemini mode-------")  
-            # Aggiungi il contesto alla cronologia della chat
             gemini_history.insert(0, f"Context:\n{context}")
             logging.info(f"Gemini history after adding context: {gemini_history}")
             gemini_history.append(f"User: {user_message}")
@@ -114,7 +112,15 @@ def chat():
     except Exception as e:
         logging.error(f'Unexpected error: {str(e)}')
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
- 
+
+# Esempio di deserializzazione sicura
+def load_pickle_file(file_path):
+    if ALLOW_DANGEROUS_DESERIALIZATION:
+        with open(file_path, 'rb') as file:
+            return pickle.load(file)
+    else:
+        raise ValueError("Deserialization not allowed for untrusted sources.")
+
 @app.route('/api/delete_conversation', methods=['POST'])
 def delete_conversations():
     try:
@@ -222,7 +228,6 @@ def reset_conversation():
     except Exception as e:
         logging.error(f'Unexpected error: {str(e)}')
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
-
 
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
