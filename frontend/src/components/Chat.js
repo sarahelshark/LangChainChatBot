@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { sendEnter } from '../utils/sendInputs';
 import SendButton from './SendButton';
 import ResetButton from './ResetButton';
@@ -16,10 +16,33 @@ const Chat = () => {
 
   const [loading, setLoading] = useState(false);  
   const [model, setModel] = useState('chatgpt'); //default>chatgpt
+  const [showOverlay, setShowOverlay] = useState(false);  // State for overlay
+  // Show overlay when the model is changed
+  useEffect(() => {
+    if (showOverlay) {
+      const timer = setTimeout(() => {
+        setShowOverlay(false);
+      }, 500);  // Hide the overlay
+      return () => clearTimeout(timer);
+    }
+  }, [showOverlay]);
+
+  const handleModelChange = (e) => {
+    setModel(e.target.value);
+    setShowOverlay(true);  // Show overlay when model changes
+  };
 
   return (
     <section className="mt-8 mx-5 md:mx-11">
       <h1 className="text-2xl font-bold mb-4 text-center">Welcome to the Chatbot</h1>
+       {/* Overlay for model change */}
+       {showOverlay && (
+        <div id="overlay" className={!showOverlay ? "hidden" : ""}>
+          <div id="overlay-text">
+            Switching to {model === 'chatgpt' ? 'ChatGPT' : 'Gemini'}...
+          </div>
+        </div>
+      )}
       {/* Select dropdown for AI model */}
       <div className="mb-4">
         <label htmlFor="modelSelect" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -28,7 +51,7 @@ const Chat = () => {
         <select
           id="modelSelect"
           value={model}
-          onChange={(e) => setModel(e.target.value)}  // Update the model state
+          onChange={handleModelChange}  // Update the model state
           className="p-2 border border-gray-300 rounded dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white"
         >
           <option value="chatgpt">ChatGPT</option>
