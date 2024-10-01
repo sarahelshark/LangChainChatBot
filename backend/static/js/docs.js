@@ -1,3 +1,0 @@
-initializeDarkMode();
-homeNotActive(); 
-fetchReadmeContent();

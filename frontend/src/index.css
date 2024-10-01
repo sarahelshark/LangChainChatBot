@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global Styles */
+:root {
+  --primary-color: #0D6EFD;
+  --primary-overlay: rgba(0, 123, 255, 0.5);
+  --primary-darker: #0a58ca;
+  --background-color: #e2e6e9;
+  --user-message-bg: #cce5ff;
+  --assistant-message-bg: white;
+  --box-shadow: 4px 4px 8px var(--primary-color);
+  --transparent-scrollbar: #f4f4f400;
+  --secondary-loader: rgba(0, 0, 0, 0.1);
+  --primary-loader: #3498db;
+  --border-radius: 10px;
+  --padding: 12px;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -64,3 +80,20 @@ input[type="file"] {
   border: 3px solid ; 
 }
 
+/* Loader Styles */
+.loader {
+  border: 4px solid var(--secondary-loader); 
+  border-left: 4px solid var(--primary-loader); 
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-top: .5rem;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
