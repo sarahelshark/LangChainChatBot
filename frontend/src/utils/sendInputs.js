@@ -1,4 +1,4 @@
-export function handleSend(input, messages, setMessages, setInput, setLoading) {
+export function handleSend(input, messages, setMessages, setInput, setLoading, model) {
   if (input.trim() !== '' && input) {
     const newMessages = [...messages, { sender: 'User', text: input }];
     setMessages(newMessages);  // Update the chat with the user's message
@@ -12,7 +12,7 @@ export function handleSend(input, messages, setMessages, setInput, setLoading) {
       },
       body: JSON.stringify({
         message: input,
-        model: 'chatgpt'  // or 'gemini' 
+        model: model,  // -chatgpt- or 'gemini' 
       }),
     })
     .then(response => response.json())
@@ -34,9 +34,9 @@ export function handleSend(input, messages, setMessages, setInput, setLoading) {
   }
 }
 
-export const sendEnter = async (e, input, messages, setMessages, setInput, setLoading) => {
+export const sendEnter = async (e, input, messages, setMessages, setInput, setLoading, model) => {
   if (e.key === 'Enter' && input.trim() !== '' && input) {
     e.preventDefault();
-    handleSend(input, messages, setMessages, setInput, setLoading); 
+    handleSend(input, messages, setMessages, setInput, setLoading, model); 
   }
 };

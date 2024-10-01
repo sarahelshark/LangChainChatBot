@@ -15,10 +15,26 @@ const Chat = () => {
   } = useResetConversation();
 
   const [loading, setLoading] = useState(false);  
+  const [model, setModel] = useState('chatgpt'); //default>chatgpt
 
   return (
     <section className="mt-8 mx-5 md:mx-11">
       <h1 className="text-2xl font-bold mb-4 text-center">Welcome to the Chatbot</h1>
+      {/* Select dropdown for AI model */}
+      <div className="mb-4">
+        <label htmlFor="modelSelect" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+          Choose AI model:
+        </label>
+        <select
+          id="modelSelect"
+          value={model}
+          onChange={(e) => setModel(e.target.value)}  // Update the model state
+          className="p-2 border border-gray-300 rounded dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white"
+        >
+          <option value="chatgpt">ChatGPT</option>
+          <option value="gemini">Gemini</option>
+        </select>
+      </div>
 
 
       <div className="h-64 p-4 bg-gray-100 dark:bg-gray-700 overflow-y-auto rounded">
@@ -48,11 +64,11 @@ const Chat = () => {
           type="text"
           className="flex-grow p-2 border border-gray-300 rounded dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
           value={input}
-          onKeyDown={(e) => sendEnter(e, input, messages, setMessages, setInput, setLoading)}  
+          onKeyDown={(e) => sendEnter(e, input, messages, setMessages, setInput, setLoading , model)}  
           onChange={(e) => setInput(e.target.value)}
           placeholder="Write a message..."
         />
-        <SendButton input={input} messages={messages} setMessages={setMessages} setInput={setInput} setLoading={setLoading} />
+        <SendButton input={input} messages={messages} setMessages={setMessages} setInput={setInput} setLoading={setLoading} model={model}  />
         <ResetButton resetConversation={resetConversation} />
       </div>
 
