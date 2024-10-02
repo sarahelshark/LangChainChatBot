@@ -36,7 +36,6 @@ code {
 div.upload {
   display: flex;
   align-items: center;
-  z-index: 1000; 
 }
 .upload>p {
   margin: 0;
@@ -47,6 +46,7 @@ label.upload-area {
 }
 label.upload-area span.upload-button {
   position: relative;
+  margin-left: 10PX;
   width: 30px;
   height: 30px;
   padding: 15px;
