@@ -1,5 +1,6 @@
-# Basic Digital Assistant 
+# Basic Digital Assistant - BACKEND 
 ***LangChain and OpenAI / Gemini***
+This is the backend branch, please push all backend changes *here* 
 
 ### Setup
 1. Create a virtual environment:
