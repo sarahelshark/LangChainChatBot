@@ -1,144 +1,70 @@
+# Getting Started with Create React App
 
-# E-commerce Digital Assistant with LangChain and OpenAI
-## !!!! Important note on dependencies.txt
-1. To install all the project dependencies, after having set the environment (see below), run:
-   ```
-   pip install -r dependencies.txt
-   ```
-2. The previous dependencies work only with the **legacy version** of langchain, specifically used in all the **_deprecated.py** files. 
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-   To access the latest version implementation (0.2x) you should change directory
- `cd ./learning_playground` and simply update the pip & langchain dependencies to the latest updates  
- - `python.exe -m pip install --upgrade pip` 
- - `pip install --upgrade langchain`
+## Available Scripts
 
-3. If any error occurs when installing the specific versions, try following the **step-by-step guide** listed below
-4. you can use the ***.env_sample*** and ***gitignore_sample.txt*** simply by renaming them and replacing the secret values
+In the project directory, you can run:
 
- 
+### `npm start`
 
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-## 1 > productDescription_deprecated.py 
-This project implements a digital assistant for e-commerce product descriptions using Flask, LangChain, and OpenAI's GPT models. The assistant generates product descriptions in Italian based on user input and can also perform translations.
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-### Setup
+### `npm test`
 
-1. Create a virtual environment:
-   ```
-   python -m venv venv
-   ```
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-2. Activate the environment:
-   - Windows: `.\venv\Scripts\activate`
-   - macOS/Linux: `source venv/bin/activate`
+### `npm run build`
 
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-3. Create a `.env` file in the project root with your OpenAI API key & flask SECRET_KEY :
-   ```
-   OPENAI_API_KEY="your_api_key_here"
-   OPENAI_ORGANIZATION="your_organization_id_here"
-   OPENAI_PROJECT = "your_open_ai_project"
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-   SECRET_KEY = "your_flask_secret_key"
-   ```
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### Project Structure
+### `npm run eject`
 
-- `productDescription_deprecated.py`: Flask application with chat API endpoints ()
-- `main.js`: Client-side JavaScript for handling user interactions
-- `index.html`: HTML template for the chat interface
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-### Running the Application
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-1. Start the Flask server:
-   ```
-   python productDescription_deprecated.py
-   ```
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-2. Open a web browser and navigate to `http://localhost:5000` to interact with the assistant.
+## Learn More
 
-### Features
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-- Generate product descriptions in Italian
-- Translate product descriptions on request
-- Maintain conversation context using LangChain's ConversationChain
-- Reset conversation functionality
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Usage
+### Code Splitting
 
-- Start a conversation by greeting the assistant
-- Provide product information to generate descriptions
-- Ask for translations of generated descriptions
-- Type 'exit' to end the conversation
-- Use the "Reset Conversation" button to start a new chat session
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Dependencies
+### Analyzing the Bundle Size
 
-- Flask
-- Flask-CORS
-- LangChain
-- OpenAI API
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Note
+### Making a Progressive Web App
 
-This project uses environment variables for API keys and other sensitive information. Make sure to keep your `.env` file secure and never commit it to version control.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
+### Advanced Configuration
 
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
+### Deployment
 
-## 2 > productDescription_deprecated.py
-This project implements a digital assistant for e-commerce product search using Flask, LangChain, and OpenAI's GPT models. The setup is the same, you will just need to run the App you already used for the product description generator, after having typed 'exit' on the flask UI and started a new terminal.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-1. Create the database:
-   ```
-   python create_db.py
-   ```
-2. Check if the db is populated
-   ```
-   python check_db.py
-   ```
-3. Start the Flask server:
-   ```
-   python productDescription_deprecated.py
-   ```
-4.  Open a web browser and navigate to `http://localhost:5000` to interact with the assistant.
+### `npm run build` fails to minify
 
-### Project Structure
-
-- `searchDB_deprecated.py`: Flask application with chat API endpoints ()
-- `create_db.py`: Script to create and populate a SQLite database with sample products
-- `check_db.py`: Script to check if the SQLite db is correctly populated
-- `main.js`: Client-side JavaScript for handling user interactions
-- `index.html`: HTML template for the chat interface
-
-### Features
-
-- Search queries from the user input
-- european languages are supported
-- Maintain conversation context using LangChain's ConversationChain.
-- Reset conversation functionality.
-- Integration with a SQLite database for product information.
-
-## Usage
-
-- Start a conversation by greeting the assistant and ask them what they skills are.
-- Type 'exit' to end the conversation.
-- ask to help you find a specific product by description, price or name, in a european language 
-- Use the "Reset Conversation" button to start a new chat session.
-
-
-## Dependencies
-
-- Flask
-- Flask-CORS
-- LangChain
-- OpenAI API
-- SQLite3
-
-
-## 3 > test-integration.py => work in progress
-This project implements a digital assistant for e-commerce. This app will include the first two features in a single app: 
-
-`description generator/translator + product search/purchase advice`
-+ the UI will be enhanced
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

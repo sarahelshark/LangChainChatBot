@@ -1,116 +1,70 @@
+# Getting Started with Create React App
 
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-# E-commerce Digital Assistant with LangChain and OpenAI
----
+## Available Scripts
 
+In the project directory, you can run:
 
+### `npm start`
 
-## Overview
-This project implements a digital assistant for e-commerce product descriptions and product search using Flask, LangChain, and OpenAI's GPT models. The assistant can generate product descriptions in Italian, perform translations, and help users find specific products.
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
----
+### `npm test`
 
-## Setup Instructions
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### 1. Virtual Environment Setup
-1. **Create a virtual environment:**
-   ```bash
-   python -m venv venv
-   ```
-2. **Activate the environment:**
-   - **Windows:**
-     ```bash
-     .\venv\Scripts\activate
-     ```
-   - **macOS/Linux:**
-     ```bash
-     source venv/bin/activate
-     ```
+### `npm run build`
 
-### 2. Install Dependencies
-To install the project dependencies:
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-1. **Install Flask, Flask-CORS, and python-dotenv:**
-   ```bash
-   pip install flask flask-cors python-dotenv
-   ```
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-2. **Install LangChain and OpenAI packages:**
-   ```bash
-   pip install langchain langchain-openai
-   pip install -qU langchain-openai
-   ```
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-3. **Upgrade pip and LangChain dependencies:**
-   ```bash
-   python.exe -m pip install --upgrade pip
-   pip install --upgrade langchain
-   ```
+### `npm run eject`
 
-4. **Install additional LangChain community tools:**
-   ```bash
-   pip install langchain_community
-   ```
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-### 3. Configuration
-Create a `.env` file in the project root directory with the following content, replacing the placeholder values with your actual API keys:
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-```plaintext
-OPENAI_API_KEY="your_api_key_here"
-OPENAI_ORGANIZATION="your_organization_id_here"
-OPENAI_PROJECT="your_open_ai_project"
-SECRET_KEY="your_flask_secret_key"
-```
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-### 4. Project Structure and Running the Applications
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-#### **Description Generator**
-- **File:** `productDescription_deprecated.py`
-- **Functionality:** Generates product descriptions in Italian and performs translations upon request.
-- **Run the Application:**
-  ```bash
-  python productDescription_deprecated.py
-  ```
-- **Access:** Open a web browser and navigate to [http://localhost:5000](http://localhost:5000).
+## Learn More
 
-#### **Product Search**
-- **File:** `searchDB_deprecated.py`
-- **Functionality:** Searches for products based on user input, supports multiple European languages.
-- **Database Setup:**
-  - **Create the database:**
-    ```bash
-    python create_db.py
-    ```
-  - **Check if the database is populated:**
-    ```bash
-    python check_db.py
-    ```
-- **Run the Application:**
-  ```bash
-  python productDescription_deprecated.py
-  ```
-- **Access:** Open a web browser and navigate to [http://localhost:5000](http://localhost:5000).
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-### 5. Usage Instructions
-- **Description Generator:**
-  - Start a conversation by greeting the assistant.
-  - Provide product information to generate descriptions.
-  - Ask for translations of generated descriptions.
-  - Type `exit` to end the conversation.
-  - Use the "Reset Conversation" button to start a new chat session.
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-- **Product Search:**
-  - Start a conversation by greeting the assistant and asking about its skills.
-  - Ask the assistant to help find a specific product by description, price, or name, in a European language.
-  - Type `exit` to end the conversation.
-  - Use the "Reset Conversation" button to start a new chat session.
+### Code Splitting
 
-### 6. Work in Progress
-- **File:** `test-integration.py`
-- **Goal:** Integrate the description generator/translator and product search/purchase advice into a single application with an enhanced user interface.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### 7. Notes
-- This project uses environment variables for API keys and other sensitive information. Make sure to keep your `.env` file secure and never commit it to version control.
+### Analyzing the Bundle Size
 
----
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
