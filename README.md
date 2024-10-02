@@ -1,70 +1,73 @@
-# Getting Started with Create React App
+# Basic Digital Assistant 
+***LangChain and OpenAI / Gemini***
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Setup
+1. Create a virtual environment:
+   ```
+   python -m venv venv
+   ```
+2. Activate the environment:
+   ```
+   - Windows: `.\venv\Scripts\activate`
+   - macOS/Linux: `source venv/bin/activate`
+   ```
+3. Create a `.env` file in the project root with your OpenAI API key & flask SECRET_KEY :
+   ```
+   OPENAI_API_KEY="your_api_key_here"
+   OPENAI_ORGANIZATION="your_organization_id_here"
+   OPENAI_PROJECT = "your_open_ai_project"
 
-## Available Scripts
+   SECRET_KEY = "your_flask_secret_key"
+   ```
+### dependencies.txt
+1. To install all the project dependencies, after having set the environment (previous paragraph), run:
+   ```
+   pip install -r dependencies.txt
+   ```
+3. If any error occurs when installing the specific versions, try following the **step-by-step guide** listed below.
+4. You can use the ***.env_sample*** and ***gitignore_sample.txt*** simply by renaming them and replacing the secret values
+5. You can use ***your-credentials.json*** to fill it with your vertexAi secret values, and finally rename it 
 
-In the project directory, you can run:
+### Project Structure (Backend folder)
 
-### `npm start`
+- `main.js`: Client-side JavaScript for handling user interactions
+- `index.html`: HTML template for the chat interface
+- `main.py`: Server-side Python script for handling API requests
+- `utils/`:
+  - `context.py`: Functions for creating enhanced context from chat history & uploaded documents
+  - `vectorization.py`: Functions for vectorizing and storing chat history and uploaded documents
+  - `helpers.py`: Helper functions for session management and text splitting (to be implemented)
+- `faiss_index_chatgpt/`: Directory for storing FAISS index files for ChatGPT
+- `faiss_index_gemini/`: Directory for storing FAISS index files for Gemini
+- `faiss_index_uploaded_docs/`: Directory for storing FAISS index files for uploaded documents
+- `uploads/`: Directory for storing uploaded documents
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Running the Application
+1. python main.py
+2. Open the development server directly from the terminal (e.g.`http://localhost:5000`) to interact with the assistant.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Features
+- Basic chatbot interaction
+- Reset of conversation
+- Memory of the conversations in a vector store & retrieval augmented generation
+- Reset conversation functionality
+- Delete conversation
+- Upload of .pdf, .txt, . csv files, enhancing the context of the llm
 
-### `npm test`
+### Usage
+- Start a conversation by greeting the assistant
+- Type 'exit' to end the conversation and store it with a session uid and timestamp
+- Use the "Reset Conversation" button to start a new chat session, the conversation is not saved
+- Switch between the chatGPT and gemini models
+- Easily delete the undesired conversations both visually and on the vector store by clicking on the X button 
+- Upload short documents (.pdf, .txt, . csv files), in order to generate more accurate responses
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Dependencies
+- Flask
+- Flask-CORS
+- LangChain
+- OpenAI API
 
-### `npm run build`
+### Note
+This project uses environment variables for API keys and other sensitive information. Make sure to keep your `.env`, `.json` file secure and ***never*** commit it to version control.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
