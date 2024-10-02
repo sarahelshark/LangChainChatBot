@@ -66,7 +66,7 @@ const ChatOffCanvas = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className={`fixed inset-y-0 right-0 w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out ${
+      className={`fixed inset-y-0 right-0 sm:w-full md:w-80 lg:w-80 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
@@ -97,16 +97,16 @@ const ChatOffCanvas = ({ isOpen, onClose }) => {
       </div>
 
       {/* Chat Content */}
-      <div className="p-4">
+      <div className="p-6">
         {loading && <p>Loading chats...</p>}
         {error && <p className="text-red-500">Error: {error}</p>}
         {!loading && !error && (
           conversations.length > 0 ? (
             <ul>
               {conversations.map((conversation) => (
-                <li key={conversation.id} className="mb-2">
+                <li key={conversation.id} className="mb-5 dark:text-white">
                   <div className="card mb-3">
-                    <div className="card-body">
+                    <div className="card-body shadow-xl">
                       <button
                         type="button"
                         className="btn-close float-end"
