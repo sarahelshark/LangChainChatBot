@@ -1,7 +1,7 @@
 
 const MessageList = ({ messages, loading }) => {
     return (
-      <div className="h-64 p-4 bg-gray-100 dark:bg-gray-700 overflow-y-auto rounded">
+      <div className="h-64 p-4 bg-gray-200 dark:bg-gray-700 overflow-y-auto rounded">
         {messages.length > 0 ? (
           messages.map((msg, index) => (
             <div

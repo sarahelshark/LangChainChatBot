@@ -7,9 +7,9 @@ function LinksGallery () {
         <h4> YOU MAY ALSO NEED</h4>
 
         <div className=" mt-4 flex flex-row space-x-3 justify-center">
-          <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded">Langchain</div>
-          <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded">VertexAi</div>
-          <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded">Alpenite</div>
+          <div className="p-4 bg-gray-200 dark:bg-gray-700 rounded">Langchain</div>
+          <div className="p-4 bg-gray-200 dark:bg-gray-700 rounded">VertexAi</div>
+          <div className="p-4 bg-gray-200 dark:bg-gray-700 rounded">Alpenite</div>
        </div>
        
        </section>
