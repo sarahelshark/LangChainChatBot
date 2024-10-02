@@ -16,22 +16,7 @@ const Chat = () => {
   } = useResetConversation();
 
   const [loading, setLoading] = useState(false);  
-  const [model, setModel] = useState('chatgpt'); //default>chatgpt
-  const [showOverlay, setShowOverlay] = useState(false);  // State for overlay
-  // Show overlay when the model is changed
-  useEffect(() => {
-    if (showOverlay) {
-      const timer = setTimeout(() => {
-        setShowOverlay(false);
-      }, 500);  // Hide the overlay
-      return () => clearTimeout(timer);
-    }
-  }, [showOverlay]);
-
-  const handleModelChange = (e) => {
-    setModel(e.target.value);
-    setShowOverlay(true);  // Show overlay when model changes
-  };
+  const [model] = useState('chatgpt');   
 
   return (
     <section className="mt-8 mx-5 md:mx-11">
