@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Styles */
+:root {
+  --primary-color: #0D6EFD;
+  --primary-overlay: rgba(0, 123, 255, 0.5);
+  --primary-darker: #0a58ca;
+  --background-color: #e2e6e9;
+  --user-message-bg: #cce5ff;
+  --assistant-message-bg: white;
+  --box-shadow: 4px 4px 8px var(--primary-color);
+  --transparent-scrollbar: #f4f4f400;
+  --secondary-loader: rgba(0, 0, 0, 0.1);
+  --primary-loader: #3498db;
+  --border-radius: 10px;
+  --padding: 12px;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Upload Styles */
+div.upload {
+  display: flex;
+  align-items: center;
+}
+.upload>p {
+  margin: 0;
+  padding: 5px;
+}
+label.upload-area {
+  cursor: pointer;
+}
+label.upload-area span.upload-button {
+  position: relative;
+  margin-left: 10PX;
+  width: 30px;
+  height: 30px;
+  padding: 15px;
+  border: 2px dashed ;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .4s;
+  
+}
+label.upload-area span.upload-button .lucide {
+  position: absolute;
+  font-size: 20px;
+}
+label.upload-area span.upload-button:hover {
+  transform: scale(1.1); 
+}
+input[type="file"] {
+  display: none;
+}
+
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 12px; 
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  border: 3px solid ; 
+}
+
+/* Loader Styles */
+.loader {
+  border: 4px solid var(--secondary-loader); 
+  border-left: 4px solid var(--primary-loader); 
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-top: .5rem;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+/*Overlay model selected*/
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-overlay); 
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--background-color);
+  font-size: 2rem;
+  text-align: center;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+#overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#overlay-text {
+  border: 3px solid white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+
+.card:hover {
+  transform: scale(1.02);
+  cursor: pointer;
+}
