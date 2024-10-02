@@ -66,7 +66,7 @@ const ChatOffCanvas = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className={`fixed inset-y-0 right-0 sm:w-full md:w-80 lg:w-80 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out ${
+      className={`fixed inset-y-0 overflow-y-auto  right-0 sm:w-full md:w-80 lg:w-80 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
@@ -107,12 +107,12 @@ const ChatOffCanvas = ({ isOpen, onClose }) => {
                 <li key={conversation.id} className="mb-5 dark:text-white">
                   <div className="card mb-3">
                     <div className="card-body shadow-xl">
-                      <button
-                        type="button"
-                        className="btn-close float-end"
-                        aria-label="Close"
-                        onClick={() => deleteConversation(conversation.id, model)} // Attach delete function
-                      ></button>
+                      
+                    <div className="flex justify-end items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                      <button onClick={() => deleteConversation(conversation.id, model)} className="p-1 rounded-full text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
+                        <X size={12} />
+                        </button>
+                    </div>
                       <p className="card-text">{conversation.content}</p>
                       <p className="blockquote-footer">{new Date(conversation.timestamp).toLocaleString()}</p>
                     </div>
