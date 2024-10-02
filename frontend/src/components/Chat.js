@@ -33,7 +33,7 @@ const Chat = () => {
             </div>
           ))
         ) : (
-          <p className="text-gray-500 text-center">Start a conversation!</p>
+          <p className="text-gray-500 text-center">Start a conversation! When you're done, type 'exit'...</p>
         )}
         {loading && <div className="loader"></div>}  {/* Display loader when loading is true */}
       </div>
