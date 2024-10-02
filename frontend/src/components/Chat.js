@@ -4,6 +4,7 @@ import SendButton from './SendButton';
 import ResetButton from './ResetButton';
 import UploadButton from './UploadButton';
 import useResetConversation from '../hooks/useResetConversation';
+import SelectModel from './SelectModel';
 
 const Chat = () => {
   const {
@@ -35,31 +36,7 @@ const Chat = () => {
   return (
     <section className="mt-8 mx-5 md:mx-11">
       <h1 className="text-2xl font-bold mb-4 text-center">Welcome to the Chatbot</h1>
-       {/* Overlay for model change */}
-       {showOverlay && (
-        <div id="overlay" className={!showOverlay ? "hidden" : ""}>
-          <div id="overlay-text">
-            Switching to {model === 'chatgpt' ? 'ChatGPT' : 'Gemini'}...
-          </div>
-        </div>
-      )}
-      {/* Select dropdown for AI model */}
-      <div className="mb-4">
-        <label htmlFor="modelSelect" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-          Choose AI model:
-        </label>
-        <select
-          id="modelSelect"
-          value={model}
-          onChange={handleModelChange}  // Update the model state
-          className="p-2 border border-gray-300 rounded dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white"
-        >
-          <option value="chatgpt">ChatGPT</option>
-          <option value="gemini">Gemini</option>
-        </select>
-      </div>
-
-
+       <SelectModel/>
       <div className="h-64 p-4 bg-gray-100 dark:bg-gray-700 overflow-y-auto rounded">
         {messages.length > 0 ? (
           messages.map((msg, index) => (

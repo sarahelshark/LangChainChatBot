@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { marked } from 'marked';
+import LinksGallery from './LinksGallery';
+
 
 function Docs() {
     const [content, setContent] = useState('');
@@ -24,14 +26,15 @@ function Docs() {
 
     return (
 
-        <div className="mt-8 mx-5 md:mx-11">
-        <h1 className="text-2xl font-bold mb-4 text-center">Chatbot Docs</h1>
-        <div className="h-64 p-4 bg-gray-100 dark:bg-gray-700 overflow-y-auto rounded">
-        <div id="readme-content">
-            {error ? <p className="text-danger">{error}</p> : <div dangerouslySetInnerHTML={{ __html: content }} />}
-        </div>
-        </div>
-        
+      <div className="mt-8 mx-5 md:mx-11">
+         <h1 className="text-2xl font-bold mb-4 text-center">Chatbot Docs</h1>
+         <div className="h-64 p-4 bg-gray-100 dark:bg-gray-700 overflow-y-auto rounded">
+           <div id="readme-content">
+             {error ? <p className="text-danger">{error}</p> : <div dangerouslySetInnerHTML={{ __html: content }} />}
+           </div>
+         </div>
+
+         <LinksGallery/>
       </div>
     );
 }
