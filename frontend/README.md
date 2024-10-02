@@ -1,73 +1,61 @@
-# Basic Digital Assistant 
+# Basic Digital Assistant Frontend
 ***LangChain and OpenAI / Gemini***
 
-### Setup
-1. Create a virtual environment:
-   ```
-   python -m venv venv
-   ```
-2. Activate the environment:
-   ```
-   - Windows: `.\venv\Scripts\activate`
-   - macOS/Linux: `source venv/bin/activate`
-   ```
-3. Create a `.env` file in the project root with your OpenAI API key & flask SECRET_KEY :
-   ```
-   OPENAI_API_KEY="your_api_key_here"
-   OPENAI_ORGANIZATION="your_organization_id_here"
-   OPENAI_PROJECT = "your_open_ai_project"
+This is the frontend branch for the RAG based Digital Assistant. Please push all frontend changes to this branch only.
 
-   SECRET_KEY = "your_flask_secret_key"
+## Project Structure
+
+- `public/`: Contains public assets
+  - `favicon.ico`: Favicon for the website
+  - `index.html`: Main HTML file
+  - `manifest.json`: Web app manifest file
+  - `robots.txt`: Robots exclusion protocol file
+- `src/`: Source code directory
+  - `components/`: React components 
+  - `hooks/`: Custom React hooks 
+  - `utils/`: Utility functions
+  - `App.js`: Main React component
+  - `index.css`: Main CSS file
+  - `index.js`: Entry point for React app
+- `package.json`: NPM package configuration
+- `package-lock.json`: Locked versions of NPM packages
+- `postcss.config.js`: PostCSS configuration
+- `tailwind.config.js`: Tailwind CSS configuration
+- `.gitignore`: Git ignore file, of which you have a sample @.sample_gitignore.txt
+- `README.md`: This file
+
+## Setup
+
+1. Install dependencies:
    ```
-### dependencies.txt
-1. To install all the project dependencies, after having set the environment (previous paragraph), run:
+   npm install
    ```
-   pip install -r dependencies.txt
+
+2. Start the development server:
    ```
-3. If any error occurs when installing the specific versions, try following the **step-by-step guide** listed below.
-4. You can use the ***.env_sample*** and ***gitignore_sample.txt*** simply by renaming them and replacing the secret values
-5. You can use ***your-credentials.json*** to fill it with your vertexAi secret values, and finally rename it 
+   npm start
+   ```
 
-### Project Structure (Backend folder)
+3. Open `http://your_local_host` to view it in the browser.
 
-- `main.js`: Client-side JavaScript for handling user interactions
-- `index.html`: HTML template for the chat interface
-- `main.py`: Server-side Python script for handling API requests
-- `utils/`:
-  - `context.py`: Functions for creating enhanced context from chat history & uploaded documents
-  - `vectorization.py`: Functions for vectorizing and storing chat history and uploaded documents
-  - `helpers.py`: Helper functions for session management and text splitting (to be implemented)
-- `faiss_index_chatgpt/`: Directory for storing FAISS index files for ChatGPT
-- `faiss_index_gemini/`: Directory for storing FAISS index files for Gemini
-- `faiss_index_uploaded_docs/`: Directory for storing FAISS index files for uploaded documents
-- `uploads/`: Directory for storing uploaded documents
+## Available Scripts
 
-### Running the Application
-1. python main.py
-2. Open the development server directly from the terminal (e.g.`http://localhost:5000`) to interact with the assistant.
+In the project directory, you can run:
 
-### Features
-- Basic chatbot interaction
-- Reset of conversation
-- Memory of the conversations in a vector store & retrieval augmented generation
-- Reset conversation functionality
-- Delete conversation
-- Upload of .pdf, .txt, . csv files, enhancing the context of the llm
+- `npm start`: Runs the app in development mode
+- `npm test`: Launches the test runner
+- `npm run build`: Builds the app for production (not suggested yet)
 
-### Usage
-- Start a conversation by greeting the assistant
-- Type 'exit' to end the conversation and store it with a session uid and timestamp
-- Use the "Reset Conversation" button to start a new chat session, the conversation is not saved
-- Switch between the chatGPT and gemini models
-- Easily delete the undesired conversations both visually and on the vector store by clicking on the X button 
-- Upload short documents (.pdf, .txt, . csv files), in order to generate more accurate responses
+## Features
 
-### Dependencies
-- Flask
-- Flask-CORS
-- LangChain
-- OpenAI API
+- React-based frontend for the RAG based Digital Assistant
+- Integration with LangChain and OpenAI/Gemini backends (WIP ollama embeddings)
+- Responsive design using Tailwind CSS
 
-### Note
-This project uses environment variables for API keys and other sensitive information. Make sure to keep your `.env`, `.json` file secure and ***never*** commit it to version control.
+## Dependencies
+
+- React
+- Tailwind CSS
+
+
 
