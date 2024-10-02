@@ -12,7 +12,7 @@ def create_enhanced_context(model_type, embeddings, max_context_length=3000):
 
     # Load chat history vector store
     if os.path.exists(chat_index_path):
-        chat_vectorstore = FAISS.load_local(chat_index_path, embeddings)
+        chat_vectorstore = FAISS.load_local(chat_index_path, embeddings,allow_dangerous_deserialization=True)
         logging.info(f"Loaded vector store for {model_type}")
         chat_docs = chat_vectorstore.docstore._dict
         for doc_id, doc in chat_docs.items():
@@ -27,7 +27,7 @@ def create_enhanced_context(model_type, embeddings, max_context_length=3000):
 
     # Load uploaded documents vector store
     if os.path.exists(upload_index_path):
-        upload_vectorstore = FAISS.load_local(upload_index_path, embeddings)
+        upload_vectorstore = FAISS.load_local(upload_index_path, embeddings,allow_dangerous_deserialization=True)
         logging.info(f"Loaded vector store for uploaded documents")
         upload_docs = upload_vectorstore.docstore._dict
         for doc_id, doc in upload_docs.items():

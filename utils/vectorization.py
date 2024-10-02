@@ -27,12 +27,12 @@ def handle_vectorstore(index_path, documents, embeddings, model_type, session_ui
             logging.info(f"Created directory for {model_type} vector store at {index_path}")
 
         if os.path.exists(index_path):
-            vectorstore = FAISS.load_local(index_path, embeddings)
+            vectorstore = FAISS.load_local(index_path, embeddings,allow_dangerous_deserialization=True)
             logging.info(f"Loaded existing vector store for {model_type}")
             vectorstore.add_documents(documents)
             logging.info(f"Added new session (UID: {session_uid}) to existing vector store for {model_type}")
         else:
-            vectorstore = FAISS.from_documents(documents, embeddings)
+            vectorstore = FAISS.from_documents(documents, embeddings,allow_dangerous_deserialization=True)
             logging.info(f"Created new vector store for {model_type} with session UID: {session_uid}")
 
         vectorstore.save_local(index_path)
