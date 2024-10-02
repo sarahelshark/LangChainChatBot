@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import { sendEnter } from '../utils/sendInputs';
 import SendButton from './SendButton';
 import ResetButton from './ResetButton';
