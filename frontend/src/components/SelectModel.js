@@ -1,24 +1,22 @@
 import { useState, useEffect } from 'react';
 
-function SelectModel(){
-    const [model, setModel] = useState('chatgpt'); 
+function SelectModel({ model, setModel}){
+  
     const [showOverlay, setShowOverlay] = useState(false);  
-
     // Show overlay when the model is changed
     useEffect(() => {
       if (showOverlay) {
         const timer = setTimeout(() => {
           setShowOverlay(false);
-        }, 500); 
+        }, 500);  // Hide the overlay
         return () => clearTimeout(timer);
       }
     }, [showOverlay]);
   
     const handleModelChange = (e) => {
       setModel(e.target.value);
-      setShowOverlay(true);
+      setShowOverlay(true);  // Show overlay when model changes
     };
-    
     return(
         <>
         {showOverlay && (
