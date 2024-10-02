@@ -6,45 +6,79 @@
    ```
    python -m venv venv
    ```
-2. Activate the environment:
-   ```
-   - Windows: `.\venv\Scripts\activate`
-   - macOS/Linux: `source venv/bin/activate`
-   ```
-3. Create a `.env` file in the project root with your OpenAI API key & flask SECRET_KEY :
-   ```
-   OPENAI_API_KEY="your_api_key_here"
-   OPENAI_ORGANIZATION="your_organization_id_here"
-   OPENAI_PROJECT = "your_open_ai_project"
+2. **Activate the environment:**
+   - **Windows:**
+     ```bash
+     .\venv\Scripts\activate
+     ```
+   - **macOS/Linux:**
+     ```bash
+     source venv/bin/activate
+     ```
 
-   SECRET_KEY = "your_flask_secret_key"
-   ```
-### dependencies.txt
-1. To install all the project dependencies, after having set the environment (previous paragraph), run:
-   ```
-   pip install -r dependencies.txt
-   ```
-3. If any error occurs when installing the specific versions, try following the **step-by-step guide** listed below.
-4. You can use the ***.env_sample*** and ***gitignore_sample.txt*** simply by renaming them and replacing the secret values
-5. You can use ***your-credentials.json*** to fill it with your vertexAi secret values, and finally rename it 
+### 2. Install Dependencies
+To install the project dependencies:
 
-### Project Structure
+1. **Install Flask, Flask-CORS, and python-dotenv:**
+   ```bash
+   pip install flask flask-cors python-dotenv
+   ```
 
-- `main.js`: Client-side JavaScript for handling user interactions
-- `index.html`: HTML template for the chat interface
-- `main.py`: Server-side Python script for handling API requests
-- `utils/`:
-  - `context.py`: Functions for creating enhanced context from chat history & uploaded documents
-  - `vectorization.py`: Functions for vectorizing and storing chat history and uploaded documents
-  - `helpers.py`: Helper functions for session management and text splitting (to be implemented)
-- `faiss_index_chatgpt/`: Directory for storing FAISS index files for ChatGPT
-- `faiss_index_gemini/`: Directory for storing FAISS index files for Gemini
-- `faiss_index_uploaded_docs/`: Directory for storing FAISS index files for uploaded documents
-- `uploads/`: Directory for storing uploaded documents
+2. **Install LangChain and OpenAI packages:**
+   ```bash
+   pip install langchain langchain-openai
+   pip install -qU langchain-openai
+   ```
 
-### Running the Application
-1. python main.py
-2. Open the development server directly from the terminal (e.g.`http://localhost:5000`) to interact with the assistant.
+3. **Upgrade pip and LangChain dependencies:**
+   ```bash
+   python.exe -m pip install --upgrade pip
+   pip install --upgrade langchain
+   ```
+
+4. **Install additional LangChain community tools:**
+   ```bash
+   pip install langchain_community
+   ```
+
+### 3. Configuration
+Create a `.env` file in the project root directory with the following content, replacing the placeholder values with your actual API keys:
+
+```plaintext
+OPENAI_API_KEY="your_api_key_here"
+OPENAI_ORGANIZATION="your_organization_id_here"
+OPENAI_PROJECT="your_open_ai_project"
+SECRET_KEY="your_flask_secret_key"
+```
+
+### 4. Project Structure and Running the Applications
+
+#### **Description Generator**
+- **File:** `productDescription_deprecated.py`
+- **Functionality:** Generates product descriptions in Italian and performs translations upon request.
+- **Run the Application:**
+  ```bash
+  python productDescription_deprecated.py
+  ```
+- **Access:** Open a web browser and navigate to [http://localhost:5000](http://localhost:5000).
+
+#### **Product Search**
+- **File:** `searchDB_deprecated.py`
+- **Functionality:** Searches for products based on user input, supports multiple European languages.
+- **Database Setup:**
+  - **Create the database:**
+    ```bash
+    python create_db.py
+    ```
+  - **Check if the database is populated:**
+    ```bash
+    python check_db.py
+    ```
+- **Run the Application:**
+  ```bash
+  python productDescription_deprecated.py
+  ```
+- **Access:** Open a web browser and navigate to [http://localhost:5000](http://localhost:5000).
 
 ### Features
 - Basic chatbot interaction

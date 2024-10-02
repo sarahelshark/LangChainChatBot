@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv 
 import logging
 from langchain_openai import OpenAIEmbeddings
+
 from flask import Flask, request, jsonify, render_template
 from flask_bootstrap import Bootstrap5
 from flask_cors import CORS
@@ -112,15 +113,7 @@ def chat():
     except Exception as e:
         logging.error(f'Unexpected error: {str(e)}')
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
-
-# deserializzazione sicura
-def load_pickle_file(file_path):
-    if ALLOW_DANGEROUS_DESERIALIZATION:
-        with open(file_path, 'rb') as file:
-            return pickle.load(file)
-    else:
-        raise ValueError("Deserialization not allowed for untrusted sources.")
-
+ 
 @app.route('/api/delete_conversation', methods=['POST'])
 def delete_conversations():
     try:
@@ -141,7 +134,7 @@ def delete_conversations():
             return {"error": f"No vector store found for {model_type}"}, 404
 
         # Carica il vector store esistente
-        vectorstore = FAISS.load_local(index_path, embeddings)
+        vectorstore = FAISS.load_local(index_path, embeddings,allow_dangerous_deserialization=True)
         logging.info(f"Loaded existing vector store for {model_type}")
 
         # Trova gli ID da eliminare dal vector store basandoti su uids_to_delete
@@ -180,7 +173,7 @@ def get_old_chats():
         
         # set the embeddings and vectorstore based on the model type
         embeddings = openai_embeddings
-        vectorstore = FAISS.load_local(f"faiss_index_{model_type}", embeddings)
+        vectorstore = FAISS.load_local(f"faiss_index_{model_type}", embeddings,allow_dangerous_deserialization=True)
     
         # Get all documents from the vector store
         all_docs = vectorstore.docstore._dict
@@ -266,4 +259,4 @@ def upload_file():
         return jsonify({'error': 'File type not allowed'}), 400
     
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=True)
