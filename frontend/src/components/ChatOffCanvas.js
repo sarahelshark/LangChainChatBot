@@ -98,7 +98,7 @@ const ChatOffCanvas = ({ isOpen, onClose }) => {
 
       {/* Chat Content */}
       <div className="p-6">
-        {loading && <p>Loading chats...</p>}
+        {loading && <p className='text-white'>Loading chats...</p>}
         {error && <p className="text-red-500">Error: {error}</p>}
         {!loading && !error && (
           conversations.length > 0 ? (
