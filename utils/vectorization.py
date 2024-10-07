@@ -6,6 +6,7 @@ from langchain.schema import Document, SystemMessage
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_community.document_loaders import TextLoader, CSVLoader, PyPDFLoader
+import traceback
 
 from langchain_ollama import OllamaEmbeddings
 ollama_embeddings = OllamaEmbeddings(
@@ -19,7 +20,7 @@ def generate_session_info():
     return session_uid, session_timestamp
 
 def split_text_into_documents(full_text, session_uid, session_timestamp):
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=50)
+    text_splitter = CharacterTextSplitter(chunk_size=2000, chunk_overlap=50)
     texts = text_splitter.split_text(full_text)
     documents = [Document(page_content=text, metadata={"session_uid": session_uid, "session_timestamp": session_timestamp}) for text in texts]
     return documents
@@ -44,7 +45,7 @@ def handle_vectorstore(index_path, documents, embeddings, model_type, session_ui
         logging.info(f"Data for {model_type} (UID: {session_uid}) vectorized and stored successfully.")
         return session_uid, session_timestamp
     except Exception as e:
-        logging.error(f"Error in vectorizing and storing data: {e}")
+        logging.error(f"Error in vectorizing and storing data: {e}, Traceback: {traceback.format_exc()}")
         return None, None
 
 # /helpers for vectorization functions
@@ -57,14 +58,10 @@ def vectorize_and_store_chat_history(chat_history, model_type, embeddings):
 
     session_uid, session_timestamp = generate_session_info()
 
-   
-
     if model_type == 'chatgpt':
-        # Filtra i messaggi di sistema e di contesto  attenzione, per gemini non è una lista di stringhe
         filtered_history = [msg for msg in chat_history if not isinstance(msg, SystemMessage) and "Context" not in msg.content]
         full_text = "\n".join([f"{type(msg).__name__}: {msg.content}" for msg in filtered_history])
     elif model_type == 'gemini':
-        # Per Gemini, assumiamo che chat_history sia già una lista di stringhe
         filtered_history = [msg for msg in chat_history if "Context" not in msg]
         full_text = "\n".join(filtered_history)
     else:
@@ -120,7 +117,7 @@ def vectorize_and_store_uploaded_docs(upload_folder, index_folder, embeddings):
         return
 
     session_uid, session_timestamp = generate_session_info()
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=50)
+    text_splitter = CharacterTextSplitter(chunk_size=2000, chunk_overlap=50)
     texts = text_splitter.split_documents(documents)
 
     for doc in texts:

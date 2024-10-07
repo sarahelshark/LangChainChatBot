@@ -47,7 +47,7 @@ chatgpt_model = ChatOpenAI(model="gpt-4", temperature=0.7, max_tokens=300)
 
 from langchain_ollama import OllamaEmbeddings
 ollama_embeddings = OllamaEmbeddings(
-    model="llama3.2"
+    model="mxbai-embed-large"
 )
 
 # Initialize chat history
