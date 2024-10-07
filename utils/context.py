@@ -1,8 +1,10 @@
 import logging
-from datetime import datetime
 import os
 from langchain_community.vectorstores import FAISS
 
+from langchain_ollama import OllamaEmbeddings
+
+embeddings = OllamaEmbeddings(model="mxbai-embed-large")
 
 def create_enhanced_context(model_type, embeddings, max_context_length=3000):
     chat_index_path = f"faiss_index_{model_type}"

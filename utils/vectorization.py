@@ -7,6 +7,11 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_community.document_loaders import TextLoader, CSVLoader, PyPDFLoader
 
+from langchain_ollama import OllamaEmbeddings
+ollama_embeddings = OllamaEmbeddings(
+    model="mxbai-embed-large"
+)
+
 # helpers for vectorization functions
 def generate_session_info():
     session_uid = str(uuid.uuid4())

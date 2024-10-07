@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv 
 import logging
-from langchain_openai import OpenAIEmbeddings
+#from langchain_openai import OpenAIEmbeddings
 from flask import Flask, request, jsonify, render_template
 from flask_bootstrap import Bootstrap5
 from flask_cors import CORS
@@ -14,7 +14,7 @@ from models import GeminiPro
 from langchain_community.vectorstores import FAISS
 from langchain_openai import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
-import pickle  # Importa pickle se necessario
+import pickle 
 load_dotenv()
 
 # Initialize the Flask app
@@ -41,7 +41,14 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.environ[constants.googleApplicationCredentials] = constants.alpeniteVertexai
 # Set up chatgpt model
 chatgpt_model = ChatOpenAI(model="gpt-4", temperature=0.7, max_tokens=300)
-openai_embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+#openai_embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+
+# OLLAMA
+
+from langchain_ollama import OllamaEmbeddings
+ollama_embeddings = OllamaEmbeddings(
+    model="llama3.2"
+)
 
 # Initialize chat history
 chatgpt_history = []
@@ -76,16 +83,16 @@ def chat():
 
         if user_message.lower() == 'exit':
             if model_choice == 'chatgpt':
-                vectorize_and_store_chat_history(chatgpt_history, 'chatgpt', openai_embeddings)
+                vectorize_and_store_chat_history(chatgpt_history, 'chatgpt', ollama_embeddings)
                 chatgpt_history = [system_message]
             else:
-                vectorize_and_store_chat_history(gemini_history, 'gemini', openai_embeddings)
+                vectorize_and_store_chat_history(gemini_history, 'gemini', ollama_embeddings)
                 gemini_history = []
             
             return jsonify({'content': "Grazie per aver utilizzato l'assistente AI. Arrivederci!👋"})
    
         # Recupera il contesto dalle conversazioni precedenti
-        context = create_enhanced_context(model_choice, openai_embeddings)
+        context = create_enhanced_context(model_choice, ollama_embeddings)
 
         if model_choice == 'chatgpt':
             logging.info("-------ChatGPT mode-------")  
@@ -133,7 +140,7 @@ def delete_conversations():
         if not model_type or not uids_to_delete:
             return {"error": "model_type and uids_to_delete are required"}, 400
 
-        embeddings = openai_embeddings
+       
         index_path = f"faiss_index_{model_type}"
 
         if not os.path.exists(index_path):
@@ -179,7 +186,7 @@ def get_old_chats():
             return jsonify({'error': 'Invalid model type specified.'}), 400
         
         # set the embeddings and vectorstore based on the model type
-        embeddings = openai_embeddings
+        embeddings = ollama_embeddings
         vectorstore = FAISS.load_local(f"faiss_index_{model_type}", embeddings,allow_dangerous_deserialization=True)
     
         # Get all documents from the vector store
@@ -249,7 +256,7 @@ def upload_file():
             session_uid, session_timestamp = vectorize_and_store_uploaded_docs(
                 app.config['UPLOAD_FOLDER'],
                 INDEX_FOLDER,
-                openai_embeddings
+                ollama_embeddings
             )
             
             if session_uid and session_timestamp:
