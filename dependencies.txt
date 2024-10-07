@@ -9,7 +9,7 @@ Bootstrap-Flask
 python-dotenv
 langchain 
 langchain-openai
-
+faiss-cpu
 
 # Python version
 # python==3.12.4
