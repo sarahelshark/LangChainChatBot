@@ -148,7 +148,7 @@ def delete_conversations():
             return {"error": f"No vector store found for {model_type}"}, 404
 
         # Carica il vector store esistente
-        vectorstore = FAISS.load_local(index_path, embeddings,allow_dangerous_deserialization=True)
+        vectorstore = FAISS.load_local(index_path, ollama_embeddings,allow_dangerous_deserialization=True)
         logging.info(f"Loaded existing vector store for {model_type}")
 
         # Trova gli ID da eliminare dal vector store basandoti su uids_to_delete

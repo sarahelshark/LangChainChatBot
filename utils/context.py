@@ -6,6 +6,7 @@ from langchain_ollama import OllamaEmbeddings
 
 embeddings = OllamaEmbeddings(model="mxbai-embed-large")
 
+
 def create_enhanced_context(model_type, embeddings, max_context_length=3000):
     chat_index_path = f"faiss_index_{model_type}"
     upload_index_path = os.path.abspath('./faiss_index_uploaded_docs')
@@ -13,8 +14,8 @@ def create_enhanced_context(model_type, embeddings, max_context_length=3000):
     conversations = []
 
     # Load chat history vector store
-    if os.path.exists(chat_index_path):
-        chat_vectorstore = FAISS.load_local(chat_index_path, embeddings,allow_dangerous_deserialization=True)
+    if os.path.exists(os.path.join(chat_index_path, "index.faiss")):
+        chat_vectorstore = FAISS.load_local(chat_index_path, embeddings, allow_dangerous_deserialization=True)
         logging.info(f"Loaded vector store for {model_type}")
         chat_docs = chat_vectorstore.docstore._dict
         for doc_id, doc in chat_docs.items():
@@ -28,8 +29,8 @@ def create_enhanced_context(model_type, embeddings, max_context_length=3000):
         logging.info(f"No vector store found for {model_type}")
 
     # Load uploaded documents vector store
-    if os.path.exists(upload_index_path):
-        upload_vectorstore = FAISS.load_local(upload_index_path, embeddings,allow_dangerous_deserialization=True)
+    if os.path.exists(os.path.join(upload_index_path, "index.faiss")):
+        upload_vectorstore = FAISS.load_local(upload_index_path, embeddings, allow_dangerous_deserialization=True)
         logging.info(f"Loaded vector store for uploaded documents")
         upload_docs = upload_vectorstore.docstore._dict
         for doc_id, doc in upload_docs.items():

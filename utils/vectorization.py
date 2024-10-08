@@ -27,18 +27,19 @@ def split_text_into_documents(full_text, session_uid, session_timestamp):
 
 def handle_vectorstore(index_path, documents, embeddings, model_type, session_uid, session_timestamp):
     try:
-        # Verifica e crea la cartella dell'indice se non esiste
-        if not os.path.exists(index_path):
-            os.makedirs(index_path, exist_ok=True)
-            logging.info(f"Created directory for {model_type} vector store at {index_path}")
-
-        if os.path.exists(index_path):
-            vectorstore = FAISS.load_local(index_path, embeddings,allow_dangerous_deserialization=True)
+        full_index_path = os.path.join(index_path, "index.faiss")
+        logging.info(f"Attempting to access index file at: {full_index_path}")
+        # Create the index directory if it doesn't exist
+        os.makedirs(index_path, exist_ok=True)
+        
+        
+        if os.path.exists(os.path.join(index_path, "index.faiss")):
+            vectorstore = FAISS.load_local(index_path, embeddings, allow_dangerous_deserialization=True)
             logging.info(f"Loaded existing vector store for {model_type}")
             vectorstore.add_documents(documents)
             logging.info(f"Added new session (UID: {session_uid}) to existing vector store for {model_type}")
         else:
-            vectorstore = FAISS.from_documents(documents, embeddings,allow_dangerous_deserialization=True)
+            vectorstore = FAISS.from_documents(documents, embeddings)
             logging.info(f"Created new vector store for {model_type} with session UID: {session_uid}")
 
         vectorstore.save_local(index_path)
@@ -47,7 +48,7 @@ def handle_vectorstore(index_path, documents, embeddings, model_type, session_ui
     except Exception as e:
         logging.error(f"Error in vectorizing and storing data: {e}, Traceback: {traceback.format_exc()}")
         return None, None
-
+    
 # /helpers for vectorization functions
 
 # vectorization functions
@@ -85,9 +86,7 @@ def vectorize_and_store_uploaded_docs(upload_folder, index_folder, embeddings):
 
     # Creazione della cartella per l'indice se non esiste
     index_path = os.path.join(index_folder)
-    if not os.path.exists(index_path):
-        os.makedirs(index_path, exist_ok=True)
-        logging.info(f"Created directory for uploaded documents at {index_path}")
+    os.makedirs(index_path, exist_ok=True)
 
     documents = []
 
@@ -124,6 +123,13 @@ def vectorize_and_store_uploaded_docs(upload_folder, index_folder, embeddings):
         doc.metadata["session_uid"] = session_uid
         doc.metadata["session_timestamp"] = session_timestamp
 
-    return handle_vectorstore(index_path, texts, embeddings, 'uploaded_docs', session_uid, session_timestamp)
+    if os.path.exists(os.path.join(index_path, "index.faiss")):
+        vectorstore = FAISS.load_local(index_path, embeddings, allow_dangerous_deserialization=True)
+        vectorstore.add_documents(texts)
+    else:
+        vectorstore = FAISS.from_documents(texts, embeddings)
 
+    vectorstore.save_local(index_path)
+    logging.info(f"Data for uploaded documents (UID: {session_uid}) vectorized and stored successfully.")
+    return session_uid, session_timestamp
 # /vectorization functions
