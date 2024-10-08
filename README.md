@@ -41,7 +41,7 @@ This is the backend branch, please push all backend changes *here*
 - `faiss_index_chatgpt/`: Directory for storing FAISS index files for ChatGPT
 - `faiss_index_gemini/`: Directory for storing FAISS index files for Gemini
 - `faiss_index_uploaded_docs/`: Directory for storing FAISS index files for uploaded documents
-- `uploads/`: Directory for storing uploaded documents
+- `uploads/`: Directory for storing uploaded documents, please keep it otherwise it will not work out 
 
 ### Running the Application
 1. python main.py
