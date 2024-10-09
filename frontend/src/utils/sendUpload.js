@@ -8,8 +8,7 @@ export async function sendUpload(event) {
     if (file) {
     fetch('http://127.0.0.1:5000/api/upload', {
         method: 'POST',
-        body: formData,
-        
+        body: formData,    
       })
       .then(response => response.json())
       .catch(error => {
