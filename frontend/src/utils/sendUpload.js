@@ -1,7 +1,6 @@
 export async function sendUpload(event) {
     const file = event.target.files[0];
-    console.log(file);
-    //if (!file) return;
+    if (!file) return;
     const formData = new FormData();
     formData.append('file', file);
 
