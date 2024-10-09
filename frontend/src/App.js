@@ -1,7 +1,7 @@
 import './index.css';
 import Navbar from './components/Navbar';
-import Chat from './components/Chat';
-import ChatOffCanvas from './components/ChatOffCanvas';
+import Chatbox from './components/Chatbox';
+import ChatOffCanvas from './components/ChatsOffCanvas';
 import Docs from './components/Docs';
 import Footer from './components/Footer';
 import { toggleChat, toggleDarkMode } from './utils/toggleFunctions';
@@ -26,7 +26,7 @@ const App = () => {
           setActivePage={setActivePage}
         />
         <main className="p-4 flex-grow">
-          {activePage === 'home' ? <Chat /> : <Docs />}
+          {activePage === 'home' ? <Chatbox /> : <Docs />}
         </main>
         
       </div>
