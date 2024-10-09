@@ -13,5 +13,4 @@ const SendButton = ({input, messages, setMessages, setInput, setLoading, model})
 };
 
 
-
 export default SendButton;

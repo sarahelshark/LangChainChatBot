@@ -24,8 +24,6 @@ const FormInput = ({ input, setInput, messages, setMessages, setLoading, model, 
        <ResetButton resetConversation={resetConversation} />
        <UploadButton input={input} messages={messages} setMessages={setMessages} setInput={setInput} />    
       </div>
-      
-      
     </div>
   );
 };

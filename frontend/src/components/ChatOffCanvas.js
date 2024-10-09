@@ -2,35 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 
 const ChatOffCanvas = ({ isOpen, onClose }) => {
-  const [conversations, setConversations] = useState([]); // Store fetched conversations
-  const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState(null); // Error state
-  const [model, setModel] = useState('chatgpt'); // Default model (chatgpt)
+  const [conversations, setConversations] = useState([]); 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null); 
+  const [model, setModel] = useState('chatgpt'); // Default 
   
-  // Function to fetch old chats (Similar to loadOldChats in my vanilla JS)
+
   const loadOldChats = async (modelType) => {
-    setLoading(true); // Show loader
-    setError(null); // Reset previous errors
-    setConversations([]); // Clear previous conversations
+    setLoading(true); 
+    setError(null); 
+    setConversations([]); 
 
     try {
-
       const response = await fetch(`http://127.0.0.1:5000/api/get_old_chats?model=${modelType}&offset=0&limit=3`); // Fetch API
       const data = await response.json();
 
       if (response.ok) {
-        setConversations(data.conversations || []); // Set the conversations
+        setConversations(data.conversations || []); 
       } else {
-        setError(data.error || 'Failed to load conversations'); // Handle API error
+        setError(data.error || 'Failed to load conversations'); 
       }
     } catch (err) {
-      setError('Error fetching conversations: ' + err.message); // Catch any other error
+      setError('Error fetching conversations: ' + err.message); 
     } finally {
-      setLoading(false); // Hide loader
+      setLoading(false);
     }
   };
 
-  // Function to delete a specific conversation?
+
   const deleteConversation = async (uid, modelType) => {
     try {
       const response = await fetch(`http://127.0.0.1:5000/api/delete_conversation?model=${modelType}&uids_to_delete=${uid}`, {
@@ -47,22 +46,21 @@ const ChatOffCanvas = ({ isOpen, onClose }) => {
         throw new Error(data.error || 'Failed to delete conversation');
       }
 
-      // Remove deleted conversation from the state
       setConversations((prevConversations) => prevConversations.filter(convo => convo.id !== uid));
-
       alert('Conversation deleted successfully');
+
     } catch (error) {
       console.error('Error deleting conversation:', error);
       alert(`Failed to delete conversation: ${error.message}`);
     }
   };
 
-  // Fetch chats when the component (off-canvas) is shown (similar to 'show.bs.offcanvas' in vanilla JS)
+
   useEffect(() => {
     if (isOpen) {
-      loadOldChats(model); // Fetch old chats for the current model
+      loadOldChats(model); 
     }
-  }, [isOpen, model]); // Re-fetch if model changes
+  }, [isOpen, model]); 
 
   return (
     <div

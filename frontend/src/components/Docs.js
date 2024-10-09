@@ -8,11 +8,9 @@ function Docs() {
     const [error, setError] = useState(null);
     const [docsType, setDocsType] = useState('dev'); //default docs
 
-    
-
     useEffect(() => {
       if (docsType === 'dev'){
-        fetch('/README.md')  // Updated path to fetch README.md from the root of the project
+        fetch('/README.md') 
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -27,7 +25,7 @@ function Docs() {
                 setError('Error loading README.md content.');
             });
       }else if (docsType === 'user'){
-        fetch('/READMEUSER.md')  // Updated path to fetch README.md from the root of the project
+        fetch('/READMEUSER.md')  
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);

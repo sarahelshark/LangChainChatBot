@@ -28,6 +28,7 @@ const App = () => {
         <main className="p-4 flex-grow">
           {activePage === 'home' ? <Chat /> : <Docs />}
         </main>
+        
       </div>
       <ChatOffCanvas isOpen={chatOpen} onClose={toggleChat(chatOpen, setChatOpen)} />
       <Footer />

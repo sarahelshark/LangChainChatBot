@@ -3,7 +3,9 @@ import useResetConversation from '../hooks/useResetConversation';
 import SelectModel from './SelectModel';
 import MessageList from './MessageList'; 
 import FormInput from './FormInput';     
-
+const chatInfo = {
+  title: "Welcome to the Chatbot",
+};
 
 const Chat = () => {
   const {
@@ -15,12 +17,11 @@ const Chat = () => {
   } = useResetConversation();
 
   const [loading, setLoading] = useState(false);  
-  const [model, setModel] = useState('chatgpt'); //default model 
-
+  const [model, setModel] = useState('chatgpt'); //default 
 
   return (
     <section className="mt-8 mx-5 md:mx-11">
-      <h1 className="text-2xl font-bold mb-4 text-center">Welcome to the Chatbot</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">{chatInfo.title}</h1>
       <SelectModel model={model} setModel={setModel}/>
       <MessageList messages={messages} loading={loading} />
       <FormInput 

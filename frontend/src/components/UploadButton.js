@@ -17,7 +17,7 @@ const UploadButton = () => {
     const file = event.target.files[0];
     sendUpload(event)
     if (file) {
-      // Imposta il nome del file e mostra la modale
+
       setFileName(file.name);
       setModalVisible(true);
 
