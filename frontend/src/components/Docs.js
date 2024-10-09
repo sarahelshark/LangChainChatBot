@@ -6,6 +6,7 @@ import SelectDocsType from './SelectDocsType';
 function Docs() {
     const [content, setContent] = useState('');
     const [error, setError] = useState(null);
+    const [docsType, setDocsType] = useState('dev'); //default docs
 
     useEffect(() => {
         fetch('/README.md')  // Updated path to fetch README.md from the root of the project
@@ -28,7 +29,7 @@ function Docs() {
 
       <div className="mt-8 mx-5 md:mx-11">
          <h1 className="text-2xl font-bold mb-4 text-center">Chatbot Docs</h1>
-         <SelectDocsType/>
+         <SelectDocsType docsType={docsType} setDocsType={setDocsType}/>
          <div className="h-64 p-4 bg-gray-200 dark:bg-gray-700 overflow-y-auto rounded">
            <div id="readme-content">
              {error ? <p className="text-danger">{error}</p> : <div dangerouslySetInnerHTML={{ __html: content }} />}
