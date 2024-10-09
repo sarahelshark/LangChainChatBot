@@ -1,8 +1,9 @@
-
 function SelectDocsType({docsType , setDocsType}){
+   
   const handleDocsChange = (e) =>{
     setDocsType(e.target.value);
-  };  
+  }; 
+   
   
   return(
         <>
