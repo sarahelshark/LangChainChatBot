@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ArrowUp } from "lucide-react";
+import { sendUpload } from "../utils/sendUpload"
 
 const modalInfo = {
   success: "Success!",
@@ -14,7 +15,7 @@ const UploadButton = () => {
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
-
+    sendUpload(event)
     if (file) {
       // Imposta il nome del file e mostra la modale
       setFileName(file.name);
@@ -23,7 +24,8 @@ const UploadButton = () => {
       setTimeout(() => {
         setModalVisible(false);
       }, 2000);
-    }
+    } 
+
   };
 
   return (
@@ -67,6 +69,7 @@ const UploadButton = () => {
         <label className="upload-area">
           <input
             type="file"
+            encType='multipart/form-data'
             className="hidden"
             id="fileUpload"
             onChange={handleFileUpload}
