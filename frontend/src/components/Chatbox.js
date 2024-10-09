@@ -2,7 +2,7 @@ import { useState} from 'react';
 import useResetConversation from '../hooks/useResetConversation';
 import SelectModel from './SelectModel';
 import MessageList from './MessageList'; 
-import FormInput from './FormInput';     
+import FormInput from './FormInput';   
 
 const chatInfo = {
   title: "Welcome to the Chatbot",
@@ -15,6 +15,7 @@ const Chat = () => {
     setInput,
     resetConversation,
   } = useResetConversation();
+  
 
   const [loading, setLoading] = useState(false);  
   const [model, setModel] = useState('chatgpt'); //default 
