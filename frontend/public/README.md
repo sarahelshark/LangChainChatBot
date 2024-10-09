@@ -1,4 +1,5 @@
-# Basic Digital Assistant 
+# ***Dev Guide __ Basic Digital Assistant***
+
 ***LangChain and OpenAI / Gemini***
 
 ### Setup
