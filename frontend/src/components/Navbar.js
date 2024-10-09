@@ -1,7 +1,6 @@
 import React from "react";
 import NavItem from "./NavItem";
 import ToggleModeButton from "./ToggleModeButton";
-
 import { MessageSquare, FileText, Home } from 'lucide-react';
 
 const Navbar = ({ darkMode, toggleDarkMode, toggleChat, setActivePage }) => (

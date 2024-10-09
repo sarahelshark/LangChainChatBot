@@ -7,7 +7,7 @@ const linksData = [
 function LinksGallery() {
   return (
    <section id="siteReference" className="mt-4 text-center">
-      <h4>YOU MAY ALSO NEED</h4>
+      <h4>TO DISCOVER MORE...</h4>
  
      <div className="mt-4 flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3 justify-center">
         {linksData.map((link, index) => (

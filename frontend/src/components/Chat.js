@@ -3,10 +3,10 @@ import useResetConversation from '../hooks/useResetConversation';
 import SelectModel from './SelectModel';
 import MessageList from './MessageList'; 
 import FormInput from './FormInput';     
+
 const chatInfo = {
   title: "Welcome to the Chatbot",
 };
-
 const Chat = () => {
   const {
     messages,

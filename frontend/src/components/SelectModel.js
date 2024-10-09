@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 
 function SelectModel({ model, setModel}){
-  
   const [showOverlay, setShowOverlay] = useState(false);  
-
   useEffect(() => {
     if (showOverlay) {
       const timer = setTimeout(() => {
