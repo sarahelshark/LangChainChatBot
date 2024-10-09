@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { deleteConversation } from '../utils/deleteConversation';
+import SelectModel from './SelectModel';
 
 const ChatOffCanvas = ({ isOpen, onClose }) => {
   const [conversations, setConversations] = useState([]); 
@@ -8,7 +9,6 @@ const ChatOffCanvas = ({ isOpen, onClose }) => {
   const [error, setError] = useState(null); 
   const [model, setModel] = useState('chatgpt'); // Default 
   
-
   const loadOldChats = async (modelType) => {
     setLoading(true); 
     setError(null); 
@@ -29,8 +29,6 @@ const ChatOffCanvas = ({ isOpen, onClose }) => {
       setLoading(false);
     }
   };
-
-
 
   useEffect(() => {
     if (isOpen) {
@@ -54,20 +52,8 @@ const ChatOffCanvas = ({ isOpen, onClose }) => {
         </button>
       </div>
 
-      {/* Model Select Dropdown */}
       <div className="p-4">
-        <label htmlFor="oldChatModelSelect" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          Choose AI model:
-        </label>
-        <select
-          id="oldChatModelSelect"
-          value={model}
-          onChange={(e) => setModel(e.target.value)} // Update model when selected
-          className="p-2 border border-gray-300 rounded dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white"
-        >
-          <option value="chatgpt">ChatGPT</option>
-          <option value="gemini">Gemini</option>
-        </select>
+       <SelectModel model={model} setModel={setModel}/>
       </div>
 
       {/* Chat Content */}
