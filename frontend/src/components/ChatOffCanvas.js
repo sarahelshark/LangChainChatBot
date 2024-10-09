@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
+import { deleteConversation } from '../utils/deleteConversation';
 
 const ChatOffCanvas = ({ isOpen, onClose }) => {
   const [conversations, setConversations] = useState([]); 
@@ -29,31 +30,6 @@ const ChatOffCanvas = ({ isOpen, onClose }) => {
     }
   };
 
-
-  const deleteConversation = async (uid, modelType) => {
-    try {
-      const response = await fetch(`http://127.0.0.1:5000/api/delete_conversation?model=${modelType}&uids_to_delete=${uid}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ uids_to_delete: [uid], model_type: modelType }),
-      });
-      const data = await response.json();
-
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to delete conversation');
-      }
-
-      setConversations((prevConversations) => prevConversations.filter(convo => convo.id !== uid));
-      alert('Conversation deleted successfully');
-
-    } catch (error) {
-      console.error('Error deleting conversation:', error);
-      alert(`Failed to delete conversation: ${error.message}`);
-    }
-  };
 
 
   useEffect(() => {
@@ -107,7 +83,7 @@ const ChatOffCanvas = ({ isOpen, onClose }) => {
                     <div className="card-body shadow-xl">
                       
                     <div className="flex justify-end items-center p-4 border-b border-gray-200 dark:border-gray-700">
-                      <button onClick={() => deleteConversation(conversation.id, model)} className="p-1 rounded-full text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
+                      <button onClick={() => deleteConversation(conversation.id, model, setConversations)} className="p-1 rounded-full text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
                         <X size={12} />
                         </button>
                     </div>
