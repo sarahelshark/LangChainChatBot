@@ -7,7 +7,16 @@ from langchain_ollama import OllamaEmbeddings
 embeddings = OllamaEmbeddings(model="mxbai-embed-large")
 
 
-def create_enhanced_context(model_type, embeddings, max_context_length=3000):
+def search_all_documents(query, embeddings, model_type):
+    index_path = f"faiss_index_{model_type}"
+    vectorstore = FAISS.load_local(index_path, embeddings, allow_dangerous_deserialization=True)
+    
+    results = vectorstore.similarity_search(query)
+    
+    return results
+
+
+def create_enhanced_context(model_type, embeddings, query, max_context_length=7000):
     chat_index_path = f"faiss_index_{model_type}"
     upload_index_path = os.path.abspath('./faiss_index_uploaded_docs')
 
@@ -52,6 +61,14 @@ def create_enhanced_context(model_type, embeddings, max_context_length=3000):
         if len(context) + len(conversation["content"]) > max_context_length:
             break
         context += conversation["content"] + "\n"
+        
+     # Esegui la ricerca di similarità sui documenti nel vector store
+    search_results = search_all_documents(query, embeddings, model_type)
+    # Aggiungi i risultati della ricerca al contesto
+    for result in search_results:
+        if len(context) + len(result.page_content) > max_context_length:
+            break
+        context += result.page_content + "\n"
 
     logging.info(f"Enhanced context created with length: {len(context)}")
     return context

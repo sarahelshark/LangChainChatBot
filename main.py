@@ -8,7 +8,7 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from utils.vectorization import vectorize_and_store_chat_history
 from utils.vectorization import vectorize_and_store_uploaded_docs
-from utils.context import create_enhanced_context
+from utils.context import create_enhanced_context, search_all_documents
 import utils.constants as constants
 from models import GeminiPro
 from langchain_community.vectorstores import FAISS
@@ -92,7 +92,7 @@ def chat():
             return jsonify({'content': "Grazie per aver utilizzato l'assistente AI. Arrivederci!👋"})
    
         # Recupera il contesto dalle conversazioni precedenti
-        context = create_enhanced_context(model_choice, ollama_embeddings)
+        context = create_enhanced_context(model_choice, ollama_embeddings, user_message, max_context_length=7000)
 
         if model_choice == 'chatgpt':
             logging.info("-------ChatGPT mode-------")  
@@ -271,6 +271,22 @@ def upload_file():
             return jsonify({'error': f'Failed to upload file: {str(e)}'}), 500
     else:
         return jsonify({'error': 'File type not allowed'}), 400
-    
+
+@app.route('/api/search', methods=['GET'])
+def search_documents():
+    try:
+        query = request.args.get('query', '')
+        model_type = request.args.get('model', 'chatgpt')  # Default to ChatGPT if not specified
+
+        if not query:
+            return jsonify({'error': 'Query parameter is required.'}), 400
+
+        results = search_all_documents(query, ollama_embeddings, model_type)
+
+        return jsonify({'results': [result.page_content for result in results]})
+    except Exception as e:
+        logging.error(f'Error during search: {str(e)}')
+        return jsonify({'error': f'Error during search: {str(e)}'}), 500
+        
 if __name__ == '__main__':
     app.run(debug=True)

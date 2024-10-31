@@ -20,7 +20,7 @@ def generate_session_info():
     return session_uid, session_timestamp
 
 def split_text_into_documents(full_text, session_uid, session_timestamp):
-    text_splitter = CharacterTextSplitter(chunk_size=2000, chunk_overlap=50)
+    text_splitter = CharacterTextSplitter(chunk_size=4000, chunk_overlap=200)
     texts = text_splitter.split_text(full_text)
     documents = [Document(page_content=text, metadata={"session_uid": session_uid, "session_timestamp": session_timestamp}) for text in texts]
     return documents
@@ -116,7 +116,7 @@ def vectorize_and_store_uploaded_docs(upload_folder, index_folder, embeddings):
         return
 
     session_uid, session_timestamp = generate_session_info()
-    text_splitter = CharacterTextSplitter(chunk_size=2000, chunk_overlap=50)
+    text_splitter = CharacterTextSplitter(chunk_size=4000, chunk_overlap=200)
     texts = text_splitter.split_documents(documents)
 
     for doc in texts:
